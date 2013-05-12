@@ -5,6 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT      += xmlpatterns
+QT      += xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,8 +15,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    Baza/bramaznajomych.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    Baza/bramaznajomych.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    Baza/znajomi_zasoby.qrc
