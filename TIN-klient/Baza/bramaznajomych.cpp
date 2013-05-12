@@ -116,8 +116,10 @@ bool BramaZnajomych::wczytajBaze()
                 QDomDocument doc("mydocument");
                 if(doc.setContent(plikBazy)){
 //                    qDebug() << "Udalo sie zaladowac document";
+
                 } else {
 //                    qDebug() << "DomDocument fejl";
+
                 }
 
 
@@ -133,9 +135,6 @@ bool BramaZnajomych::wczytajBaze()
                     QString nick = znajomi.at(i).attributes().namedItem("login").toAttr().value();
                     listaZnajomych.push_back(qMakePair(nick, id));
                 }
-
-//                test();
-
 
             } else{
 //                qDebug() << "Poprawnosc pliku xml fejl";

@@ -13,6 +13,14 @@
  */
 typedef QPair< QString, int > Znajomy;
 
+/**
+ * @brief The BramaZnajomych class
+ * Klasa odpowiadajaca za odczyt/zapis do pliku listy znajomych
+ * i wszystkie operacje zwiazane z lista znajomych.
+ * Do bramy przypisuje się uzytownika, a ta operaje na pliku o nazwie
+ * loginUzytkownika.xml w katalogu okreslona przez katalogBazy
+ * Zalecane tworzenie instancji klasy dopiero po zalogowaniu przez uzytkownika
+ */
 class BramaZnajomych : public QObject
 {
     Q_OBJECT
