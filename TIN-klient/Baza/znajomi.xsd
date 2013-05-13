@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:complexType name="znajomy">
+	 <xsd:attribute name="login" type="xsd:string"/> 
+	 <xsd:attribute name="ID" type="xsd:int"/>
+	</xsd:complexType>
+
+	<xsd:group name="grupa_znajomi">
+	 <xsd:sequence>
+	  <xsd:element name="znajomy" type="znajomy"/>
+	 </xsd:sequence>
+	</xsd:group>
+
+	<xsd:complexType name = "znajomi">
+	 <xsd:group ref="grupa_znajomi"  maxOccurs="unbounded" minOccurs="0" />
+	</xsd:complexType>
+
+ <xsd:element name="znajomi" type="znajomi"/>
+
+</xsd:schema>
