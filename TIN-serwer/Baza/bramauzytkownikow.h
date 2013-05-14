@@ -41,7 +41,7 @@ public:
 
     /**
      * @brief sprawdzUzytkownika
-     * prawdza czy użytkownik o podanym nicku (loginie) istnieje
+     * sprawdza czy użytkownik o podanym nicku (loginie) istnieje
      * @param login uzytkownika ktorego id chcemy poznac
      * @return id uzytkownika jesli istnieje, jesli nie zwraca 0
      */
