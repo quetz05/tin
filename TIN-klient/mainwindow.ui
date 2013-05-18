@@ -1,24 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>543</width>
+    <height>385</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>MainWindow</string>
+  <property name="windowTitle">
+   <string>Super TIN-TIN</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>0</y>
+      <width>201</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QPushButton" name="pushSzukajZnajomych">
+       <property name="text">
+        <string>Szukaj znajomych</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QListView" name="listaZnajomych"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="titListaZnajomych">
+       <property name="text">
+        <string>Lista znajomych</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>240</y>
+      <width>191</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QPushButton" name="pushRozmawiaj">
+       <property name="text">
+        <string>Rozmawiaj</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushWyslijPlik">
+       <property name="text">
+        <string>Wyslij plik</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGraphicsView" name="logoView">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>256</width>
+      <height>192</height>
+     </rect>
+    </property>
+    <property name="interactive">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>543</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuPlik">
+    <property name="title">
+     <string>Plik</string>
+    </property>
+    <addaction name="actionSzukajZnajomych"/>
+    <addaction name="separator"/>
+    <addaction name="actionWyloguj"/>
+    <addaction name="actionZakoncz"/>
+   </widget>
+   <addaction name="menuPlik"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionSzukajZnajomych">
+   <property name="text">
+    <string>Szukaj znajomych</string>
+   </property>
+  </action>
+  <action name="actionZakoncz">
+   <property name="text">
+    <string>Zakończ</string>
+   </property>
+  </action>
+  <action name="actionWyloguj">
+   <property name="text">
+    <string>Wyloguj</string>
+   </property>
+  </action>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>

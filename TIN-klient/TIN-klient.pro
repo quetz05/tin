@@ -16,12 +16,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    Baza/bramaznajomych.cpp
+    Baza/bramaznajomych.cpp \
+    wyszukiwarka.cpp
 
 HEADERS  += mainwindow.h \
-    Baza/bramaznajomych.h
+    Baza/bramaznajomych.h \
+    wyszukiwarka.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    wyszukiwarka.ui
 
 RESOURCES += \
-    Baza/znajomi_zasoby.qrc
+    Baza/znajomi_zasoby.qrc \
