@@ -3,10 +3,10 @@
 
 wyszukiwarka::wyszukiwarka(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::wyszukiwarka)
-{
-    ui->setupUi(this);
-}
+    ui(new Ui::Wyszukiwarka)
+    {
+        ui->setupUi(this);
+    }
 
 wyszukiwarka::~wyszukiwarka()
 {

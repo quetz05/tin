@@ -19,12 +19,12 @@
      <rect>
       <x>330</x>
       <y>0</y>
-      <width>201</width>
+      <width>204</width>
       <height>321</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="0">
+     <item row="4" column="0">
       <widget class="QPushButton" name="pushSzukajZnajomych">
        <property name="text">
         <string>Szukaj znajomych</string>
@@ -32,7 +32,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QListView" name="listaZnajomych"/>
+      <widget class="QListWidget" name="listaZnajomych"/>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="titListaZnajomych">
@@ -40,6 +40,24 @@
         <string>Lista znajomych</string>
        </property>
       </widget>
+     </item>
+     <item row="3" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushDodaj">
+         <property name="text">
+          <string>Dodaj</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushUsun">
+         <property name="text">
+          <string>Usuń</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>

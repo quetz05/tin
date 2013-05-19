@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-class wyszukiwarka;
+class Wyszukiwarka;
 }
 
 class wyszukiwarka : public QDialog
@@ -16,7 +16,7 @@ public:
     ~wyszukiwarka();
     
 private:
-    Ui::wyszukiwarka *ui;
+    Ui::Wyszukiwarka *ui;
 };
 
 #endif // WYSZUKIWARKA_H

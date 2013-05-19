@@ -4,10 +4,9 @@
 #include <QMainWindow>
 #include <QPixmap>
 #include <QGraphicsScene>
-#include <iostream>
 #include <QDebug>
 #include <wyszukiwarka.h>
-
+#include <dodawanie.h>
 
 namespace Ui {
 class MainWindow;
@@ -17,7 +16,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public slots:
+private slots:
 
     //wylogowuje uzytkownika
     void wyloguj();
@@ -29,6 +28,12 @@ public slots:
     void rozpocznijRozmowe(int *listaUczestnikow);
     //rozpoczyna wysylanie pliku
     void rozpocznijWysylanie(int *listaUczestnikow);
+    //wyswietla okno dodawania znajomego
+    void dodajZnajomego();
+    //usuwa znajomego z listy
+    void usunZnajomego();
+    //zaznacza konkretnego znajomego
+    void zaznaczenieZnajomego(QListWidgetItem *znajomy);
 
 
 
@@ -36,10 +41,23 @@ public slots:
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+
+        BramaZnajomych *bramaZnajomych;
+        QList <Znajomy> znajomi;
+        void wczytajZnajomych();
     
 private:
+
+
+
     Ui::MainWindow *ui;
     wyszukiwarka *wysz;
+    QListWidgetItem *zaznaczonyZnajomy;
+    dodawanie *doda;
+
+
+
 };
 
 #endif // MAINWINDOW_H
