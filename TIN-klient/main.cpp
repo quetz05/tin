@@ -2,15 +2,17 @@
 #include <QApplication>
 
 #include "Baza/bramaznajomych.h"
+#include "ekranlogowania.h"
+#include <QThread>
 
 int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    
-    return a.exec();
 
+    ekranLogowania ek;
+    ek.show();
+
+    return a.exec();
 
 }

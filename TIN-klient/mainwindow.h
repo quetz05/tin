@@ -39,13 +39,14 @@ private slots:
 
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0, QString login="");
     ~MainWindow();
 
 
         BramaZnajomych *bramaZnajomych;
         QList <Znajomy> znajomi;
         void wczytajZnajomych();
+        info *oknoInformacji;
     
 private:
 

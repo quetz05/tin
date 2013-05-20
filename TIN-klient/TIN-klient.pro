@@ -18,16 +18,22 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     Baza/bramaznajomych.cpp \
     wyszukiwarka.cpp \
-    dodawanie.cpp
+    dodawanie.cpp \
+    ekranlogowania.cpp \
+    info.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
     wyszukiwarka.h \
-    dodawanie.h
+    dodawanie.h \
+    ekranlogowania.h \
+    info.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \
-    dodawanie.ui
+    dodawanie.ui \
+    ekranlogowania.ui \
+    info.ui
 
 RESOURCES += \
     Baza/znajomi_zasoby.qrc \

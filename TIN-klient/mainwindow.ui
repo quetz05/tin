@@ -65,9 +65,9 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>240</y>
+      <y>210</y>
       <width>191</width>
-      <height>71</height>
+      <height>131</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -79,9 +79,23 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="pushGrupRozmawiaj">
+       <property name="text">
+        <string>Rozmowa grupowa</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="pushWyslijPlik">
        <property name="text">
         <string>Wyslij plik</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushGrupWyslijPlik">
+       <property name="text">
+        <string>Grupowe wysyłanie</string>
        </property>
       </widget>
      </item>

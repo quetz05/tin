@@ -1,14 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent, QString login) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     zaznaczonyZnajomy = NULL;
     wysz = NULL;
     doda=NULL;
-    bramaZnajomych = new BramaZnajomych(QString("quetz"));
+    bramaZnajomych = new BramaZnajomych(QString(login));
 
 
 
@@ -43,10 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+
     delete zaznaczonyZnajomy;
     delete doda;
     delete wysz;
+    delete oknoInformacji;
+    delete ui;
 }
 
 
@@ -98,14 +100,17 @@ void MainWindow::usunZnajomego()
         int ID = QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt();
 
         if(!bramaZnajomych->usunZnajomego(ID))
-            //wyswietl okno bledu
-            ;
+            oknoInformacji = new info(this,"Wystąpił problem przy usuwaniu znajomego. To nie moja wina! Twórcy coś pokopali...",false);
+        else
+        {
+            zaznaczonyZnajomy=NULL;
+            ui->listaZnajomych->clear();
 
-        zaznaczonyZnajomy=NULL;
-        ui->listaZnajomych->clear();
-
-        wczytajZnajomych();
-        ui->pushUsun->setEnabled(false);
+            wczytajZnajomych();
+            ui->pushUsun->setEnabled(false);
+            ui->pushRozmawiaj->setEnabled(false);
+            ui->pushWyslijPlik->setEnabled(false);
+        }
     }
 }
 
@@ -113,6 +118,8 @@ void MainWindow::zaznaczenieZnajomego(QListWidgetItem *znajomy)
 {
     zaznaczonyZnajomy = znajomy;
     ui->pushUsun->setEnabled(true);
+    ui->pushRozmawiaj->setEnabled(true);
+    ui->pushWyslijPlik->setEnabled(true);
 }
 
 void MainWindow::wczytajZnajomych()
