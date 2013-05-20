@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <wyszukiwarka.h>
 #include <dodawanie.h>
+#include <QProcess>
 
 namespace Ui {
 class MainWindow;

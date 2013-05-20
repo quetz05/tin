@@ -54,10 +54,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::wyloguj()
 {
-
-
-
-
+    QProcess::startDetached(QApplication::applicationFilePath());
+    exit(12);
 }
 
 void MainWindow::zakoncz()
