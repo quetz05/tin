@@ -52,6 +52,14 @@ public:
     bool czyWBazie(int idUzytkownika);
 
     /**
+     * @brief czyWBazie
+     * funkcja sprawdzająca czy dany znajomy jest już w bazie
+     * @param nazwaUzytkownika
+     * @return true jesli znajomy jest w bazie
+     */
+    bool czyWBazie(QString nazwaUzytkownika);
+
+    /**
      * @brief dodajZnajomego
      * funkcja dodająca do lokalnej bazy danych znajomego
      * @param idUzytkownika
