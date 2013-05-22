@@ -34,6 +34,19 @@ bool BramaZnajomych::czyWBazie(int idUzytkownika)
     return false;
 }
 
+bool BramaZnajomych::czyWBazie(QString nazwaUzytkownika)
+{
+    QList< Znajomy >::Iterator it, koniec;
+    koniec = listaZnajomych.end();
+
+    for(it = listaZnajomych.begin(); it < koniec; ++it){
+        if(it->first == nazwaUzytkownika){
+            return true;
+        }
+    }
+    return false;
+}
+
 bool BramaZnajomych::dodajZnajomego(int idUzytkownika, QString nazwaUzytkownika)
 {
     Znajomy nowy(nazwaUzytkownika, idUzytkownika);
