@@ -7,12 +7,16 @@ MainWindow::MainWindow(QWidget *parent, QString login) :
 {
     zaznaczonyZnajomy = NULL;
     wysz = NULL;
-    doda=NULL;
+
+
     bramaZnajomych = new BramaZnajomych(QString(login));
+    doda = new dodawanie(this,bramaZnajomych);
 
 
 
     ui->setupUi(this);
+
+
 
     //connect(ui->pushRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijRozmowe(int*)));
     //connect(ui->pushWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijWysylanie(int*)));
@@ -86,7 +90,9 @@ void MainWindow::rozpocznijWysylanie(int *listaUczestnikow)
 
 void MainWindow::dodajZnajomego()
 {
-    doda = new dodawanie(this,bramaZnajomych);
+
+    connect(doda, SIGNAL(zakoncz()), this, SLOT(zakonczDodawanie()));
+
     doda->show();
 
 }
@@ -102,7 +108,6 @@ void MainWindow::usunZnajomego()
         else
         {
             zaznaczonyZnajomy=NULL;
-            ui->listaZnajomych->clear();
 
             wczytajZnajomych();
             ui->pushUsun->setEnabled(false);
@@ -122,10 +127,18 @@ void MainWindow::zaznaczenieZnajomego(QListWidgetItem *znajomy)
 
 void MainWindow::wczytajZnajomych()
 {
+    ui->listaZnajomych->clear();
+
     znajomi = bramaZnajomych->getListaZnajomych();
 
     for(int i = 0; i<znajomi.length(); i++)
     {
         ui->listaZnajomych->addItem(znajomi[i].first +"  "+"|"+QString::number(znajomi[i].second)+"|");
     }
+}
+
+void MainWindow::zakonczDodawanie()
+{
+    wczytajZnajomych();
+    doda->hide();
 }

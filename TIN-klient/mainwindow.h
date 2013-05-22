@@ -19,6 +19,7 @@ class MainWindow : public QMainWindow
 
 private slots:
 
+
     //wylogowuje uzytkownika
     void wyloguj();
     //konczy dzialanie programu
@@ -36,7 +37,9 @@ private slots:
     //zaznacza konkretnego znajomego
     void zaznaczenieZnajomego(QListWidgetItem *znajomy);
 
+    void zakonczDodawanie();
 
+    void wczytajZnajomych();
 
     
 public:
@@ -46,7 +49,7 @@ public:
 
         BramaZnajomych *bramaZnajomych;
         QList <Znajomy> znajomi;
-        void wczytajZnajomych();
+
         info *oknoInformacji;
     
 private:
