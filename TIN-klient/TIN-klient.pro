@@ -29,7 +29,8 @@ HEADERS  += mainwindow.h \
     dodawanie.h \
     ekranlogowania.h \
     info.h \
-    oknorozmowy.h
+    oknorozmowy.h \
+    polaczenie.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \
