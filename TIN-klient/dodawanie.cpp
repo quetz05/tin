@@ -6,6 +6,8 @@ dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych) :
     QDialog(parent),
     ui(new Ui::dodawanie)
 {
+    this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
     ui->setupUi(this);
 
     brama = bramaZnajomych;

@@ -40,7 +40,7 @@ public:
     {
         if (ekranLogowania->objectName().isEmpty())
             ekranLogowania->setObjectName(QStringLiteral("ekranLogowania"));
-        ekranLogowania->resize(379, 252);
+        ekranLogowania->resize(379, 208);
         verticalLayoutWidget = new QWidget(ekranLogowania);
         verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
         verticalLayoutWidget->setGeometry(QRect(20, 30, 341, 121));

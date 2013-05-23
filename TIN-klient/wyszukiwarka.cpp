@@ -5,6 +5,7 @@ wyszukiwarka::wyszukiwarka(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Wyszukiwarka)
     {
+        this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
         ui->setupUi(this);
     }
 

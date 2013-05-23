@@ -6,6 +6,8 @@ ekranLogowania::ekranLogowania(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ekranLogowania)
 {
+    this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
     ui->setupUi(this);
 
     login = "";

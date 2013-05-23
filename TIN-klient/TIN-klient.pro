@@ -20,20 +20,23 @@ SOURCES += main.cpp\
     wyszukiwarka.cpp \
     dodawanie.cpp \
     ekranlogowania.cpp \
-    info.cpp
+    info.cpp \
+    oknorozmowy.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
     wyszukiwarka.h \
     dodawanie.h \
     ekranlogowania.h \
-    info.h
+    info.h \
+    oknorozmowy.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \
     dodawanie.ui \
     ekranlogowania.ui \
-    info.ui
+    info.ui \
+    oknorozmowy.ui
 
 RESOURCES += \
     Baza/znajomi_zasoby.qrc \
