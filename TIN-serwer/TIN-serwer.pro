@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    Baza/bramauzytkownikow.cpp
+    Baza/bramauzytkownikow.cpp \
+    serwerapp.cpp \
+    userconection.cpp
 
 HEADERS  += mainwindow.h \
-    Baza/bramauzytkownikow.h
+    Baza/bramauzytkownikow.h \
+    serwerapp.h \
+    userconnection.h
 
 FORMS    += mainwindow.ui
