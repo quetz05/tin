@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    if(polacz((char*)"192.168.0.12",1111))
+    if(polacz((char*)"127.0.0.1",1111))
         qDebug() << "Połączony z serwerem...";
     else
         qDebug() << "Brak połączenia z serwerem...";

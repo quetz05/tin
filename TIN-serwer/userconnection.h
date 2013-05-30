@@ -14,16 +14,33 @@ private:
     int myid;
     //trzeba nam jeszcze liste naszych rozmow zeby je jakos obslugiwac
     QMap<int,rozmowa*> rozmowy;
-    //bool wyslijWiadomosc(Naglowek n,QString wiad);
-    bool wyslijPakietDanych(char* dane);
+    /**
+     * @brief odbiezNaglowek funkcja wczytuje naglowek i go dekoduje
+     * @param dataSize wielkosc danych ktore sa przekazane w wiadomosci
+     * @return zwraca kod naglowka
+     */
+    int odbiezNaglowek(int* dataSize);
+
+
 protected:
     /**
      * @brief run petla glowna programu
      */
     void run();
 public:
+    /**
+     * @brief UserConnection domyslny konstruktor
+     * @param parent obiekt ktory jest ojcem naszego
+     */
     explicit UserConnection(QObject *parent = 0);
+    /**
+     * @brief UserConnection konstruktor ktory tworzy polaczenie na podstawie gniazda
+     * @param socket deskryptor gniazda przekazywany do watku urzytkownika
+     */
     UserConnection(int socket);
+    /**
+     * Destruktor domyslny
+     **/
     ~UserConnection();
     
 signals:

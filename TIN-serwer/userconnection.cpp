@@ -1,13 +1,22 @@
 #include "userconnection.h"
+#include <unistd.h> // to jest wazny include z opcjami read i write
+#include <QDebug>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stdio.h>
 
 UserConnection::UserConnection(QObject *parent) :
     QThread(parent)
 {
     zalogowany = false;
+    myid=-1;
 }
 
 UserConnection::UserConnection(int socket)
 {
+    myid=-1;
     this->socket = socket;
     zalogowany = false;
 }
@@ -19,6 +28,7 @@ UserConnection::~UserConnection()
         (it.value())->usunSluchacza(myid);
     }
 
+    close(socket);// zamykamy gniazdo
 }
 
 void UserConnection::nowaWiadomosc(int id)
@@ -31,7 +41,7 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
 {
     if(!zalogowany && idUsr==myid){
         if(status){
-            //Qdebug()<<"zalogowany urzytkownik\n";
+            qDebug()<<"zalogowany urzytkownik\n";
             zalogowany = true;
         }
     }
@@ -49,4 +59,17 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro)
 ///@todo
 void UserConnection::run()
 {
+    qDebug() << "wystartowal watek urzytkownika\n";
+    while(odbiezNaglowek()!=0){// 0 kod wyjscia
+     // tu obróbka danych
+
+    }
+    emit finished(myid);
+
+}
+
+
+int UserConnection::odbiezNaglowek(int *dataSize)
+{
+    ///@todo jakies ready itd
 }

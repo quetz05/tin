@@ -16,16 +16,33 @@ private:
     QMap<int,rozmowa*>   rozmowy;
     int port;
 public:
+    /**
+     * @brief SerwerApp domyslny konstruktor
+     * @param parent ojciec obiektu
+     */
     explicit SerwerApp(QObject *parent = 0);
-
+    /**
+     * @brief quit zluzy do sygnalizacji ze mozna nas zamknac i usunac wszystko co tylko sie da
+     */
     void quit();
     
-
+    /**
+     * @brief setPort ustawia port z zewnatrz
+     * @param value numer portu do nasluchu
+     */
     void setPort(int value){port = value;}
 
 signals:
+    /**
+     * @brief finished sygnal mowiacy ze mozna nas spokojnie zamknac
+     */
     void finished();
-
+    /**
+     * @brief dodajeDoRozmowy sygnal sluzocy do powiadomienia urzytkownikow ze ktos zostal dodany do rozmowy
+     * @param idUsr     urzytkownik dodany do rozmowy
+     * @param idRozm rozmowa do ktorej ten zostal dodany
+     * @param rozmowa wskaznik na rozmowe do ktorej go dodalismy
+     */
     void dodajeDoRozmowy(int idUsr,int idRozm,rozmowa* rozmowa);
     /**
      * @brief dodanoUrzytkownika komunikat o zalogowaniu urzytkownika
