@@ -4,6 +4,8 @@
 #include <QSqlQuery>
 #include <QSqlResult>
 
+BramaUzytkownikow* BramaUzytkownikow::instance = 0L;
+
 BramaUzytkownikow::BramaUzytkownikow(QObject *parent) :
     QObject(parent)
 {
@@ -17,6 +19,12 @@ BramaUzytkownikow::BramaUzytkownikow(QObject *parent) :
         qDebug() << "Polaczenie z baza fejl!";
     }
 }
+
+BramaUzytkownikow::BramaUzytkownikow(const BramaUzytkownikow &copy)
+{
+}
+
+
 
 bool BramaUzytkownikow::sprawdzUzytkownika(int idUzytkownika)
 {
@@ -34,6 +42,8 @@ int BramaUzytkownikow::dodajUzytkownika(QString login, QString hash)
     insert.append(hash);
     insert.append("');");
 
+    mutex.lock();
+
     if(baza.open()){
         qDebug() << "Udalo sie otworzyc plik z baza!";
         baza.transaction();
@@ -45,16 +55,27 @@ int BramaUzytkownikow::dodajUzytkownika(QString login, QString hash)
         } else{
             qDebug() << "Dodawanie uzytkownika fejl";
             baza.rollback();
+
+            mutex.unlock();
             return 0;
         }
 
         baza.close();
     } else {
         qDebug() << "Polaczenie z baza fejl!";
+        mutex.unlock();
         return ER_OPEN_DB;
     }
 
+    mutex.unlock();
     return sprawdzUzytkownika(login);
+}
+
+BramaUzytkownikow *BramaUzytkownikow::getSharedInstance()
+{
+    if(!instance)
+        instance = new BramaUzytkownikow;
+    return instance;
 }
 
 
@@ -66,6 +87,7 @@ int BramaUzytkownikow::sprawdzUzytkownika(QString login)
 
     int id;
 
+    mutex.lock();
     if(baza.open()){
         baza.transaction();
         QSqlQuery pobierzID(baza);
@@ -88,10 +110,12 @@ int BramaUzytkownikow::sprawdzUzytkownika(QString login)
             id = ER_SQL_DB;
         }
     } else{
+        mutex.unlock();
         return ER_OPEN_DB;
     }
 
     baza.close();
+    mutex.unlock();
     return id;
 
 }
@@ -104,6 +128,7 @@ QString BramaUzytkownikow::getHashPassword(int idUzytkownika)
 
     QString haslo;
 
+    mutex.lock();
     if(baza.open()){
         baza.transaction();
         QSqlQuery pobierzHaslo(baza);
@@ -127,5 +152,6 @@ QString BramaUzytkownikow::getHashPassword(int idUzytkownika)
     }
 
     baza.close();
+    mutex.unlock();
     return haslo;
 }

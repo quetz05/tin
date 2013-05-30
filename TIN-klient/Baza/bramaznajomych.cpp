@@ -78,7 +78,7 @@ bool BramaZnajomych::dodajZnajomego(int idUzytkownika, QString nazwaUzytkownika)
 
     zapiszBaze();
 
-    test();
+    //test();
 
     return true;
 }
@@ -92,7 +92,7 @@ bool BramaZnajomych::usunZnajomego(int idUzytkownika)
         if(it->second == idUzytkownika){
             listaZnajomych.erase(it);
             zapiszBaze();
-            test();
+//            test();
             return true;
         }
     }

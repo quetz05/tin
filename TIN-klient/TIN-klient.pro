@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     dodawanie.cpp \
     ekranlogowania.cpp \
     info.cpp \
-    oknorozmowy.cpp
+    oknorozmowy.cpp \
+    rejestracja.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
@@ -30,14 +31,17 @@ HEADERS  += mainwindow.h \
     ekranlogowania.h \
     info.h \
     oknorozmowy.h \
-    polaczenie.h
+    polaczenie.h \
+    rejestracja.h \
+    ../wiadomosc.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \
     dodawanie.ui \
     ekranlogowania.ui \
     info.ui \
-    oknorozmowy.ui
+    oknorozmowy.ui \
+    rejestracja.ui
 
 RESOURCES += \
     Baza/znajomi_zasoby.qrc \

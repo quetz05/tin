@@ -14,6 +14,7 @@ ekranLogowania::ekranLogowania(QWidget *parent) :
     dostep - false;
 
     oknoInformacji = NULL;
+    rej = new Rejestracja();
 
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
     connect(ui->pushZaloguj, SIGNAL(clicked()), this, SLOT(zaloguj()));
@@ -26,7 +27,6 @@ ekranLogowania::ekranLogowania(QWidget *parent) :
     ui->textPass->setEchoMode(QLineEdit::Password);
     ui->textPass->setInputMethodHints(Qt::ImhHiddenText| Qt::ImhNoPredictiveText|Qt::ImhNoAutoUppercase);
 
-    ui->pushRejestruj->setEnabled(false);
 }
 
 ekranLogowania::~ekranLogowania()
@@ -87,6 +87,11 @@ QString ekranLogowania::pobierzLogin()
 
 void ekranLogowania::rejestruj()
 {
+   connect(rej, SIGNAL(zakoncz()), this, SLOT(zakonczRejestracje()));
+   rej->show();
+}
 
-
+void ekranLogowania::zakonczRejestracje()
+{
+    rej->hide();
 }
