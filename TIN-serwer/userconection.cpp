@@ -15,7 +15,7 @@ UserConnection::UserConnection(int socket)
 ///zrobione chyba wszystko
 UserConnection::~UserConnection()
 {
-    for(QMap<rozmowa*>::Iterator it=rozmowy.begin();it!=rozmowy.end();++it){
+    for(QMap<int,rozmowa*>::Iterator it=rozmowy.begin();it!=rozmowy.end();++it){
         (it.value())->usunSluchacza(myid);
     }
 
@@ -31,7 +31,7 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
 {
     if(!zalogowany && idUsr==myid){
         if(status){
-            Qdebug()<<"zalogowany urzytkownik\n";
+            //Qdebug()<<"zalogowany urzytkownik\n";
             zalogowany = true;
         }
     }
