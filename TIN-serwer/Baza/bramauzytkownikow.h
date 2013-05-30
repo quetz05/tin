@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include <QMutex>
 
 /**
  * error zwracany w przypadku gdy proba polaczania z baza sie nie uda
@@ -23,13 +24,6 @@ class BramaUzytkownikow : public QObject
 {
     Q_OBJECT
 public:
-    /**
-     * @brief BramaUzytkownikow
-     * Konstruktor od razu probuje otworzyc plik z baza danych i w przypadku
-     * nieudanej proby poinformuje o tym w konsoli
-     * @param parent
-     */
-    explicit BramaUzytkownikow(QObject *parent = 0);
 
     /**
      * @brief sprawdzUzytkownika
@@ -67,7 +61,39 @@ public:
      */
     int dodajUzytkownika(QString login, QString hash);
 
+    /**
+     * @brief getSharedInstance
+     * funkcja zwracajaca wskaznik na jedyna instancje tej klasy
+     * @return instancje BramyUzytkownikow
+     */
+    static BramaUzytkownikow* getSharedInstance();
+
 private:
+
+    /**
+     * @brief BramaUzytkownikow
+     * Konstruktor od razu probuje otworzyc plik z baza danych i w przypadku
+     * nieudanej proby poinformuje o tym w konsoli
+     * @param parent
+     */
+    explicit BramaUzytkownikow(QObject *parent = 0);
+
+    /**
+     * @brief BramaUzytkownikow
+     *konstruktor kopiujacy, dziala jak domyslny, ale jest definicja zeby byl prywatny
+     * @param copy
+     */
+    BramaUzytkownikow(const BramaUzytkownikow &copy);
+
+    /**
+     * @brief instance instancja singletona
+     */
+    static BramaUzytkownikow* instance;
+
+    /**
+     * @brief mutex na operacje dostepu do pliku
+     */
+    QMutex mutex;
 
     QSqlDatabase baza;
     
