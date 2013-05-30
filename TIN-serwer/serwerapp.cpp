@@ -49,17 +49,19 @@ void SerwerApp::run()
         quit();
         return;
     }
-
+     qDebug() << "start serwera (rozpoczecie nasłuchu)\n";
     //nakurwiamy petle uruchamiajaca miliard watkow urzytkownikow
     while(1){
         struct sockaddr_in cliaddr;
         unsigned int addrlen=sizeof(cliaddr);
         int sock2=accept(sockfd,(struct sockaddr*)&cliaddr,&addrlen);
         // jak się ktoś podłączy to tu go startujemy jupi
+        // ale chyba tu bedziemy chcieli jeszcze wymendzić od klienta jego id
+        //albo zrobić pierdyliard innych rzeczy hmmm
 
 
     }
-    qDebug() << "apka sie odpaliła\n";
+
     //na koncu wychodzimy z apki
     quit();
 }

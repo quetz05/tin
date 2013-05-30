@@ -6,6 +6,11 @@
 class UserConnection : public QThread
 {
     Q_OBJECT
+private:
+    int socket;
+
+    bool wyslijWiadomosc(Naglowek n,QString wiad);
+    bool wyslijPakietDanych(char* dane);
 protected:
     void run();
 public:
@@ -15,7 +20,8 @@ public:
 signals:
     
 public slots:
-    
+    void nowaWiadomosc(int id);
+
 };
 
 #endif // USERCONECTION_H

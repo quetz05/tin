@@ -16,11 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     Baza/bramauzytkownikow.cpp \
     serwerapp.cpp \
-    userconection.cpp
+    userconection.cpp \
+    rozmowa.cpp \
+    message.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramauzytkownikow.h \
     serwerapp.h \
-    userconnection.h
+    userconnection.h \
+    rozmowa.h \
+    message.h
 
 FORMS    += mainwindow.ui
