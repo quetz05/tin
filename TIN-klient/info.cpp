@@ -5,6 +5,8 @@ info::info(QWidget *parent, QString info, bool ok) :
     QDialog(parent),
     ui(new Ui::info)
 {
+        this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
     ui->setupUi(this);
 
     connect(ui->pushOK, SIGNAL(clicked()), this, SLOT(zakoncz()));

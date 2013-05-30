@@ -6,8 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
-#define DATA "trolololo"
+#include <unistd.h>
 
 #define TYP_PLIK_ODPYTAJ 1; // odpytaj użytkownik czy chcą odebrać plik
 #define TYP_PLIK_CHETNI 2; // poinformuj nadawcę, ilu jest chętnych
@@ -16,25 +15,6 @@
 #define TYP_LOGUJ 5; // logowanie
 
 int gniazdo = 0;
-
-typedef struct Naglowek
-{
-    int typ;
-    int ID;
-    int rozmiar;
-
-
-}Naglowek;
-
-
-typedef struct Wiadomosc
-{
-   Naglowek naglowek;
-   char dane[500];
-
-}Wiadomosc;
-
-
 
 
 bool polacz(char* adres, int port)
@@ -65,7 +45,7 @@ bool polacz(char* adres, int port)
     /* hostbyname zwraca strukture zawierajaca adres danego hosta */
     if (hp == (struct hostent *) 0)
     {
-        qDebug() << "Nieznany adres: "<< adres  ;
+        qDebug() << "Nieznany adres: "<< adres;
         return false;
     }
 
@@ -79,13 +59,11 @@ bool polacz(char* adres, int port)
         return false;
     }
 
-    /*if (write( gniazdo, DATA, sizeof DATA ) == -1)
+   /* if (write( gniazdo, DATA, sizeof DATA ) == -1)
     {
         qDebug() << "Błąd przy wysylaniu wiadomosci...";
         return false;
     }*/
-
-    //close(gniazdo);
 
     return true;
 }

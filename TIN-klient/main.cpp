@@ -5,10 +5,14 @@
 #include "ekranlogowania.h"
 #include <QThread>
 #include "polaczenie.h"
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
-    polacz((char*)"192.168.0.12",1111);
+    if(polacz((char*)"192.168.0.12",1111))
+        qDebug() << "Połączony z serwerem...";
+    else
+        qDebug() << "Brak połączenia z serwerem...";
 
 
     Q_INIT_RESOURCE(znajomi_zasoby);

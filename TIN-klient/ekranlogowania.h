@@ -5,6 +5,7 @@
 #include <QString>
 #include <mainwindow.h>
 #include "info.h"
+#include "rejestracja.h"
 
 namespace Ui {
 class ekranLogowania;
@@ -22,6 +23,7 @@ private slots:
     void zakoncz();
     void zaloguj();
     void rejestruj();
+    void zakonczRejestracje();
     
 public:
     explicit ekranLogowania(QWidget *parent = 0);
@@ -33,6 +35,8 @@ private:
     QString login;
     QString haslo;
 
+
+    Rejestracja *rej;
     info *oknoInformacji;
 
     Ui::ekranLogowania *ui;

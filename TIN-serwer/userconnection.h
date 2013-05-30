@@ -9,7 +9,7 @@ class UserConnection : public QThread
 private:
     int socket;
 
-    bool wyslijWiadomosc(Naglowek n,QString wiad);
+    //bool wyslijWiadomosc(Naglowek n,QString wiad);
     bool wyslijPakietDanych(char* dane);
 protected:
     void run();

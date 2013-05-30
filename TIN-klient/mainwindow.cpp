@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent, QString login) :
     ui->setupUi(this);
 
 
-
     connect(ui->pushRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijRozmowe()));
     connect(ui->pushWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijWysylanie()));
     connect(ui->pushSzukajZnajomych, SIGNAL(clicked()), this, SLOT(wyszukiwarkaZnajomych()));
