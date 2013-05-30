@@ -43,7 +43,6 @@ void oknoRozmowy::wyslij()
 
 void oknoRozmowy::zakoncz()
 {
-
-       emit koniecRozmowy(loginRozmowcy);
+       koniecRozmowy(loginRozmowcy);
 }
 
