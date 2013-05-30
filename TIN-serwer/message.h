@@ -19,6 +19,13 @@ public:
     explicit message(QString wiadomosc= "0");
     bool czyPrzeczytal(int k){return przeczytali.contains(k);  }//sprawdzamy czy dany koles przeczytal nasza wiadomosc
     QString Czytaj(int id); //odczytujemy wiadomość ze wskazaniem na to
+    /**
+     * @brief usunInf usuwamy info o kims kto to czytal
+     * @param id id tego kogos
+     */
+    void usunInf(int id);
+
+    int iluPrzeczytalo(){return przeczytali.size();}
     
 //signals:
     

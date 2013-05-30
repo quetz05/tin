@@ -4,6 +4,10 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <stdio.h>
+#include "userconnection.h"
+
+
 #define PULA 128
 // pula jeszce nie odebranych połączeń na sockecie
 
@@ -55,11 +59,24 @@ void SerwerApp::run()
         struct sockaddr_in cliaddr;
         unsigned int addrlen=sizeof(cliaddr);
         int sock2=accept(sockfd,(struct sockaddr*)&cliaddr,&addrlen);
-        // jak się ktoś podłączy to tu go startujemy jupi
-        // ale chyba tu bedziemy chcieli jeszcze wymendzić od klienta jego id
-        //albo zrobić pierdyliard innych rzeczy hmmm
+        UserConnection *con= new UserConnection(sock2);
+        // uzytkownik moze dodac rozmowce
+        QObject::connect(con,SIGNAL(dodajeRozmowce(int ,int )),this,SLOT(dodajDoRozmowy(int ,int )));
+        // uzytkownik moze stworzyc rozmowe
+        QObject::connect(con,SIGNAL(tworzeRozmowe(int )),this,SLOT(stworzRozmowe(int )));
+        // uzytkownik moze opuscic rozmowe
+        QObject::connect(con,SIGNAL(opuszczamRozmowe(int  ,int )),this,SLOT(opuscRozmowe(int ,int )));
+        // uzytkownik moze dodac sie do zalogowanych jak juz sie zaloguje
+        QObject::connect(con,SIGNAL(dodajeSieDoListy(int,UserConnection*)),this,SLOT(dodajDoMapy(int,UserConnection*)));
+        // uzytkownik moze zostac dodany do rozmowy
+        QObject::connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*)));
+        //rozglaszamy ze ktos sie pojawil i czy mu sie udalo
+        QObject::connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)));
+        // uzytkownik zglasza ze wychodzi
+        QObject::connect(con,SIGNAL(finished(int)),this,SLOT(wyszedl(int)));
 
-
+        //RUDUDUDUDUDUDU wreszcie odpalamy nasz super watek
+        con->start();
     }
 
     //na koncu wychodzimy z apki
@@ -68,4 +85,47 @@ void SerwerApp::run()
 // slot informujacy nas o zamykaniu zatrzymujemy watki i czyscimy po sobie
 void SerwerApp::AboutToQuitApp()
 {
+}
+///zrobione
+void SerwerApp::dodajDoRozmowy(int idUsr, int idRozm)
+{
+    if(rozmowy.contains(idRozm)){
+        rozmowy[idRozm]->dodajSluchacza();
+        emit dodajeDoRozmowy(idUsr,idRozm,rozmowy[idRozm]);
+
+    }
+}
+///zrobione
+void SerwerApp::stworzRozmowe(int idUsr)
+{
+    int i =0;
+    while(rozmowy.contains(i))++i;
+    rozmowy.insert(i,new rozmowa());
+    emit dodajeDoRozmowy(idUsr,i,rozmowy[i]);
+}
+///zrobione
+void SerwerApp::opuscRozmowe(int idUsr, int idRozm)
+{
+    if(rozmowy.contains(idRozm)){
+        rozmowy[idRozm]->usunSluchacza(idUsr);
+    }
+    if(!(rozmowy[idRozm]->czySluchacze())) {
+        delete rozmowy[idRozm];
+        rozmowy.remove(idRozm);
+    }
+}
+///zorbione
+void SerwerApp::dodajDoMapy(int idUsr,UserConnection* usr)
+{
+    if(!users.contains(idUsr)){
+        users.insert(idUsr,usr);
+        emit dodanoUrzytkownika(idUsr,1);//ok
+    }
+    emit dodanoUrzytkownika(idUsr,0);// blad
+}
+///zrobione
+void SerwerApp::wyszedl(int idUsr)
+{//usuwamy urzytkownika jego destruktor powinien nam zrobic przysluge zamknac polaczenie
+    delete users[idUsr];
+    users.remove(idUsr);
 }

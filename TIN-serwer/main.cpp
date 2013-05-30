@@ -4,6 +4,7 @@
 #include <iostream>
 #include<cstdlib>
 #include "serwerapp.h"
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
