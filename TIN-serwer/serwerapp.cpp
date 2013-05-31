@@ -69,7 +69,7 @@ void SerwerApp::run()
         // uzytkownik moze dodac sie do zalogowanych jak juz sie zaloguje
         QObject::connect(con,SIGNAL(dodajeSieDoListy(int,UserConnection*)),this,SLOT(dodajDoMapy(int,UserConnection*)));
         // uzytkownik moze zostac dodany do rozmowy
-        QObject::connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*)));
+        QObject::connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*,bool)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*,bool)));
         //rozglaszamy ze ktos sie pojawil i czy mu sie udalo
         QObject::connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)));
         // uzytkownik zglasza ze wychodzi
@@ -91,7 +91,7 @@ void SerwerApp::dodajDoRozmowy(int idUsr, int idRozm)
 {
     if(rozmowy.contains(idRozm)){
         rozmowy[idRozm]->dodajSluchacza();
-        emit dodajeDoRozmowy(idUsr,idRozm,rozmowy[idRozm]);
+        emit dodajeDoRozmowy(idUsr,idRozm,rozmowy[idRozm],0);
 
     }
 }
@@ -101,7 +101,7 @@ void SerwerApp::stworzRozmowe(int idUsr)
     int i =0;
     while(rozmowy.contains(i))++i;
     rozmowy.insert(i,new rozmowa());
-    emit dodajeDoRozmowy(idUsr,i,rozmowy[i]);
+    emit dodajeDoRozmowy(idUsr,i,rozmowy[i],1);
 }
 ///zrobione
 void SerwerApp::opuscRozmowe(int idUsr, int idRozm)

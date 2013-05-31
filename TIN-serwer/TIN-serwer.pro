@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     serwerapp.cpp \
     rozmowa.cpp \
     message.cpp \
-    userconnection.cpp
+    userconnection.cpp \
+    ../wiadomosc.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramauzytkownikow.h \

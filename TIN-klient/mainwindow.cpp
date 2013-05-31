@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent, QString login) :
     ui(new Ui::MainWindow)
 {
     zaznaczonyZnajomy = NULL;
-    wysz = NULL;
+    //wysz = NULL;
     uzytkownik = login;
 
 
@@ -56,7 +56,7 @@ MainWindow::~MainWindow()
 
     delete zaznaczonyZnajomy;
     delete doda;
-    delete wysz;
+    //delete wysz;
     delete oknoInformacji;
     delete ui;
 }
@@ -75,8 +75,8 @@ void MainWindow::zakoncz()
 
 void MainWindow::wyszukiwarkaZnajomych()
 {
-    wysz = new wyszukiwarka(this);
-    wysz->show();
+    //wysz = new wyszukiwarka(this);
+    //wysz->show();
 }
 
 void MainWindow::rozpocznijRozmowe()

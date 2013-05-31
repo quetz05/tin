@@ -6,11 +6,16 @@
 
 Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
 {
-    naglowek.typ = (char*) typ;
-    naglowek.ID = (char*) htons(ID);
-    naglowek.trueRozmiar = 2*string.length();
-    naglowek.rozmiar = (char*) htons(naglowek.trueRozmiar);
+    naglowek.typ = new char;
+    *(naglowek.typ) = typ;
 
+
+    int *wsk = new int(htons(ID));
+    naglowek.ID = (char*)wsk;
+    naglowek.trueRozmiar = 2*string.length();
+
+    wsk = new int(htons(naglowek.trueRozmiar));
+    naglowek.rozmiar = (char*)wsk;
     gniazdo = gnia;
 
     //dane = new char[naglowek.trueRozmiar];

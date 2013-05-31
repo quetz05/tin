@@ -1,3 +1,4 @@
+/*
 #include "wyszukiwarka.h"
 #include "ui_wyszukiwarka.h"
 
@@ -13,3 +14,4 @@ wyszukiwarka::~wyszukiwarka()
 {
     delete ui;
 }
+*/
