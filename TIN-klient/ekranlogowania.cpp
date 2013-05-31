@@ -55,7 +55,6 @@ void ekranLogowania::zaloguj()
 
     else if(login!="" && haslo!="")
     {
-
             dostep = true;
 
             MainWindow *mw = new MainWindow (0,login);

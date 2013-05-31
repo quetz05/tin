@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     info.cpp \
     oknorozmowy.cpp \
     rejestracja.cpp \
-    ../wiadomosc.cpp
+    ../wiadomosc.cpp \
+    szyfrator.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     oknorozmowy.h \
     polaczenie.h \
     rejestracja.h \
-    ../wiadomosc.h
+    ../wiadomosc.h \
+    szyfrator.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \

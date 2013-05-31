@@ -16,8 +16,8 @@ class wyszukiwarka : public QDialog
     Q_OBJECT
 
 public:
-    explicit wyszukiwarka(QWidget *parent = 0);
-    ~wyszukiwarka();
+    explicit Wyszukiwarka(QWidget *parent = 0);
+    ~Wyszukiwarka();
 
 private:
     Ui::Wyszukiwarka *ui;
