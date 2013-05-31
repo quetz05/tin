@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wyszukiwarka</class>
- <widget class="QDialog" name="wyszukiwarka">
+ <class>Wyszukiwarka</class>
+ <widget class="QDialog" name="Wyszukiwarka">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -34,8 +34,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>191</width>
-     <height>160</height>
+     <width>211</width>
+     <height>166</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -90,7 +90,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>wyszukiwarka</receiver>
+   <receiver>Wyszukiwarka</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -106,7 +106,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>wyszukiwarka</receiver>
+   <receiver>Wyszukiwarka</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

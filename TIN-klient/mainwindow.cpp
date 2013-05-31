@@ -75,7 +75,7 @@ void MainWindow::zakoncz()
 
 void MainWindow::wyszukiwarkaZnajomych()
 {
-    wysz = new wyszukiwarka(this);
+    wysz = new Wyszukiwarka(this);
     wysz->show();
 }
 

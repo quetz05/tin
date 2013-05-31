@@ -52,7 +52,6 @@ void ekranLogowania::zaloguj()
 
     else if(login!="" && haslo!="")
     {
-
             dostep = true;
 
              MainWindow *w = new MainWindow (0,login);
@@ -60,8 +59,7 @@ void ekranLogowania::zaloguj()
              this->hide();
              w->show();
 
-             this->~ekranLogowania();
-
+             //this->~ekranLogowania();
     }
 
 }
