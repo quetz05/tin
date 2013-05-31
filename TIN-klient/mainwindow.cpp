@@ -5,17 +5,15 @@ MainWindow::MainWindow(QWidget *parent, QString login) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     zaznaczonyZnajomy = NULL;
-    wysz = NULL;
+    //wysz = NULL;
     uzytkownik = login;
+    bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
 
 
-
-    bramaZnajomych = new BramaZnajomych(QString(login));
     doda = new dodawanie(this,bramaZnajomych);
     oknoWysylania= new QFileDialog(this);
-
-
 
     ui->setupUi(this);
 
@@ -56,7 +54,7 @@ MainWindow::~MainWindow()
 
     delete zaznaczonyZnajomy;
     delete doda;
-    delete wysz;
+    //delete wysz;
     delete oknoInformacji;
     delete ui;
 }
@@ -75,8 +73,8 @@ void MainWindow::zakoncz()
 
 void MainWindow::wyszukiwarkaZnajomych()
 {
-    wysz = new Wyszukiwarka(this);
-    wysz->show();
+    //wysz = new wyszukiwarka(this);
+    //wysz->show();
 }
 
 void MainWindow::rozpocznijRozmowe()
@@ -154,15 +152,18 @@ void MainWindow::wczytajZnajomych()
 {
     ui->listaZnajomych->clear();
 
-    znajomi = bramaZnajomych->getListaZnajomych();
-
-    for(int i = 0; i<znajomi.length(); i++)
+    if(bramaZnajomych->getListaZnajomych().empty()==false)
     {
-        ui->listaZnajomych->addItem(znajomi[i].first +"  "+"|"+QString::number(znajomi[i].second)+"|");
-    }
+        znajomi = bramaZnajomych->getListaZnajomych();
 
-    ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
-    ui->listaZnajomych->item(1)->setForeground(Qt::darkGreen);
+        for(int i = 0; i<znajomi.length(); i++)
+        {
+            ui->listaZnajomych->addItem(znajomi[i].first +"  "+"|"+QString::number(znajomi[i].second)+"|");
+        }
+
+        ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
+        //ui->listaZnajomych->item(1)->setForeground(Qt::darkGreen);
+    }
 }
 
 void MainWindow::zakonczDodawanie()

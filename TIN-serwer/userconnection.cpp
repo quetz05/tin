@@ -48,7 +48,7 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
     }
 }
 ///@todo
-void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro)
+void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 {
     if(idUsr==this->myid){
         rozmowy.insert(idRozm,ro);
@@ -64,7 +64,18 @@ void UserConnection::run()
     qDebug() << "wystartowal watek urzytkownika\n";
     while(!wyjscie){ // 0 kod wyjscia
      // tu obróbka danych i wyslanie nowych wiadomosci
-
+        char wiad[4];
+        read(socket,wiad,1);
+        qDebug()<< wiad[1]<<"\n";
+        read(socket,wiad,4);
+        qDebug()<< ntohs(*((int*)wiad))<<"\n";
+        read(socket,wiad,4);
+        qDebug()<< ntohs(*((int*)wiad))<<"\n";
+        int rozmiar = *((int*)wiad);
+        for(int i=0;i<rozmiar;++i){
+            read(socket,wiad,2);
+            qDebug() << *((QChar*)wiad);
+        }
 
     }
     emit finished(myid);

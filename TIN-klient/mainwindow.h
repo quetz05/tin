@@ -54,7 +54,7 @@ public:
 private:
 
     Ui::MainWindow *ui;
-    Wyszukiwarka *wysz;
+    //wyszukiwarka *wysz;
     QListWidgetItem *zaznaczonyZnajomy;
     dodawanie *doda;
     QMap <QString,oknoRozmowy*> oknaRozmowy;

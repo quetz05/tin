@@ -11,7 +11,8 @@ ekranLogowania::ekranLogowania(QWidget *parent) :
     ui->setupUi(this);
 
     login = "";
-    dostep - false;
+
+    dostep = false;
 
     oknoInformacji = NULL;
     rej = new Rejestracja();
@@ -54,12 +55,11 @@ void ekranLogowania::zaloguj()
     {
             dostep = true;
 
-             MainWindow *w = new MainWindow (0,login);
+            MainWindow *mw = new MainWindow (0,login);
 
              this->hide();
-             w->show();
+             mw->show();
 
-             //this->~ekranLogowania();
     }
 
 }

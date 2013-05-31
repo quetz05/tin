@@ -106,7 +106,7 @@ public:
 };
 
 namespace Ui {
-    class Wyszukiwarka: public Ui_wyszukiwarka {};
+    class wyszukiwarka: public Ui_wyszukiwarka {};
 } // namespace Ui
 
 QT_END_NAMESPACE

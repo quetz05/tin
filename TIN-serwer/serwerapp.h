@@ -42,8 +42,9 @@ signals:
      * @param idUsr     urzytkownik dodany do rozmowy
      * @param idRozm rozmowa do ktorej ten zostal dodany
      * @param rozmowa wskaznik na rozmowe do ktorej go dodalismy
+     * @param czyTworze wskaznik mowiacy czy rozmowa jest tworzona a zatem czy mamy wyslac uzytkownikowi potwierdzenie stwozenia czy
      */
-    void dodajeDoRozmowy(int idUsr,int idRozm,rozmowa* rozmowa);
+    void dodajeDoRozmowy(int idUsr,int idRozm,rozmowa* rozmowa,bool czyTworze);
     /**
      * @brief dodanoUrzytkownika komunikat o zalogowaniu urzytkownika
      * @param idUsr identyfikator urzytkownika

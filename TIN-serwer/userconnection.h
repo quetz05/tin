@@ -77,7 +77,7 @@ public slots:
      * @brief dodanyDoRozmowy slocik ktory informuje nas ze dodano nas do rozmowy i przekazuje nam id rozmowy
      * @param idRozm take cos z takim czyms
      */
-    void dodanyDoRozmowy(int idUsr, int idRozm, rozmowa* ro);
+    void dodanyDoRozmowy(int idUsr, int idRozm, rozmowa* ro, bool czy);
 
     /**
      * @brief nowaWiadomosc powiadomienie o przyjsciu nowej wiadomosci
