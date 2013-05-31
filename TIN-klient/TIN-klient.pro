@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     ekranlogowania.cpp \
     info.cpp \
     oknorozmowy.cpp \
-    rejestracja.cpp
+    rejestracja.cpp \
+    ../wiadomosc.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \

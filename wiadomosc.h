@@ -1,6 +1,8 @@
 ﻿#ifndef WIADOMOSC_H
 #define WIADOMOSC_H
 
+#include <QString>
+
 /// TYPY NAGLOWKOW
 #define ODLACZ_UZYTKOWNIKA 1 //UWAGA!! uzywalne do konczenia petli obslugi
 #define REJESTRUJ 2
@@ -20,9 +22,10 @@
 class Naglowek
 {
     public:
-        char typ;
-        int ID;
-        int rozmiar;
+        char* typ;
+        char* ID;
+        char* rozmiar;
+        int trueRozmiar;
 };
 
 
@@ -33,16 +36,20 @@ class Wiadomosc
 public:
 
 
-    Wiadomosc() {ilosc = 1024;dane=new char[ilosc];}
-
-    Wiadomosc(int x) {ilosc = x;dane=new char[ilosc];}
+    Wiadomosc(char typ, unsigned int ID, QString string, int gnia);
     ~Wiadomosc(){delete [] dane;}
-    Naglowek naglowek;
 
-    private:
-        int ilosc;
-        char *dane;
+    Naglowek naglowek;
+    char *dane;
+    bool wyslijDoSerwera();
+
+    int gniazdo;
 
 };
+
+
+
+
+
 
 #endif // WIADOMOSC_H

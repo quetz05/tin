@@ -8,11 +8,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define TYP_PLIK_ODPYTAJ 1; // odpytaj użytkownik czy chcą odebrać plik
-#define TYP_PLIK_CHETNI 2; // poinformuj nadawcę, ilu jest chętnych
-#define TYP_PLIK_TRANSFER 3;// pakiet z plikiem
-#define TYP_REJESTRUJ 4; // rejestracja nowego użytkownika
-#define TYP_LOGUJ 5; // logowanie
 
 int gniazdo = 0;
 
