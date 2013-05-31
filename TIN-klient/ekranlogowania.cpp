@@ -2,7 +2,7 @@
 #include "ui_ekranlogowania.h"
 
 
-ekranLogowania::ekranLogowania(QWidget *parent) :
+ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     QDialog(parent),
     ui(new Ui::ekranLogowania)
 {
@@ -10,12 +10,14 @@ ekranLogowania::ekranLogowania(QWidget *parent) :
 
     ui->setupUi(this);
 
+    gniazdo = socket;
+
     login = "";
 
     dostep = false;
 
     oknoInformacji = NULL;
-    rej = new Rejestracja();
+    rej = new Rejestracja(0,gniazdo);
 
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
     connect(ui->pushZaloguj, SIGNAL(clicked()), this, SLOT(zaloguj()));

@@ -26,7 +26,7 @@ private slots:
     void zakonczRejestracje();
     
 public:
-    explicit ekranLogowania(QWidget *parent = 0);
+    explicit ekranLogowania(QWidget *parent = 0, int socket=0);
     ~ekranLogowania();
     QString pobierzLogin();
     bool dostep;
@@ -38,7 +38,7 @@ private:
 
     Rejestracja *rej;
     info *oknoInformacji;
-
+    int gniazdo;
     Ui::ekranLogowania *ui;
 };
 

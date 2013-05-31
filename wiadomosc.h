@@ -46,6 +46,7 @@ public:
     bool wyslijDoSerwera();
 
     int gniazdo;
+    QString trueDane;
 
 };
 

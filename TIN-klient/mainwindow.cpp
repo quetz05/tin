@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent, QString login) :
+MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent, QString login) :
     //wysz = NULL;
     uzytkownik = login;
     bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
+    gniazdo = socket;
 
 
     doda = new dodawanie(this,bramaZnajomych);
