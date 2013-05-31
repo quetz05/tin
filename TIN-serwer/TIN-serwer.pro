@@ -25,6 +25,7 @@ HEADERS  += mainwindow.h \
     serwerapp.h \
     userconnection.h \
     rozmowa.h \
-    message.h
+    message.h \
+    ../wiadomosc.h
 
 FORMS    += mainwindow.ui

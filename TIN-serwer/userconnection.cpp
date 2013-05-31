@@ -6,6 +6,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include "../wiadomosc.h"
 
 UserConnection::UserConnection(QObject *parent) :
     QThread(parent)
@@ -59,17 +60,13 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro)
 ///@todo
 void UserConnection::run()
 {
+    bool wyjscie=false;
     qDebug() << "wystartowal watek urzytkownika\n";
-    while(odbiezNaglowek()!=0){// 0 kod wyjscia
-     // tu obróbka danych
+    while(!wyjscie){ // 0 kod wyjscia
+     // tu obróbka danych i wyslanie nowych wiadomosci
+
 
     }
     emit finished(myid);
 
-}
-
-
-int UserConnection::odbiezNaglowek(int *dataSize)
-{
-    ///@todo jakies ready itd
 }
