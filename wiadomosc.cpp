@@ -10,11 +10,11 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
     *(naglowek.typ) = typ;
 
 
-    int *wsk = new int(htons(ID));
+    unsigned int *wsk = new unsigned int(htons(ID));
     naglowek.ID = (char*)wsk;
     naglowek.trueRozmiar = 2*string.length();
 
-    wsk = new int(htons(naglowek.trueRozmiar));
+    wsk = new unsigned int(htons(naglowek.trueRozmiar));
     naglowek.rozmiar = (char*)wsk;
     gniazdo = gnia;
 
