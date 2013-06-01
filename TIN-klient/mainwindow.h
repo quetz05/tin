@@ -6,10 +6,14 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <wyszukiwarka.h>
-#include <dodawanie.h>
 #include <QProcess>
-#include "oknorozmowy.h"
 #include <QFileDialog>
+
+#include "grupowarozmowa.h"
+#include "ekranlogowania.h"
+#include "serverconn.h"
+#include "oknorozmowy.h"
+#include "dodawanie.h"
 
 
 namespace Ui {
@@ -42,10 +46,17 @@ private slots:
 
     void zakonczDodawanie();
 
-    void zakonczRozmowe(const QString &rozmowca);
+    void zakonczRozmowe(int id);
 
     void wczytajZnajomych();
 
+    void rozpocznijGrupRozmowe();
+
+    void rozpocznijGrupWysylanie();
+    void zakonczGrupRoz();
+    void tworzGrupRoz(const QList<int> &);
+
+    void zaloguj(const QString&login);
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
@@ -57,13 +68,17 @@ private:
     //wyszukiwarka *wysz;
     QListWidgetItem *zaznaczonyZnajomy;
     dodawanie *doda;
-    QMap <QString,oknoRozmowy*> oknaRozmowy;
+    QMap <int,oknoRozmowy*> oknaRozmowy;
     QString uzytkownik;
     info *oknoInformacji;
     BramaZnajomych *bramaZnajomych;
     QList <Znajomy> znajomi;
     QFileDialog *oknoWysylania;
     int gniazdo;
+    GrupowaRozmowa *grRozmowa;
+    ekranLogowania *el;
+
+    ServerConn *con;
 
 
 

@@ -9,11 +9,19 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     zaznaczonyZnajomy = NULL;
     //wysz = NULL;
     uzytkownik = login;
-    bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
+    bramaZnajomych = NULL;
     gniazdo = socket;
+    grRozmowa = NULL;
+
+    el = new ekranLogowania(this,gniazdo);
+    el->show();
+
+    //con = new ServerConn();
+
+    connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
 
 
-    doda = new dodawanie(this,bramaZnajomych);
+    doda = NULL;
     oknoWysylania= new QFileDialog(this);
 
     ui->setupUi(this);
@@ -21,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
     connect(ui->pushRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijRozmowe()));
     connect(ui->pushWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijWysylanie()));
+
+    connect(ui->pushGrupRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijGrupRozmowe()));
+    connect(ui->pushGrupWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijGrupWysylanie()));
+
     connect(ui->pushSzukajZnajomych, SIGNAL(clicked()), this, SLOT(wyszukiwarkaZnajomych()));
 
     connect(ui->actionSzukajZnajomych, SIGNAL(triggered()), this, SLOT(wyszukiwarkaZnajomych()));
@@ -38,8 +50,6 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     ui->logoView->setScene(scene);
     ui->logoView->show();
 
-    //wczytywanie listy znajomych
-    wczytajZnajomych();
 
     ui->pushRozmawiaj->setEnabled(false);
     ui->pushWyslijPlik->setEnabled(false);
@@ -47,7 +57,6 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
 
     ui->pushGrupWyslijPlik->setEnabled(false);
-    ui->pushGrupRozmawiaj->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -67,6 +76,22 @@ void MainWindow::wyloguj()
     exit(12);
 }
 
+void MainWindow::zaloguj(const QString &login)
+{
+
+    el->hide();
+
+    uzytkownik = login;
+
+    bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
+    doda = new dodawanie(this,bramaZnajomych);
+
+    //wczytywanie listy znajomych
+    wczytajZnajomych();
+
+    this->show();
+}
+
 void MainWindow::zakoncz()
 {
     QApplication::exit();
@@ -80,17 +105,19 @@ void MainWindow::wyszukiwarkaZnajomych()
 
 void MainWindow::rozpocznijRozmowe()
 {
+    int id = 13;
 
-    QString rozmowca = zaznaczonyZnajomy->text();
+    QList <QString> rozmowca;
+    rozmowca.push_back(zaznaczonyZnajomy->text());
 
-    if(oknaRozmowy.count(rozmowca)==0)
+    if(oknaRozmowy.count(id)==0)
     {
 
-        oknaRozmowy.insert(rozmowca,new oknoRozmowy(this,uzytkownik,rozmowca));
+        oknaRozmowy.insert(id,new oknoRozmowy(this,id,rozmowca,gniazdo));
 
-        connect(oknaRozmowy.value(rozmowca), SIGNAL(koniecRozmowy(const QString &)), this, SLOT(zakonczRozmowe(QString)));
+        connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
 
-        oknaRozmowy.value(rozmowca)->show();
+        oknaRozmowy.value(id)->show();
     }
 
 }
@@ -98,7 +125,6 @@ void MainWindow::rozpocznijRozmowe()
 void MainWindow::rozpocznijWysylanie()
 {
     oknoWysylania->show();
-
 
 }
 
@@ -137,16 +163,16 @@ void MainWindow::zaznaczenieZnajomego(QListWidgetItem *znajomy)
     ui->pushUsun->setEnabled(true);
 
     //dostępność opcji rozmowy/wysłania pliku
-    if(zaznaczonyZnajomy->foreground()==Qt::darkGreen)
+  /*  if(zaznaczonyZnajomy->foreground()==Qt::darkGreen)
     {
         ui->pushRozmawiaj->setEnabled(true);
         ui->pushWyslijPlik->setEnabled(true);
     }
     else
-    {
-        ui->pushRozmawiaj->setEnabled(false);
-        ui->pushWyslijPlik->setEnabled(false);
-    }
+    {*/
+        ui->pushRozmawiaj->setEnabled(true);
+        ui->pushWyslijPlik->setEnabled(true);
+    //}
 }
 
 void MainWindow::wczytajZnajomych()
@@ -162,7 +188,7 @@ void MainWindow::wczytajZnajomych()
             ui->listaZnajomych->addItem(znajomi[i].first +"  "+"|"+QString::number(znajomi[i].second)+"|");
         }
 
-        ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
+        //ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
         //ui->listaZnajomych->item(1)->setForeground(Qt::darkGreen);
     }
 }
@@ -173,9 +199,68 @@ void MainWindow::zakonczDodawanie()
     doda->hide();
 }
 
-void MainWindow::zakonczRozmowe(const QString &rozmowca)
+void MainWindow::zakonczRozmowe(int id)
 {
-    QMap <QString, oknoRozmowy*>::Iterator it = oknaRozmowy.find(rozmowca);
-    delete oknaRozmowy.value(rozmowca);
+    QMap <int, oknoRozmowy*>::Iterator it = oknaRozmowy.find(id);
+    delete oknaRozmowy.value(id);
     oknaRozmowy.erase(it);
+}
+
+void MainWindow::rozpocznijGrupRozmowe()
+{
+    if(grRozmowa==NULL)
+    {
+        znajomi = bramaZnajomych->getListaZnajomych();
+
+        grRozmowa = new GrupowaRozmowa(this, znajomi);
+
+        connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
+        connect(grRozmowa, SIGNAL(tworz(const QList<int>&)), this, SLOT(tworzGrupRoz(QList<int>)));
+        grRozmowa->show();
+
+    }
+
+
+}
+
+void MainWindow::zakonczGrupRoz()
+{
+    delete grRozmowa;
+    grRozmowa = NULL;
+}
+
+
+void MainWindow::tworzGrupRoz(const QList<int> &lista)
+{
+       //wyslij do serwera liste i przyjmij ID rozmowy
+    int id = 17;
+
+
+
+    QList <QString> rozmowcy;
+    for(int i=0; i<lista.length(); i++)
+    {
+        for(int j=0; j<znajomi.length(); j++)
+            if(znajomi[j].second==lista[i])
+                rozmowcy.push_back(znajomi[j].first);
+    }
+
+
+    if(oknaRozmowy.count(id)==0)
+    {
+
+        oknaRozmowy.insert(id,new oknoRozmowy(this,id,rozmowcy,gniazdo));
+
+        connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
+
+        oknaRozmowy.value(id)->show();
+    }
+
+}
+
+void MainWindow::rozpocznijGrupWysylanie()
+{
+
+
+
 }

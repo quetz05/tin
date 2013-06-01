@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GrupowaRozmowa</class>
+ <widget class="QDialog" name="GrupowaRozmowa">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>506</width>
+    <height>329</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Rozmowa grupowa</string>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>491</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QListWidget" name="listPierwotne"/>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushDodaj">
+        <property name="text">
+         <string>&gt;&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushUsun">
+        <property name="text">
+         <string>&lt;&lt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QListWidget" name="listDodane"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushTworz">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>300</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Twórz rozmowę</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushAnuluj">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>300</y>
+     <width>80</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Anuluj</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>0</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Lista znajomych</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>0</y>
+     <width>121</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Rozmowa grupowa</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

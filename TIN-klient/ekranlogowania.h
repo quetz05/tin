@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include <QString>
-#include <mainwindow.h>
 #include "info.h"
 #include "rejestracja.h"
 
@@ -24,6 +23,9 @@ private slots:
     void zaloguj();
     void rejestruj();
     void zakonczRejestracje();
+
+signals:
+    void logowanie(const QString&);
     
 public:
     explicit ekranLogowania(QWidget *parent = 0, int socket=0);

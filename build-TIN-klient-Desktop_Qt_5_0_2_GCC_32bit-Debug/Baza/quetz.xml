@@ -1,14 +1,8 @@
 <znajomi>
- <znajomy ID="69" login="Beshya"/>
- <znajomy ID="6969" login="Blichar"/>
- <znajomy ID="989" login="Drow"/>
- <znajomy ID="15" login="Kaczaukę"/>
- <znajomy ID="3212" login="Lol"/>
- <znajomy ID="996" login="Misio"/>
- <znajomy ID="12" login="Modzello"/>
- <znajomy ID="13" login="Parówkę"/>
- <znajomy ID="666" login="Szatan"/>
- <znajomy ID="1234" login="Szop"/>
- <znajomy ID="99" login="Ygritte"/>
- <znajomy ID="1" login="Łosiauke"/>
+ <znajomy login="Beshya" ID="69"/>
+ <znajomy login="Drow" ID="989"/>
+ <znajomy login="GawkoZią" ID="321"/>
+ <znajomy login="Kaczaukę" ID="15"/>
+ <znajomy login="Rupert" ID="12"/>
+ <znajomy login="Łosiu" ID="1"/>
 </znajomi>

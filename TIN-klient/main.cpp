@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "../wiadomosc.h"
 #include "Baza/bramaznajomych.h"
-#include "ekranlogowania.h"
+#include "mainwindow.h"
 #include <QThread>
 #include "polaczenie.h"
 #include <QDebug>
@@ -16,26 +16,25 @@ int main(int argc, char *argv[])
     else
         qDebug() << "Brak połączenia z serwerem...";
 
-    Wiadomosc trolo(3,13,QString("Rududa Bartku? Czy nie rududa? Oto jest pytanie! ąęćśżź"),gniazdo);
 
-    trolo.wyslijDoSerwera();
 
 
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);
 
-    //ekranLogowania ek;
-    //ek.show();
 
-    Szyfrator szyfr;
+    MainWindow main;
+
+
+  /*  Szyfrator szyfr;
     char *sz = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
 
     qDebug() << sz;
 
     QString desz = szyfr.deSzyfruj(sz, 1);
 
-    qDebug() << desz;
+    qDebug() << desz;*/
 
-    return a.exec();
+  return a.exec();
 
 }

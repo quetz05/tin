@@ -24,6 +24,7 @@ private slots:
     //rejestracja
     void rejestruj();
     void wyjscie();
+    void wynikRejestracji(int wynik);
 
 signals:
     void zakoncz();
@@ -38,6 +39,7 @@ private:
     QString haslo;
     QString haslo2;
     int gniazdo;
+    Wiadomosc *wiad;
 
     info *oknoInformacji;
 };

@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     oknorozmowy.cpp \
     rejestracja.cpp \
     ../wiadomosc.cpp \
-    szyfrator.cpp
+    szyfrator.cpp \
+    grupowarozmowa.cpp \
+    serverconn.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
@@ -36,7 +38,9 @@ HEADERS  += mainwindow.h \
     polaczenie.h \
     rejestracja.h \
     ../wiadomosc.h \
-    szyfrator.h
+    szyfrator.h \
+    grupowarozmowa.h \
+    serverconn.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \
@@ -44,7 +48,8 @@ FORMS    += mainwindow.ui \
     ekranlogowania.ui \
     info.ui \
     oknorozmowy.ui \
-    rejestracja.ui
+    rejestracja.ui \
+    grupowarozmowa.ui
 
 RESOURCES += \
     Baza/znajomi_zasoby.qrc \
