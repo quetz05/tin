@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 
 
 
+
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);
 
