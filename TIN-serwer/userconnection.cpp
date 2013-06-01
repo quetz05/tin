@@ -10,6 +10,7 @@
 #include <QString>
 #include "Baza/bramauzytkownikow.h"
 #include "rozmowa.h"
+#include "szyfrator.h"
 
 UserConnection::UserConnection(QObject *parent) :
     QThread(parent)
@@ -77,6 +78,8 @@ void UserConnection::run()
      // tu obróbka danych i wyslanie nowych wiadomosci
         char wiad[4];
 
+
+        Szyfrator szyfr;
         read(socket,wiad,1);
         char typ = wiad[1];
         qDebug()<< wiad[1]<<"\n";
@@ -90,6 +93,7 @@ void UserConnection::run()
         QString login;
         QString hash;
         QString wiadomosc;
+        std::string wiadomosc2 = "";
         switch(typ){
             case ODLACZ_UZYTKOWNIKA: // skladamy samokrytyke i odlaczamy sie z serwera
                 wyjscie=true;
@@ -112,8 +116,14 @@ void UserConnection::run()
 
                 for(unsigned int i=0;i<rozmiar;++i){
                     read(socket,wiad,2);
-                    wiadomosc.append(*((QChar*)wiad));
+                    wiadomosc2.append(wiad);
+                    //wiadomosc.append(*((QChar*)wiad));
                 }// nazbieralismy nasza wiadomosc
+
+                qDebug() << wiadomosc2.c_str();
+                wiadomosc = szyfr.deSzyfruj(wiadomosc2.c_str(), 12);
+
+                qDebug() << wiadomosc;
                 rozmowy[id]->wyslijWiadomosc(wiadomosc);
                 break;
             case LOGUJ_UZYTKOWNIKA:

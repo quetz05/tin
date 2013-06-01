@@ -4,19 +4,20 @@
 #include <arpa/inet.h>
 #include <QChar>
 
-Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
+Wiadomosc::Wiadomosc(char typ, unsigned int ID, char* string, int gnia)
 {
     naglowek.typ = new char;
     *(naglowek.typ) = typ;
 
-    trueDane = string;
+    //trueDane = string;
 
 
 
     unsigned int *wsk = new unsigned int(htons(ID));
     naglowek.ID = (char*)wsk;
-    naglowek.trueRozmiar = 2*trueDane.length();
+    //naglowek.trueRozmiar = 2*trueDane.length();
 
+    naglowek.trueRozmiar = strlen(string);
     wsk = new unsigned int(htons(naglowek.trueRozmiar));
     naglowek.rozmiar = (char*)wsk;
     gniazdo = gnia;
@@ -24,10 +25,11 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
 
     //dane = new char[naglowek.trueRozmiar];
 
-    QChar *tempDane = trueDane.data();
+    //QChar *tempDane = trueDane.data();
 
+    this->dane = string;
 
-    dane = (char*) tempDane;
+    //dane = (char*) tempDane;
 
 
 }

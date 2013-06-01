@@ -38,7 +38,7 @@ class Wiadomosc
 public:
 
 
-    Wiadomosc(char typ, unsigned int ID, QString string, int gnia);
+    Wiadomosc(char typ, unsigned int ID, char* string, int gnia);
     ~Wiadomosc(){delete [] dane;}
 
     Naglowek naglowek;

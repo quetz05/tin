@@ -58,8 +58,8 @@ void Rejestracja::rejestruj()
 
     else
     {
-        wiad = new Wiadomosc( REJESTRUJ,login.length(),login + haslo,gniazdo );
-        wiad->wyslijDoSerwera();
+        //wiad = new Wiadomosc( REJESTRUJ,login.length(),login + haslo,gniazdo );
+        //wiad->wyslijDoSerwera();
 
 
         char wiad[4];

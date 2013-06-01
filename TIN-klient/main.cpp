@@ -25,14 +25,17 @@ int main(int argc, char *argv[])
     MainWindow main;
 
 
-  /*  Szyfrator szyfr;
+    Szyfrator szyfr;
     char *sz = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
 
     qDebug() << sz;
 
-    QString desz = szyfr.deSzyfruj(sz, 1);
+    Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, sz, gniazdo);
+    wiad.wyslijDoSerwera();
 
-    qDebug() << desz;*/
+    //QString desz = szyfr.deSzyfruj(sz, 1);
+
+    //qDebug() << desz;
 
   return a.exec();
 
