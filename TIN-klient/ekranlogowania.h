@@ -25,8 +25,10 @@ private slots:
     void zakonczRejestracje();
 
 
+
 public slots:
     void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
+    void sprawdzZaloguj(int);
 
 
 

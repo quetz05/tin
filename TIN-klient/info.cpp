@@ -1,5 +1,6 @@
 #include "info.h"
 #include "ui_info.h"
+#include <QDebug>
 
 info::info(QWidget *parent, QString info, bool ok) :
     QDialog(parent),
@@ -9,7 +10,7 @@ info::info(QWidget *parent, QString info, bool ok) :
 
     ui->setupUi(this);
 
-    connect(ui->pushOK, SIGNAL(clicked()), this, SLOT(zakoncz()));
+    connect(ui->pushOK, SIGNAL(clicked()), this, SLOT(close()));
     ui->informacja->setPlainText(info);
     ui->informacja->setReadOnly(true);
 
@@ -32,6 +33,7 @@ info::info(QWidget *parent, QString info, bool ok) :
 
     }
 
+    qDebug() << "robie nowe okno";
 
     this->show();
 
@@ -41,9 +43,4 @@ info::info(QWidget *parent, QString info, bool ok) :
 info::~info()
 {
     delete ui;
-}
-
-void info::zakoncz()
-{
-    this->~info();
 }
