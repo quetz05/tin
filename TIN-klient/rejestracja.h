@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "info.h"
+#include "../wiadomosc.h"
 
 namespace Ui {
 class Rejestracja;
@@ -28,7 +29,7 @@ signals:
     void zakoncz();
     
 public:
-    explicit Rejestracja(QWidget *parent = 0);
+    explicit Rejestracja(QWidget *parent = 0, int socket=0);
     ~Rejestracja();
     
 private:
@@ -36,6 +37,7 @@ private:
     QString login;
     QString haslo;
     QString haslo2;
+    int gniazdo;
 
     info *oknoInformacji;
 };

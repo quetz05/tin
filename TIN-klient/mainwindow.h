@@ -48,7 +48,7 @@ private slots:
 
     
 public:
-    explicit MainWindow(QWidget *parent = 0, QString login="");
+    explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
     ~MainWindow();
 
 private:
@@ -63,6 +63,7 @@ private:
     BramaZnajomych *bramaZnajomych;
     QList <Znajomy> znajomi;
     QFileDialog *oknoWysylania;
+    int gniazdo;
 
 
 

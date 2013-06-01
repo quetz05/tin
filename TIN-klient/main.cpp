@@ -6,6 +6,7 @@
 #include <QThread>
 #include "polaczenie.h"
 #include <QDebug>
+#include "szyfrator.h"
 
 
 int main(int argc, char *argv[])
@@ -16,14 +17,25 @@ int main(int argc, char *argv[])
         qDebug() << "Brak połączenia z serwerem...";
 
     Wiadomosc trolo(3,13,QString("Rududa Bartku? Czy nie rududa? Oto jest pytanie! ąęćśżź"),gniazdo);
-   trolo.wyslijDoSerwera();
+=======
+    trolo.wyslijDoSerwera();
 
+>>>>>>> 98dc08a1a413b5f9d65a46060a780dba57ef03fd
 
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);
 
-    ekranLogowania ek;
-    ek.show();
+    //ekranLogowania ek;
+    //ek.show();
+
+    Szyfrator szyfr;
+    char *sz = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
+
+    qDebug() << sz;
+
+    QString desz = szyfr.deSzyfruj(sz, 1);
+
+    qDebug() << desz;
 
     return a.exec();
 

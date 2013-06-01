@@ -26,6 +26,8 @@ class Naglowek
         char* ID;
         char* rozmiar;
         int trueRozmiar;
+
+        ~Naglowek(){delete typ; delete ID, delete rozmiar;}
 };
 
 
@@ -44,6 +46,7 @@ public:
     bool wyslijDoSerwera();
 
     int gniazdo;
+    QString trueDane;
 
 };
 

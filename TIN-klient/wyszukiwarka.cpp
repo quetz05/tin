@@ -2,7 +2,7 @@
 #include "wyszukiwarka.h"
 #include "ui_wyszukiwarka.h"
 
-wyszukiwarka::wyszukiwarka(QWidget *parent) :
+Wyszukiwarka::Wyszukiwarka(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Wyszukiwarka)
     {
@@ -10,7 +10,7 @@ wyszukiwarka::wyszukiwarka(QWidget *parent) :
         ui->setupUi(this);
     }
 
-wyszukiwarka::~wyszukiwarka()
+Wyszukiwarka::~Wyszukiwarka()
 {
     delete ui;
 }

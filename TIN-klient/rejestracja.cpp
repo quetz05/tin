@@ -1,7 +1,7 @@
 #include "rejestracja.h"
 #include "ui_rejestracja.h"
 
-Rejestracja::Rejestracja(QWidget *parent) :
+Rejestracja::Rejestracja(QWidget *parent, int socket) :
     QDialog(parent),
     ui(new Ui::Rejestracja)
 {
@@ -12,6 +12,7 @@ Rejestracja::Rejestracja(QWidget *parent) :
     login = "";
     haslo = "";
     haslo2 = "";
+    gniazdo = socket;
 
     oknoInformacji = NULL;
 
@@ -50,7 +51,14 @@ void Rejestracja::rejestruj()
 
 
     else
-        oknoInformacji = new info(this,"Rejestracja przebiegła pomyślnie! Witamy w ekipie!",true);
+    {
+        //Wiadomosc wiadom( REJESTRUJ,login.length(),login + haslo,gniazdo );
+        //wiadom.wyslijDoSerwera();
+
+
+
+        //oknoInformacji = new info(this,"Rejestracja przebiegła pomyślnie! Witamy w ekipie!",true);
+    }
 }
 
 void Rejestracja::czytajHaslo(const QString &pass)
