@@ -52,7 +52,7 @@ void Rejestracja::rejestruj()
 
     else
     {
-        //Wiadomosc wiadom( REJESTRUJ,login.length(),login + haslo,gniazdo );
+        Wiadomosc wiadom( REJESTRUJ,login.length(),login + haslo,gniazdo );
         //wiadom.wyslijDoSerwera();
 
 
