@@ -9,12 +9,17 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     zaznaczonyZnajomy = NULL;
     //wysz = NULL;
     uzytkownik = login;
-    bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
+    bramaZnajomych = NULL;
     gniazdo = socket;
     grRozmowa = NULL;
 
+    el = new ekranLogowania(this,gniazdo);
+    el->show();
 
-    doda = new dodawanie(this,bramaZnajomych);
+    connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
+
+
+    doda = NULL;
     oknoWysylania= new QFileDialog(this);
 
     ui->setupUi(this);
@@ -43,8 +48,6 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     ui->logoView->setScene(scene);
     ui->logoView->show();
 
-    //wczytywanie listy znajomych
-    wczytajZnajomych();
 
     ui->pushRozmawiaj->setEnabled(false);
     ui->pushWyslijPlik->setEnabled(false);
@@ -69,6 +72,22 @@ void MainWindow::wyloguj()
 {
     QProcess::startDetached(QApplication::applicationFilePath());
     exit(12);
+}
+
+void MainWindow::zaloguj(const QString &login)
+{
+
+    el->hide();
+
+    uzytkownik = login;
+
+    bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
+    doda = new dodawanie(this,bramaZnajomych);
+
+    //wczytywanie listy znajomych
+    wczytajZnajomych();
+
+    this->show();
 }
 
 void MainWindow::zakoncz()
@@ -142,16 +161,16 @@ void MainWindow::zaznaczenieZnajomego(QListWidgetItem *znajomy)
     ui->pushUsun->setEnabled(true);
 
     //dostępność opcji rozmowy/wysłania pliku
-    if(zaznaczonyZnajomy->foreground()==Qt::darkGreen)
+  /*  if(zaznaczonyZnajomy->foreground()==Qt::darkGreen)
     {
         ui->pushRozmawiaj->setEnabled(true);
         ui->pushWyslijPlik->setEnabled(true);
     }
     else
-    {
-        ui->pushRozmawiaj->setEnabled(false);
-        ui->pushWyslijPlik->setEnabled(false);
-    }
+    {*/
+        ui->pushRozmawiaj->setEnabled(true);
+        ui->pushWyslijPlik->setEnabled(true);
+    //}
 }
 
 void MainWindow::wczytajZnajomych()
@@ -167,7 +186,7 @@ void MainWindow::wczytajZnajomych()
             ui->listaZnajomych->addItem(znajomi[i].first +"  "+"|"+QString::number(znajomi[i].second)+"|");
         }
 
-        ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
+        //ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
         //ui->listaZnajomych->item(1)->setForeground(Qt::darkGreen);
     }
 }

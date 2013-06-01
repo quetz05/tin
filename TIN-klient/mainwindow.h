@@ -11,6 +11,7 @@
 #include "oknorozmowy.h"
 #include <QFileDialog>
 #include "grupowarozmowa.h"
+#include "ekranlogowania.h"
 
 
 namespace Ui {
@@ -52,6 +53,8 @@ private slots:
     void rozpocznijGrupWysylanie();
     void zakonczGrupRoz();
     void tworzGrupRoz(const QList<int> &);
+
+    void zaloguj(const QString&login);
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
@@ -71,6 +74,8 @@ private:
     QFileDialog *oknoWysylania;
     int gniazdo;
     GrupowaRozmowa *grRozmowa;
+
+    ekranLogowania *el;
 
 
 

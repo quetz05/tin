@@ -84,7 +84,7 @@ public:
 
     void retranslateUi(QDialog *ekranLogowania)
     {
-        ekranLogowania->setWindowTitle(QApplication::translate("ekranLogowania", "Super TIN-TIN", 0));
+        ekranLogowania->setWindowTitle(QApplication::translate("ekranLogowania", "Logowanie ST-T", 0));
         label->setText(QApplication::translate("ekranLogowania", "Login:", 0));
         label_2->setText(QApplication::translate("ekranLogowania", "Has\305\202o:", 0));
         pushZaloguj->setText(QApplication::translate("ekranLogowania", "Zaloguj", 0));

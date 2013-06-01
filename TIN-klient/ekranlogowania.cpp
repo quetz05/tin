@@ -57,10 +57,7 @@ void ekranLogowania::zaloguj()
     {
             dostep = true;
 
-            MainWindow *mw = new MainWindow (0,login);
-
-             this->hide();
-             mw->show();
+            emit logowanie(login);
 
     }
 

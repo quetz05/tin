@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "../wiadomosc.h"
 #include "Baza/bramaznajomych.h"
-#include "ekranlogowania.h"
+#include "mainwindow.h"
 #include <QThread>
 #include "polaczenie.h"
 #include <QDebug>
@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
 
-    ekranLogowania ek(0,gniazdo);
-    ek.show();
+    MainWindow main;
+
 
   /*  Szyfrator szyfr;
     char *sz = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
