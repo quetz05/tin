@@ -23,6 +23,14 @@ QString rozmowa::odbiezWiadomosc(int id)
     mutex.unlock();
     return QString("0");
 }
+// sprawdzamy czy czeka na nas jakas wiadomosc
+bool rozmowa::czyWiadomosc(int id)
+{
+    for(QVector<message>::Iterator it = messages.begin();it!=messages.end();++it){
+        if(it->czyPrzeczytal(id))   return true;
+    }
+    return false;
+}
 
 
 void rozmowa::wyslijWiadomosc(QString wiadomosc)
@@ -48,4 +56,5 @@ void rozmowa::usunSluchacza(int idUsr)
     }
 
     mutex.unlock();
+
 }

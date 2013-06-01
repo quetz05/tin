@@ -61,6 +61,7 @@ signals:
      * @brief nowaWiadomosc sygnal emitowany gdy pojawi sie nowa wiadomosc
      */
     void nowaWiadomosc();
+
 public slots:
     
 };

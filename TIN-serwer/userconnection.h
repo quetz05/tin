@@ -4,6 +4,7 @@
 #include <QThread>
 #include "rozmowa.h"
 #include <QMap>
+#include <QMutex>
 
 class UserConnection : public QThread
 {
@@ -12,15 +13,38 @@ private:
     bool zalogowany;
     int socket;
     int myid;
+    QMutex mutex; // muteks gwarantujacy nam ze tylko jeden pakiet na raz bedzie wysylany
+    // na wszelki wypadek bo sloty wywoluja sie w innym watku
+
+
     //trzeba nam jeszcze liste naszych rozmow zeby je jakos obslugiwac
     QMap<int,rozmowa*> rozmowy;
     /**
-     * @brief odbiezNaglowek funkcja wczytuje naglowek i go dekoduje
-     * @param dataSize wielkosc danych ktore sa przekazane w wiadomosci
-     * @return zwraca kod naglowka
+     * @brief sprzataj przygotowuje nas do wyjscia odlacza od rozmow
      */
-    int odbiezNaglowek(int* dataSize);
+    void sprzataj();
 
+    /**
+     * @brief rejestruj funkcja rejestrujaca ziomalka
+     * @param name nick ziomalka ktorego chcemy zarejestrowac
+     * @param pass hash hasla ziomalka :*
+     */
+    void rejestruj(QString name, QString pass);
+    /**
+     * @brief loguj funkcja logujaca nas w systemiku
+     * @param name nazwa uzytkownika do zalogowania
+     * @param pass haslo uzytkownika do zalogowania
+     */
+    void loguj(QString name, QString pass);
+    /**
+     * @brief wyslijPakiet wysyla pakiet przez nasz port thread safe
+     * @param typ typ pakietu do wyslania
+     * @param id lub inna wazna dana
+     * @param daneRozm rozmiar danych w ilosci znakow funkcja sama sobie przemnozy
+     * @param dane same dane moze byc null wtedy stwierdzamy
+     *        ze nie ma danych nawet jak rozmiar bedzie duzy
+     */
+    void wyslijPakiet(char typ, unsigned int id, unsigned int daneRozm, QString* dane);
 
 protected:
     /**
@@ -52,7 +76,7 @@ signals:
     void dodajeRozmowce(int idUsr,int idRozm);
     /**
      * @brief tworzRozmowe wysyła rządanie stworzenia nowej rozmowy
-     * @param idUsr podaje kto tworzy nową rozmowe nie wiem czy potrzebne @?
+     * @param idUsr podaje kto tworzy nową rozmowe
      * @return zwraca id nowej rozmowy
      */
     void tworzeRozmowe(int idUsr);

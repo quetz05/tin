@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     else
         qDebug() << "Brak połączenia z serwerem...";
 
-    Wiadomosc trolo(3,13,QString("Rududa Bartku? Czy nie rududa? Oto jest pytanie!"),gniazdo);
+    Wiadomosc trolo(3,13,QString("Rududa Bartku? Czy nie rududa? Oto jest pytanie! ąęćśżź"),gniazdo);
    trolo.wyslijDoSerwera();
 
 

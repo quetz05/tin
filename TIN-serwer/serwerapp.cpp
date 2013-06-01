@@ -113,6 +113,7 @@ void SerwerApp::opuscRozmowe(int idUsr, int idRozm)
         delete rozmowy[idRozm];
         rozmowy.remove(idRozm);
     }
+
 }
 ///zorbione
 void SerwerApp::dodajDoMapy(int idUsr,UserConnection* usr)
