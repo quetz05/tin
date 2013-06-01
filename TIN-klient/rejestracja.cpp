@@ -56,7 +56,7 @@ void Rejestracja::rejestruj()
 
     else
     {
-        wiad = new Wiadomosc( REJESTRUJ,login.length(),login + haslo,gniazdo );
+        wiad = new Wiadomosc( REJESTRUJ,2*login.length(),login + haslo,gniazdo );
         wiad->wyslijDoSerwera();
     }
 }
