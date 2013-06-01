@@ -176,6 +176,7 @@ void UserConnection::rejestruj(QString name, QString pass)
     }
     else{
         //tu wysylamy wiadomosc ze juz taki ktos jest i kij mu w oko
+        wyslijPakiet(REJESTRUJ,0,0,NULL);
     }
 }
 
