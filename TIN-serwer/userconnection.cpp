@@ -87,6 +87,9 @@ void UserConnection::run()
         unsigned int dlugosc =*((unsigned int*)wiad);
         qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
         unsigned int rozmiar = *((unsigned int*)wiad);
+        qDebug() <<"Jestem blisko...";
+        qDebug() <<typ;
+        qDebug() <<"Jestem blisko...";
         QString login;
         QString hash;
         QString wiadomosc;
@@ -95,6 +98,8 @@ void UserConnection::run()
                 wyjscie=true;
                 break;
             case REJESTRUJ:
+
+            qDebug() <<"Wszedłem w ciebie...";
 
                 //tu odczytujemy login i haslo
                 for(unsigned int i=0;i<id;++i){
