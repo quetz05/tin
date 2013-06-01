@@ -22,8 +22,8 @@ void ServerConn::doSetup(QThread &cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
-
-   char wiad[4];
+    qDebug() << "Dzialam se w tle";
+    char wiad[4];
 
     //czytanie typu
     read(gniazdo,wiad,1);
