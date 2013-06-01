@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <QDebug>
-#include "../wiadomosc.h"
+//#include "../wiadomosc.h"
 
 
 void ServerConn::doSetup(QThread &cThread)
@@ -38,7 +38,7 @@ void ServerConn::odbierajWiadomosci(int socket)
 
 
 
-    //rozpoznanie typu wiadomosci
+  /*  //rozpoznanie typu wiadomosci
     switch(typ){
         case REJESTRUJ:
 
@@ -83,9 +83,9 @@ void ServerConn::odbierajWiadomosci(int socket)
         case ROZPOCZNIJ_ROZMOWE:// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
             emit tworzeRozmowe(myid); // tu musimy pamietac aby potem rozruzniac zaproszenia
         // do naszych wlasnych rozmow
-            break;*/
+            break;
 
-    }
+    }*/
 
 
 

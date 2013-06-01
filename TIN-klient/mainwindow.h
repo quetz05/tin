@@ -6,12 +6,14 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <wyszukiwarka.h>
-#include <dodawanie.h>
 #include <QProcess>
-#include "oknorozmowy.h"
 #include <QFileDialog>
+
 #include "grupowarozmowa.h"
 #include "ekranlogowania.h"
+#include "serverconn.h"
+#include "oknorozmowy.h"
+#include "dodawanie.h"
 
 
 namespace Ui {
@@ -74,8 +76,9 @@ private:
     QFileDialog *oknoWysylania;
     int gniazdo;
     GrupowaRozmowa *grRozmowa;
-
     ekranLogowania *el;
+
+    ServerConn *con;
 
 
 

@@ -1,6 +1,7 @@
 #include "oknorozmowy.h"
 #include "ui_oknorozmowy.h"
 
+
 oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int socket) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)

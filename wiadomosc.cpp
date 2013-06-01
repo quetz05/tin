@@ -21,9 +21,6 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
     naglowek.rozmiar = (char*)wsk;
     gniazdo = gnia;
 
-
-    //dane = new char[naglowek.trueRozmiar];
-
     QChar *tempDane = trueDane.data();
 
 

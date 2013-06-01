@@ -2,7 +2,7 @@
 #define SERVERCONN_H
 
 #include <QThread>
-#include "rejestracja.h"
+//#include "polaczenie.h"
 
 
 class ServerConn: public QObject
@@ -10,7 +10,7 @@ class ServerConn: public QObject
     Q_OBJECT
 
 public:
-    explicit ServerConn(QObject parent = 0);
+    explicit ServerConn(QObject *parent = 0);
     void doSetup(QThread &cThread);
 
 signals:
@@ -20,15 +20,6 @@ signals:
 public slots:
 
     void odbierajWiadomosci(int socket);
-
-
-
-
-
-
-
-
-
 
 };
 
