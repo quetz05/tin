@@ -24,8 +24,15 @@ private slots:
     void rejestruj();
     void zakonczRejestracje();
 
+
+public slots:
+    void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
+
+
+
 signals:
     void logowanie(const QString&);
+    void SIGczyRejestracja(int);
     
 public:
     explicit ekranLogowania(QWidget *parent = 0, int socket=0);

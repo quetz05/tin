@@ -24,7 +24,10 @@ private slots:
     //rejestracja
     void rejestruj();
     void wyjscie();
+
+public slots:
     void wynikRejestracji(int wynik);
+
 
 signals:
     void zakoncz();

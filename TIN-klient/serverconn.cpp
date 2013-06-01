@@ -2,35 +2,41 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <QDebug>
-//#include "../wiadomosc.h"
+#include "../wiadomosc.h"
+
+
+ServerConn::ServerConn(QObject *parent, int socket) :
+    QObject(parent)
+{
+    gniazdo = socket;
+
+}
 
 
 void ServerConn::doSetup(QThread &cThread)
 {
 
-
-
-
+    connect(&cThread,SIGNAL(started()),this, SLOT(odbierajWiadomosci()));
 
 }
 
-void ServerConn::odbierajWiadomosci(int socket)
+void ServerConn::odbierajWiadomosci()
 {
 
    char wiad[4];
 
     //czytanie typu
-    read(socket,wiad,1);
-    char typ = wiad[1];
-    qDebug()<< QString(wiad[1])<<"\n";
+    read(gniazdo,wiad,1);
+    char typ = wiad[0];
+    qDebug()<< QString(wiad[0])<<"\n";
 
     //czytanie ID
-    read(socket,wiad,4);
+    read(gniazdo,wiad,4);
     unsigned int id = ntohs(*((unsigned int*)wiad));
     qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
 
     //czytanie dlugosci
-    read(socket,wiad,4);
+    read(gniazdo,wiad,4);
     unsigned int rozmiar = *((unsigned int*)wiad);
     qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
 
@@ -38,17 +44,17 @@ void ServerConn::odbierajWiadomosci(int socket)
 
 
 
-  /*  //rozpoznanie typu wiadomosci
-    switch(typ){
+    //rozpoznanie typu wiadomosci
+    switch(typ)
+    {
         case REJESTRUJ:
 
             //tu odczytujemy przydzielone ID
             //id to jest ID, reszta nas nie ineteresuje
         emit czyRejestracja(id);
 
-
         break;
-
+    }
        /* case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
             for(unsigned int i=0;i<rozmiar;++i)

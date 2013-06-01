@@ -97,12 +97,12 @@ void UserConnection::run()
             case REJESTRUJ:
 
                 //tu odczytujemy login i haslo
-                for(unsigned int i=0;i<id;++i){
+                for(unsigned int i=0;i<id/2;++i){
                     read(socket,wiad,2);
                     login.append(*((QChar*)wiad));
                 }
 
-                for(unsigned int i=0;i<rozmiar -id;++i){
+                for(unsigned int i=0;i<(rozmiar -id)/2;++i){
                     read(socket,wiad,2);
                     hash.append(*((QChar*)wiad));
                 }
@@ -120,12 +120,12 @@ void UserConnection::run()
                 // tu trzeba nam jakas funkcje do logowania
 
                 //tu odczytujemy login i haslo
-                for(unsigned int i=0;i<id;++i){
+                for(unsigned int i=0;i<id/2;++i){
                     read(socket,wiad,2);
                     login.append(*((QChar*)wiad));
                 }
 
-                for(unsigned int i=0;i<rozmiar -id;++i){
+                for(unsigned int i=0;i<(rozmiar -id)/2;++i){
                     read(socket,wiad,2);
                     hash.append(*((QChar*)wiad));
                 }
