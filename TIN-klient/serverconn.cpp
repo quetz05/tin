@@ -27,8 +27,9 @@ void ServerConn::odbierajWiadomosci()
 
     //czytanie typu
     read(gniazdo,wiad,1);
+    qDebug()<< "POSZEDŁ!"<<"\n";
     char typ = wiad[0];
-    qDebug()<< QString(wiad[0])<<"\n";
+    qDebug()<< QString("Naglowek: ") + QString(wiad[0])<<"\n";
 
     //czytanie ID
     read(gniazdo,wiad,4);

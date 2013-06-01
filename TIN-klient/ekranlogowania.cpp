@@ -19,6 +19,8 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     oknoInformacji = NULL;
     rej = new Rejestracja(0,gniazdo);
 
+    wiad = NULL;
+
     connect(this,SIGNAL(SIGczyRejestracja(int)),rej,SLOT(wynikRejestracji(int)));
 
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
@@ -58,6 +60,8 @@ void ekranLogowania::zaloguj()
 
     else if(login!="" && haslo!="")
     {
+
+
             dostep = true;
 
             emit logowanie(login);

@@ -44,6 +44,7 @@ private:
     QString login;
     QString haslo;
 
+    Wiadomosc *wiad;
 
     Rejestracja *rej;
     info *oknoInformacji;
