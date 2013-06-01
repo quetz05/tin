@@ -21,6 +21,7 @@ private:
     QMap<int,rozmowa*> rozmowy;
     /**
      * @brief sprzataj przygotowuje nas do wyjscia odlacza od rozmow
+     *      czy potrzebne?
      */
     void sprzataj();
 

@@ -17,10 +17,9 @@ int main(int argc, char *argv[])
         qDebug() << "Brak połączenia z serwerem...";
 
     Wiadomosc trolo(3,13,QString("Rududa Bartku? Czy nie rududa? Oto jest pytanie! ąęćśżź"),gniazdo);
-=======
+
     trolo.wyslijDoSerwera();
 
->>>>>>> 98dc08a1a413b5f9d65a46060a780dba57ef03fd
 
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);

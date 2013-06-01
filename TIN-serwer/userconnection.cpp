@@ -78,15 +78,15 @@ void UserConnection::run()
         char wiad[4];
 
         read(socket,wiad,1);
-        char typ = wiad[1];
-        qDebug()<< wiad[1]<<"\n";
+        char typ = wiad[0];
+        qDebug()<< wiad[0]<<"\n";
         read(socket,wiad,4);
         unsigned int id = ntohs(*((unsigned int*)wiad));
         qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
         read(socket,wiad,4);
         unsigned int dlugosc =*((unsigned int*)wiad);
         qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        unsigned int rozmiar = *((unsigned int*)wiad);
+        unsigned int rozmiar = ntohs(*((unsigned int*)wiad));
         QString login;
         QString hash;
         QString wiadomosc;
@@ -110,11 +110,11 @@ void UserConnection::run()
                 break;
             case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
-                for(unsigned int i=0;i<rozmiar;++i){
+                for(unsigned int i=0;i<((rozmiar/2));++i){
                     read(socket,wiad,2);
                     wiadomosc.append(*((QChar*)wiad));
                 }// nazbieralismy nasza wiadomosc
-                rozmowy[id]->wyslijWiadomosc(wiadomosc);
+                if(rozmowy.contains(id)) rozmowy[id]->wyslijWiadomosc(wiadomosc);
                 break;
             case LOGUJ_UZYTKOWNIKA:
                 // tu trzeba nam jakas funkcje do logowania

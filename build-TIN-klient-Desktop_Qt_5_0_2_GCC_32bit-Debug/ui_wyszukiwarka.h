@@ -24,7 +24,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_wyszukiwarka
+class Ui_Wyszukiwarka
 {
 public:
     QDialogButtonBox *buttonBox;
@@ -37,19 +37,19 @@ public:
     QLineEdit *lineEdit;
     QPushButton *pushButton;
 
-    void setupUi(QDialog *wyszukiwarka)
+    void setupUi(QDialog *Wyszukiwarka)
     {
-        if (wyszukiwarka->objectName().isEmpty())
-            wyszukiwarka->setObjectName(QStringLiteral("wyszukiwarka"));
-        wyszukiwarka->resize(357, 252);
-        buttonBox = new QDialogButtonBox(wyszukiwarka);
+        if (Wyszukiwarka->objectName().isEmpty())
+            Wyszukiwarka->setObjectName(QStringLiteral("Wyszukiwarka"));
+        Wyszukiwarka->resize(357, 252);
+        buttonBox = new QDialogButtonBox(Wyszukiwarka);
         buttonBox->setObjectName(QStringLiteral("buttonBox"));
         buttonBox->setGeometry(QRect(-70, 210, 341, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-        verticalLayoutWidget = new QWidget(wyszukiwarka);
+        verticalLayoutWidget = new QWidget(Wyszukiwarka);
         verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(10, 10, 191, 160));
+        verticalLayoutWidget->setGeometry(QRect(10, 10, 211, 166));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -87,26 +87,26 @@ public:
         verticalLayout->addWidget(pushButton);
 
 
-        retranslateUi(wyszukiwarka);
-        QObject::connect(buttonBox, SIGNAL(accepted()), wyszukiwarka, SLOT(accept()));
-        QObject::connect(buttonBox, SIGNAL(rejected()), wyszukiwarka, SLOT(reject()));
+        retranslateUi(Wyszukiwarka);
+        QObject::connect(buttonBox, SIGNAL(accepted()), Wyszukiwarka, SLOT(accept()));
+        QObject::connect(buttonBox, SIGNAL(rejected()), Wyszukiwarka, SLOT(reject()));
 
-        QMetaObject::connectSlotsByName(wyszukiwarka);
+        QMetaObject::connectSlotsByName(Wyszukiwarka);
     } // setupUi
 
-    void retranslateUi(QDialog *wyszukiwarka)
+    void retranslateUi(QDialog *Wyszukiwarka)
     {
-        wyszukiwarka->setWindowTitle(QApplication::translate("wyszukiwarka", "Wyszukiwarka znajomych", 0));
-        label_3->setText(QApplication::translate("wyszukiwarka", "Wpisz dane do wyszukiwania:", 0));
-        label->setText(QApplication::translate("wyszukiwarka", "Nick:", 0));
-        label_2->setText(QApplication::translate("wyszukiwarka", "ID:", 0));
-        pushButton->setText(QApplication::translate("wyszukiwarka", "Wyszukaj", 0));
+        Wyszukiwarka->setWindowTitle(QApplication::translate("Wyszukiwarka", "Wyszukiwarka znajomych", 0));
+        label_3->setText(QApplication::translate("Wyszukiwarka", "Wpisz dane do wyszukiwania:", 0));
+        label->setText(QApplication::translate("Wyszukiwarka", "Nick:", 0));
+        label_2->setText(QApplication::translate("Wyszukiwarka", "ID:", 0));
+        pushButton->setText(QApplication::translate("Wyszukiwarka", "Wyszukaj", 0));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class wyszukiwarka: public Ui_wyszukiwarka {};
+    class Wyszukiwarka: public Ui_Wyszukiwarka {};
 } // namespace Ui
 
 QT_END_NAMESPACE
