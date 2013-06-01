@@ -174,7 +174,7 @@ void UserConnection::run()
 void UserConnection::rejestruj(QString name, QString pass)
 {
     BramaUzytkownikow  *brama = BramaUzytkownikow::getSharedInstance();
-    if(brama->sprawdzUzytkownika(name)==0){
+    if(brama->sprawdzUzytkownika(name)<=0){
         int id =brama->dodajUzytkownika(name,pass);
         // i wysylamy takie cos ze sie u
         wyslijPakiet(REJESTRUJ,id,0,NULL);
@@ -192,7 +192,7 @@ void UserConnection::loguj(QString name, QString pass)
     // najpierw sprawdzamy czy gosc istnieje
     int id = brama->sprawdzUzytkownika(name);
     // jak taki jest to sprawdzamy czy sie haslo zgadza
-    if(id !=0){
+    if(id >0){
         QString haslo = brama->getHashPassword(id);
         if(haslo.compare(pass)){
             myid=id;
@@ -212,10 +212,12 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, unsigned int daneRo
     if(write(socket,&typ,1)==-1){
         qDebug()<<"Błąd przy nadawaniu typu nagłówka\n";
     }
+    id = htons(id);
     char *usrid = (char*)(&id);
     if(write(socket,usrid,4)==-1){
         qDebug()<<"Błąd przy nadawaniu id\n";
     }
+    daneRozm = htons(daneRozm);
     usrid = (char*)(&daneRozm);
     if(write(socket,&usrid,4)==-1){
         qDebug()<<"Błąd przy nadawaniu rozmiaru danych\n";
