@@ -16,9 +16,12 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     el = new ekranLogowania(this,gniazdo);
     el->show();
 
-    //con = new ServerConn();
-
     connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
+    connect(this, SIGNAL(elSIGczyRejestracja(int)), el, SLOT(rejCzyRejestracja(int)));
+
+    con = new ServerConn();
+
+    connect(con, SIGNAL(czyRejestracja(int)), this, SLOT(elCzyRejestracja(int)));
 
 
     doda = NULL;

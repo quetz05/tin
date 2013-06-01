@@ -57,6 +57,9 @@ private slots:
     void tworzGrupRoz(const QList<int> &);
 
     void zaloguj(const QString&login);
+
+    void elCzyRejestracja(int id) {emit elSIGczyRejestracja(id);}
+
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
@@ -78,7 +81,15 @@ private:
     GrupowaRozmowa *grRozmowa;
     ekranLogowania *el;
 
+public:
     ServerConn *con;
+
+signals:
+    //sygnal do ekranu logowania
+    void elSIGczyRejestracja(int);
+    //sygnal do okna rozmowy
+    void elSIGCzyRozmowa();
+    void elSIGCzyRozmowaGrup();
 
 
 

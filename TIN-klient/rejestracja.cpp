@@ -54,30 +54,10 @@ void Rejestracja::rejestruj()
     else if(haslo!=haslo2)
         oknoInformacji = new info(this,"Oba hasła niepodobne są do siebie... wpisz je proszę raz jeszcze.",false);
 
-
-
     else
     {
         wiad = new Wiadomosc( REJESTRUJ,login.length(),login + haslo,gniazdo );
         wiad->wyslijDoSerwera();
-
-
-        char wiad[4];
-
-         //czytanie typu
-         read(gniazdo,wiad,1);
-         qDebug()<< "POSZŁO!"<<"\n";
-         char typ = wiad[1];
-         qDebug()<< QString(wiad[1])<<"\n";
-
-         //czytanie ID
-         read(gniazdo,wiad,4);
-         unsigned int id = ntohs(*((unsigned int*)wiad));
-         qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-
-         if(typ == 2)
-            wynikRejestracji(id);
-
     }
 }
 
@@ -114,7 +94,11 @@ void Rejestracja::wyjscie()
 void Rejestracja::wynikRejestracji(int wynik)
 {
     if (!wynik==0)
+    {
         oknoInformacji = new info(this,QString("Rejestracja przebiegła pomyślnie! Twoje ID to") + QString(wynik) + QString("Witamy w ekipie!"),true);
+
+        //wyjscie();
+    }
     else
         oknoInformacji = new info(this,"Ten nick jest już zajęty... Wybierz inny.",false);
 }

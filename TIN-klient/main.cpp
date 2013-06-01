@@ -21,8 +21,15 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);
 
+    QThread odbiorSerwer;
 
-    MainWindow main;
+
+    MainWindow main(0,"",gniazdo);
+
+    main.con->doSetup(odbiorSerwer);
+    main.con->moveToThread(&odbiorSerwer);
+
+    odbiorSerwer.start();
 
 
   /*  Szyfrator szyfr;
