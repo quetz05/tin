@@ -101,7 +101,9 @@ void GrupowaRozmowa::tworzRozmowe()
         for(int i = 0; i<znajomiDodani.length(); i++)
             IDs.push_back(znajomiDodani[i].second);
 
-        tworz(IDs);
+        emit tworz(IDs);
+
+        emit wyjdz();
     }
 
 

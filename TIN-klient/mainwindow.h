@@ -43,7 +43,7 @@ private slots:
 
     void zakonczDodawanie();
 
-    void zakonczRozmowe(const QString &rozmowca);
+    void zakonczRozmowe(int id);
 
     void wczytajZnajomych();
 
@@ -51,7 +51,7 @@ private slots:
 
     void rozpocznijGrupWysylanie();
     void zakonczGrupRoz();
-    void tworzGrupRoz();
+    void tworzGrupRoz(const QList<int> &);
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
@@ -63,7 +63,7 @@ private:
     //wyszukiwarka *wysz;
     QListWidgetItem *zaznaczonyZnajomy;
     dodawanie *doda;
-    QMap <QString,oknoRozmowy*> oknaRozmowy;
+    QMap <int,oknoRozmowy*> oknaRozmowy;
     QString uzytkownik;
     info *oknoInformacji;
     BramaZnajomych *bramaZnajomych;

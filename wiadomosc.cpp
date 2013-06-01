@@ -35,6 +35,7 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
 
 bool Wiadomosc::wyslijDoSerwera()
 {
+
      if (write(gniazdo, this->naglowek.typ, 1) == -1)
      {
          qDebug() << "Błąd przy wysylaniu naglowka wiadomosci...";

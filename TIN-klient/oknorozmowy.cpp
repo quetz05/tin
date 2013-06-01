@@ -1,7 +1,7 @@
 #include "oknorozmowy.h"
 #include "ui_oknorozmowy.h"
 
-oknoRozmowy::oknoRozmowy(QWidget *parent, QString login, QList<QString> rozmowca, int socket) :
+oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int socket) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)
 {
@@ -14,15 +14,15 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, QString login, QList<QString> rozmowca
     /*@TODO funkcja read/ parę wątków*/
 
 
+    ID = id;
 
-    loginTwoj = login;
     rozmowcy = rozmowca;
     gniazdo = socket;
 
 
     QString tytul;
 
-    for(int i = 0; rozmowcy.length();i++)
+    for(int i = 0; i<rozmowcy.length();i++)
         tytul = tytul + rozmowcy[i] + ",";
 
     this->setWindowTitle(tytul);
@@ -62,9 +62,9 @@ void oknoRozmowy::wyslij()
 void oknoRozmowy::zakoncz()
 {
 
-       wiad = new Wiadomosc ( ZAKONCZ_ROZMOWE,ID,QString(""),gniazdo );
-       wiad->wyslijDoSerwera();
+       //wiad = new Wiadomosc ( ZAKONCZ_ROZMOWE,ID,QString(""),gniazdo );
+       //wiad->wyslijDoSerwera();
 
-       koniecRozmowy(loginRozmowcy);
+       koniecRozmowy(ID);
 }
 
