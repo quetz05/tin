@@ -38,6 +38,7 @@ private:
     QString haslo;
     QString haslo2;
     int gniazdo;
+    Wiadomosc *wiad;
 
     info *oknoInformacji;
 };

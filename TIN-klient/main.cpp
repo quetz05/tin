@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(znajomi_zasoby);
     QApplication a(argc, argv);
 
-    ekranLogowania ek;
+
+    ekranLogowania ek(0,gniazdo);
     ek.show();
 
   /*  Szyfrator szyfr;
@@ -33,6 +34,6 @@ int main(int argc, char *argv[])
 
     qDebug() << desz;*/
 
-    return a.exec();
+  return a.exec();
 
 }

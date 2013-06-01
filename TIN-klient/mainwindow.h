@@ -10,6 +10,7 @@
 #include <QProcess>
 #include "oknorozmowy.h"
 #include <QFileDialog>
+#include "grupowarozmowa.h"
 
 
 namespace Ui {
@@ -46,6 +47,11 @@ private slots:
 
     void wczytajZnajomych();
 
+    void rozpocznijGrupRozmowe();
+
+    void rozpocznijGrupWysylanie();
+    void zakonczGrupRoz();
+    void tworzGrupRoz();
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
@@ -64,6 +70,7 @@ private:
     QList <Znajomy> znajomi;
     QFileDialog *oknoWysylania;
     int gniazdo;
+    GrupowaRozmowa *grRozmowa;
 
 
 

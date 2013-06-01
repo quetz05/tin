@@ -22,7 +22,7 @@ private slots:
     void zakoncz();
 
 public:
-    explicit oknoRozmowy(QWidget *parent = 0, QString login = "", QString rozmowca="", int socket=0);
+    explicit oknoRozmowy(QWidget *parent = 0, QString login = "", QList <QString> rozmowca=*(new QList<QString>), int socket=0);
     ~oknoRozmowy();
 
 
@@ -39,6 +39,8 @@ private:
     //ID rozmowy
     int ID;
     int gniazdo;
+    Wiadomosc *wiad;
+    QList <QString> rozmowcy;
 };
 
 #endif // OKNOROZMOWY_H

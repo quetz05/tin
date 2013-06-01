@@ -1,6 +1,7 @@
 #include "rejestracja.h"
 #include "ui_rejestracja.h"
 
+
 Rejestracja::Rejestracja(QWidget *parent, int socket) :
     QDialog(parent),
     ui(new Ui::Rejestracja)
@@ -15,6 +16,7 @@ Rejestracja::Rejestracja(QWidget *parent, int socket) :
     gniazdo = socket;
 
     oknoInformacji = NULL;
+    wiad = NULL;
 
     connect(ui->pushRejestruj, SIGNAL(clicked()), this, SLOT(rejestruj()));
     connect(ui->pushAnuluj, SIGNAL(clicked()), this, SLOT(wyjscie()));
@@ -52,12 +54,12 @@ void Rejestracja::rejestruj()
 
     else
     {
-        Wiadomosc wiadom( REJESTRUJ,login.length(),login + haslo,gniazdo );
-        //wiadom.wyslijDoSerwera();
+        wiad = new Wiadomosc( REJESTRUJ,login.length(),login + haslo,gniazdo );
+        wiad->wyslijDoSerwera();
 
 
 
-        //oknoInformacji = new info(this,"Rejestracja przebiegła pomyślnie! Witamy w ekipie!",true);
+        oknoInformacji = new info(this,"Rejestracja przebiegła pomyślnie! Witamy w ekipie!",true);
     }
 }
 

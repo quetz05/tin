@@ -1,24 +1,31 @@
 #include "oknorozmowy.h"
 #include "ui_oknorozmowy.h"
 
-oknoRozmowy::oknoRozmowy(QWidget *parent, QString login, QString rozmowca, int socket) :
+oknoRozmowy::oknoRozmowy(QWidget *parent, QString login, QList<QString> rozmowca, int socket) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)
 {
     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-    Wiadomosc wiadom( ROZPOCZNIJ_ROZMOWE,0,QString(""),gniazdo );
-    wiadom.wyslijDoSerwera();
+   // Wiadomosc wiadom( ROZPOCZNIJ_ROZMOWE,0,QString(""),gniazdo );
+    //wiadom.wyslijDoSerwera();
+    wiad = NULL;
 
     /*@TODO funkcja read/ parę wątków*/
 
 
 
     loginTwoj = login;
-    loginRozmowcy = rozmowca;
+    rozmowcy = rozmowca;
     gniazdo = socket;
 
-    this->setWindowTitle(loginRozmowcy);
+
+    QString tytul;
+
+    for(int i = 0; rozmowcy.length();i++)
+        tytul = tytul + rozmowcy[i] + ",";
+
+    this->setWindowTitle(tytul);
 
     ui->setupUi(this);
 
@@ -55,8 +62,8 @@ void oknoRozmowy::wyslij()
 void oknoRozmowy::zakoncz()
 {
 
-        Wiadomosc wiadom( ZAKONCZ_ROZMOWE,ID,QString(""),gniazdo );
-        wiadom.wyslijDoSerwera();
+       wiad = new Wiadomosc ( ZAKONCZ_ROZMOWE,ID,QString(""),gniazdo );
+       wiad->wyslijDoSerwera();
 
        koniecRozmowy(loginRozmowcy);
 }

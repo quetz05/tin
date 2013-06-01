@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     uzytkownik = login;
     bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
     gniazdo = socket;
+    grRozmowa = NULL;
 
 
     doda = new dodawanie(this,bramaZnajomych);
@@ -21,6 +22,10 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
     connect(ui->pushRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijRozmowe()));
     connect(ui->pushWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijWysylanie()));
+
+    connect(ui->pushGrupRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijGrupRozmowe()));
+    connect(ui->pushGrupWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijGrupWysylanie()));
+
     connect(ui->pushSzukajZnajomych, SIGNAL(clicked()), this, SLOT(wyszukiwarkaZnajomych()));
 
     connect(ui->actionSzukajZnajomych, SIGNAL(triggered()), this, SLOT(wyszukiwarkaZnajomych()));
@@ -47,7 +52,6 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
 
     ui->pushGrupWyslijPlik->setEnabled(false);
-    ui->pushGrupRozmawiaj->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -81,16 +85,17 @@ void MainWindow::wyszukiwarkaZnajomych()
 void MainWindow::rozpocznijRozmowe()
 {
 
-    QString rozmowca = zaznaczonyZnajomy->text();
+    QList <QString> rozmowca;
+    rozmowca.push_back(zaznaczonyZnajomy->text());
 
-    if(oknaRozmowy.count(rozmowca)==0)
+    if(oknaRozmowy.count(rozmowca[0])==0)
     {
 
-        oknaRozmowy.insert(rozmowca,new oknoRozmowy(this,uzytkownik,rozmowca));
+        oknaRozmowy.insert(rozmowca[0],new oknoRozmowy(this,uzytkownik,rozmowca,gniazdo));
 
-        connect(oknaRozmowy.value(rozmowca), SIGNAL(koniecRozmowy(const QString &)), this, SLOT(zakonczRozmowe(QString)));
+        connect(oknaRozmowy.value(rozmowca[0]), SIGNAL(koniecRozmowy(const QString &)), this, SLOT(zakonczRozmowe(QString)));
 
-        oknaRozmowy.value(rozmowca)->show();
+        oknaRozmowy.value(rozmowca[0])->show();
     }
 
 }
@@ -178,4 +183,42 @@ void MainWindow::zakonczRozmowe(const QString &rozmowca)
     QMap <QString, oknoRozmowy*>::Iterator it = oknaRozmowy.find(rozmowca);
     delete oknaRozmowy.value(rozmowca);
     oknaRozmowy.erase(it);
+}
+
+void MainWindow::rozpocznijGrupRozmowe()
+{
+    if(grRozmowa==NULL)
+    {
+        grRozmowa = new GrupowaRozmowa(this, znajomi);
+
+        connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
+        connect(grRozmowa, SIGNAL(tworz(const QList<int>&)), this, SLOT(tworzGrupRoz()));
+        grRozmowa->show();
+
+    }
+
+
+}
+
+void MainWindow::zakonczGrupRoz()
+{
+    delete grRozmowa;
+    grRozmowa = NULL;
+}
+
+
+void MainWindow::tworzGrupRoz()
+{
+
+
+
+
+
+}
+
+void MainWindow::rozpocznijGrupWysylanie()
+{
+
+
+
 }
