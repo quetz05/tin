@@ -19,41 +19,29 @@
 
 
 
-class Naglowek
-{
-    public:
-        char typ;
-        unsigned int ID;
-        unsigned int rozmiar;
-        int trueRozmiar;
+typedef struct Naglowek {
 
-        ~Naglowek(){
-            //delete typ; delete ID, delete rozmiar;
-        }
-};
+    unsigned char typ;
+    unsigned int ID;
+    unsigned int trueRozmiar;
+
+} Naglowek;
+
 
 
 class Wiadomosc
 {
 
-
 public:
-
-
     Wiadomosc(char typ, unsigned int ID, QString string, int gnia);
-    ~Wiadomosc(){
-        if (dane)
-            delete [] dane;
-    }
+    ~Wiadomosc(){}
 
     Naglowek naglowek;
-    char *dane;
-    bool wyslijDoSerwera();
     bool wyslijDoSerwera(const char* co, unsigned int rozmiar);
+    bool wyslijDoSerwera() { return true; }
 
     int gniazdo;
     QString trueDane;
-
 };
 
 
