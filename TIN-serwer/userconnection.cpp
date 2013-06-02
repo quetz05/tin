@@ -228,7 +228,13 @@ void UserConnection::run()
             // do naszych wlasnych rozmow
                 break;
             case DODAJ_DO_ROZMOWY:
-                emit dodajeRozmowce(id,rozmiar);
+                sup = new char[rozmiar];
+                memset(sup, '\0', rozmiar);
+                read(socket, sup, rozmiar);
+                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
+                int idRozm = wiadomosc.toInt();
+                emit dodajeRozmowce(id,idRozm);
+                delete [] sup;
                 break;
             /*case PLIK_TRANSFER:
                 break;
@@ -299,7 +305,7 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     if(write(socket,wiadomosc,wielkosc)==-1){
         qDebug()<<"Błąd przy nadawaniu wiadomosci\n";
     }
-
+    delete [] wiadomosc;
     // to będzie z goła inaczej
     /*
     if(write(socket,&typ,1)==-1){
