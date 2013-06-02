@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <QDebug>
 #include "../wiadomosc.h"
+#include "szyfrator.h"
 
 ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
@@ -26,7 +27,7 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
-    qDebug() << "Dzialam se w tle";
+   /* qDebug() << "Dzialam se w tle";
     char wiad[4];
 
     //czytanie typu
@@ -43,9 +44,32 @@ void ServerConn::odbierajWiadomosci()
     read(gniazdo,wiad,4);
     unsigned int rozmiar = *((unsigned int*)wiad);
     //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+*/
+
+    char wiad[HEADER_SIZE];
+    char *sup;
+
+    read(gniazdo, wiad, HEADER_SIZE);
+
+    Szyfrator szyfr;
+    Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
+
+    qDebug() << "rozmiar == " << nagl.trueRozmiar;
+
+    char typ = nagl.typ;
+    unsigned int id = nagl.ID;
+    unsigned int rozmiar = nagl.trueRozmiar;
 
     QString wiadomosc;
 
+
+    sup = new char[rozmiar];
+
+    memset(sup, '\0', rozmiar);
+
+    read(gniazdo, sup, rozmiar);
+
+    wiadomosc = szyfr.deszyfrujDane(sup, NULL);
 
 
     //rozpoznanie typu wiadomosci
@@ -66,9 +90,17 @@ void ServerConn::odbierajWiadomosci()
         emit nowaRozmowa(id);
         break;
 
-   /* case  DODAJ_DO_ROZMOWY:
-        emit nowyRozmowca(id);
-        break;*/
+    case  DODAJ_DO_ROZMOWY:
+        emit odbiorRozmowy(id);
+        break;
+
+   case WYSLIJ_WIADOMOSC:
+
+        emit odebranaWiadomosc(id, wiadomosc);
+
+
+
+
     }
        /* case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
@@ -81,33 +113,7 @@ void ServerConn::odbierajWiadomosci()
             //odbior wiadomosci -> wysłanie do okna
 
             break;
-
-        case LOGUJ_UZYTKOWNIKA:
-            // tu trzeba nam jakas funkcje do logowania
-
-            //tu odczytujemy login i haslo
-            for(unsigned int i=0;i<id;++i)
-            {
-                read(socket,wiad,2);
-                login.append(*((QChar*)wiad));
-            }
-
-            for(unsigned int i=0;i<rozmiar -id;++i)
-            {
-                read(socket,wiad,2);
-                hash.append(*((QChar*)wiad));
-            }
-            loguj(login,hash);
-            break;
-
-
-        case ROZPOCZNIJ_ROZMOWE:// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
-            emit tworzeRozmowe(myid); // tu musimy pamietac aby potem rozruzniac zaproszenia
-        // do naszych wlasnych rozmow
-            break;
-
-    }*/
-
+*/
 
 
 }

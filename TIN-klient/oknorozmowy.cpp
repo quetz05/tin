@@ -1,32 +1,25 @@
 #include "oknorozmowy.h"
 #include "ui_oknorozmowy.h"
+#include <unistd.h>
+#include "szyfrator.h"
+#include <QDebug>
 
 
-oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int socket) :
+oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)
 {
     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-   // Wiadomosc wiadom( ROZPOCZNIJ_ROZMOWE,0,QString(""),gniazdo );
-    //wiadom.wyslijDoSerwera();
     wiad = NULL;
-
-    /*@TODO funkcja read/ parę wątków*/
-
 
     ID = id;
 
-    rozmowcy = rozmowca;
     gniazdo = socket;
 
+    uzytkownik = login;
 
-    QString tytul;
 
-    for(int i = 0; i<rozmowcy.length();i++)
-        tytul = tytul + rozmowcy[i] + ",";
-
-    this->setWindowTitle(tytul);
 
     ui->setupUi(this);
 
@@ -51,14 +44,21 @@ void oknoRozmowy::wyslij()
 {
     if(wiadomosc!="")
     {
-        //Wiadomosc wiadom( WYSLIJ_WIADOMOSC,ID,wiadomosc,gniazdo );
-        //wiadom.wyslijDoSerwera();
+        Szyfrator szyfr;
+        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID,uzytkownik +QString(": ")  + wiadomosc, gniazdo);
+        unsigned int wielkosc;
+        char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+        if(wiad.wyslijDoSerwera(wiadom, wielkosc)==-1){
+            qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
+        }
 
         //ui->oknoWiadomosci->append(loginTwoj + ": " + wiadomosc);
         ui->liniaWiadomosci->clear();
     }
 
 }
+
 
 void oknoRozmowy::zakoncz()
 {
@@ -68,4 +68,10 @@ void oknoRozmowy::zakoncz()
 
        koniecRozmowy(ID);
 }
+
+void oknoRozmowy::wyswietlWiadomosc(QString wiadomosc)
+{
+    ui->oknoWiadomosci->append(wiadomosc);
+}
+
 

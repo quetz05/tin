@@ -15,10 +15,15 @@ public:
 
 signals:
 
+
     void czyRejestracja(int);
     void czyZaloguj(int);
+    //sygnał, że tworzona jest nowa rozmowa
     void nowaRozmowa(int);
-    void nowyRozmowca(int);
+    //sygnał, że ktoś chce z nami rozmawiać
+    void odbiorRozmowy(int);
+
+    void odebranaWiadomosc(int,QString);
 
 public slots:
 

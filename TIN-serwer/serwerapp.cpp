@@ -6,7 +6,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include "userconnection.h"
-
+#include <unistd.h>
 
 #define PULA 128
 // pula jeszce nie odebranych połączeń na sockecie
@@ -23,6 +23,7 @@ SerwerApp::SerwerApp(QObject *parent) :
 //funkcja zamykajaca program
 void SerwerApp::quit()
 {
+    close(this->sockett);
     // po sprzatnieciu sygnalizujemy ze mozna nas zamknac
     emit finished();
 }
@@ -33,6 +34,7 @@ void SerwerApp::run()
 {
     int sockfd;
     // otwieramy nowe gniazdo
+
     if((sockfd =socket(AF_INET,SOCK_STREAM,0))<0){// Robimy ideanalnie jak w przykładnie
         qDebug()<< "error nie udalo sie otworzyc gniazd\n";
         quit();
@@ -53,6 +55,7 @@ void SerwerApp::run()
         quit();
         return;
     }
+    sockett = sockfd;
      qDebug() << "start serwera (rozpoczecie nasłuchu)\n";
     //nakurwiamy petle uruchamiajaca miliard watkow urzytkownikow
     while(1){

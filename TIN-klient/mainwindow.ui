@@ -72,16 +72,9 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QPushButton" name="pushRozmawiaj">
-       <property name="text">
-        <string>Rozmawiaj</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="pushGrupRozmawiaj">
        <property name="text">
-        <string>Rozmowa grupowa</string>
+        <string>Rozmowa</string>
        </property>
       </widget>
      </item>

@@ -14,6 +14,7 @@
 #include "serverconn.h"
 #include "oknorozmowy.h"
 #include "dodawanie.h"
+#include "szyfrator.h"
 
 
 namespace Ui {
@@ -34,7 +35,7 @@ private slots:
     //wyswietla okno do wyszukiwania znajomych
     void wyszukiwarkaZnajomych();
     //rozpoczyna rozmowe
-    void rozpocznijRozmowe();
+    //void rozpocznijRozmowe(QList<int>);
     //rozpoczyna wysylanie pliku
     void rozpocznijWysylanie();
     //wyswietla okno dodawania znajomego
@@ -52,9 +53,8 @@ private slots:
 
     void rozpocznijGrupRozmowe();
 
-    void rozpocznijGrupWysylanie();
     void zakonczGrupRoz();
-    void tworzGrupRoz(const QList<int> &);
+   // void tworzGrupRoz(const QList<int> &);
 
     void zaloguj(const QString&login);
 
@@ -62,7 +62,10 @@ private slots:
     void elCzyZaloguj(int id) {emit elSIGczyZaloguj(id);}
 
     void nowaRozmowa(int id);
-    void nowyRozmowca(int id);
+    void twojaNowaRozmowa(int id);
+
+    void odbierajWiadomosc(int id, QString wiadomosc);
+
 
 public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
@@ -88,7 +91,7 @@ private:
     int gniazdo;
     GrupowaRozmowa *grRozmowa;
     ekranLogowania *el;
-    Wiadomosc *wiad;
+
 
 
 signals:
@@ -99,6 +102,8 @@ signals:
     void elSIGCzyRozmowaGrup();
     //sygnal do zalogowania
     void elSIGczyZaloguj(int);
+
+    void grTwojaNowaRozmowa(int);
 
 
 

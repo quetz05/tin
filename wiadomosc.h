@@ -16,44 +16,32 @@
 #define PLIK_CHETNI 10
 #define PLIK_ODPYTAJ 11
 #define UZYTKOWNIK_DOSTEPNY 12 //PRZESYLAMY INFORMACJE O DOSTEPNYM UZYTKOWNIKU ID TEGO UZYTKOWNIKA RZOMIAR 1 DOSTEPNY 0 NIEDOSTEPNY
+#define NAWIAZ_BEZPIECZNE 13 // nawiazuje bezpieczne polaczenie
 
 
+typedef struct Naglowek {
 
-class Naglowek
-{
-    public:
-        char typ;
-        unsigned int ID;
-        unsigned int rozmiar;
-        int trueRozmiar;
+    unsigned char typ;
+    unsigned int ID;
+    unsigned int trueRozmiar;
 
-        ~Naglowek(){
-            //delete typ; delete ID, delete rozmiar;
-        }
-};
+} Naglowek;
+
 
 
 class Wiadomosc
 {
 
-
 public:
-
-
     Wiadomosc(char typ, unsigned int ID, QString string, int gnia);
-    ~Wiadomosc(){
-        if (dane)
-            delete [] dane;
-    }
+    ~Wiadomosc(){}
 
     Naglowek naglowek;
-    char *dane;
-    bool wyslijDoSerwera();
     bool wyslijDoSerwera(const char* co, unsigned int rozmiar);
+    bool wyslijDoSerwera() { return true; }
 
     int gniazdo;
     QString trueDane;
-
 };
 
 

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <szyfrator.h>
 
 
 Rejestracja::Rejestracja(QWidget *parent, int socket) :
@@ -51,12 +52,6 @@ void Rejestracja::rejestruj()
         oknoInformacji = NULL;
     }
 
-   /* if(wiad!=NULL)
-    {
-        delete wiad;
-        wiad=NULL;
-    }*/
-
     if(login=="")
         oknoInformacji = new info(this,"Nie no, bez nicku to nie ma rejestracji!",false);
 
@@ -68,8 +63,15 @@ void Rejestracja::rejestruj()
 
     else
     {
-        //wiad = new Wiadomosc( REJESTRUJ,2*login.length(),login + haslo,gniazdo );
-        //wiad->wyslijDoSerwera();
+
+        Szyfrator szyfr;
+        Wiadomosc wiad(REJESTRUJ,2*login.length(),login + haslo,gniazdo );
+        unsigned int wielkosc;
+        char *wiadomosc = szyfr.szyfruj(&wiad,NULL,&wielkosc);
+
+        if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
+            qDebug()<<"Błąd przy rejestracji";
+        }
     }
 }
 
