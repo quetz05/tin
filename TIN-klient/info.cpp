@@ -10,7 +10,8 @@ info::info(QWidget *parent, QString info, bool ok) :
 
     ui->setupUi(this);
 
-    connect(ui->pushOK, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->pushOK, SIGNAL(clicked()), this, SLOT(zakoncz()));
+    connect(this, SIGNAL(SIGzamknij()), parent, SLOT (koniecInfo()));
     ui->informacja->setPlainText(info);
     ui->informacja->setReadOnly(true);
 
@@ -43,4 +44,9 @@ info::info(QWidget *parent, QString info, bool ok) :
 info::~info()
 {
     delete ui;
+}
+
+void info::zakoncz()
+{
+    emit SIGzamknij();
 }

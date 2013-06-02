@@ -29,6 +29,7 @@ private slots:
 public slots:
     void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
     void sprawdzZaloguj(int);
+    void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
 
 
 

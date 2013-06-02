@@ -15,10 +15,15 @@ public:
     explicit info(QWidget *parent = 0, QString info = "", bool ok = false);
     ~info();
 
+signals:
+    void SIGzamknij();
 
+public slots:
+    void zakoncz();
     
 private:
     Ui::info *ui;
+
 };
 
 #endif // INFO_H
