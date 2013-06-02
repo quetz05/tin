@@ -103,7 +103,7 @@ void UserConnection::run()
 
         Szyfrator szyfr;
 
-        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, 1);
+        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
 
         qDebug() << "rozmiar == " << nagl.trueRozmiar;
 
@@ -165,9 +165,9 @@ void UserConnection::run()
                 sup = new char[dlugosc];
                 memset(sup, '\0', dlugosc);
 
-                read(socket, sup, dlugosc);
+                qDebug() << "read == " << read(socket, sup, dlugosc);
 
-                wiadomosc = szyfr.deszyfrujDane(sup, 1);
+                wiadomosc = szyfr.deszyfrujDane(sup, NULL, dlugosc);
 
                 qDebug() << "got == " << wiadomosc;
 

@@ -11,7 +11,7 @@
 
 int main(int argc, char *argv[])
 {
-    if(polacz((char*)"127.0.0.1",1111))
+    if(polacz((char*)"127.0.0.1",1112))
         qDebug() << "Połączony z serwerem...";
     else
         qDebug() << "Brak połączenia z serwerem...";
@@ -31,24 +31,27 @@ int main(int argc, char *argv[])
 
     Szyfrator szyfr;
 
-    //char *w = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
-    //qDebug() << szyfr.deSzyfruj(w, 1);
+    Klucz n = szyfr.wygenerujKlucz();
+    QString s = szyfr.kluczDoStringa(&n);
+    qDebug() << s;
+    n = szyfr.stringDoKlucz(s);
 
-    unsigned int size;
+    /*unsigned int size;
 
     Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("to jest jakiś bardzo długi tekst, który zaraz spróbuje przesłać sobie ja :)"), gniazdo);
-    char *sz = szyfr.szyfruj(&wiad, 1, &size);
-
-    qDebug() << "proba wyslania";
+    char *sz = szyfr.szyfruj(&wiad, NULL, &size);
 
     wiad.wyslijDoSerwera(sz, size);
 
+    Wiadomosc wiad2(WYSLIJ_WIADOMOSC, 12, QString("zażółć gęślą jaźń"), gniazdo);
+    char *sz2 = szyfr.szyfruj(&wiad2, NULL, &size);
 
-    //wiad.wyslijDoSerwera();
+    wiad.wyslijDoSerwera(sz2, size);
 
-    //QString desz = szyfr.deSzyfruj(sz, 1);
+    Wiadomosc wiad3(WYSLIJ_WIADOMOSC, 12, QString(""), gniazdo);
+    char *sz3 = szyfr.szyfruj(&wiad3, NULL, &size);
 
-    //qDebug() << desz;
+    wiad.wyslijDoSerwera(sz3, size);*/
 
   int i = a.exec();
 
