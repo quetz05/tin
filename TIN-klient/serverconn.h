@@ -15,8 +15,10 @@ public:
 
 signals:
 
-    void czyRejestracja(int ID);
-    void zaloguj();
+    void czyRejestracja(int);
+    void czyZaloguj(int);
+    void nowaRozmowa(int);
+    void nowyRozmowca(int);
 
 public slots:
 

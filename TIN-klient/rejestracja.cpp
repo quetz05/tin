@@ -45,6 +45,18 @@ Rejestracja::~Rejestracja()
 
 void Rejestracja::rejestruj()
 {
+   /* if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }*/
+
+   /* if(wiad!=NULL)
+    {
+        delete wiad;
+        wiad=NULL;
+    }*/
+
     if(login=="")
         oknoInformacji = new info(this,"Nie no, bez nicku to nie ma rejestracji!",false);
 
@@ -93,11 +105,18 @@ void Rejestracja::wyjscie()
 
 void Rejestracja::wynikRejestracji(int wynik)
 {
+
+    /*if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }*/
+
     if (!wynik==0)
     {
         oknoInformacji = new info(this,QString("Rejestracja przebiegła pomyślnie! Twoje ID to") + QString(wynik) + QString("Witamy w ekipie!"),true);
 
-        //wyjscie();
+        wyjscie();
     }
     else
         oknoInformacji = new info(this,"Ten nick jest już zajęty... Wybierz inny.",false);

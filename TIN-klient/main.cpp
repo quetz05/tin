@@ -64,6 +64,11 @@ int main(int argc, char *argv[])
 
     //qDebug() << desz;
 
-  return a.exec();
+  int i = a.exec();
+
+  Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+  wiad.wyslijDoSerwera();
+
+      return 0;
 
 }

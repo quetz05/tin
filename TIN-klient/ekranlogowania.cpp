@@ -1,5 +1,6 @@
 #include "ekranlogowania.h"
 #include "ui_ekranlogowania.h"
+#include <QDebug>
 
 
 ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
@@ -19,6 +20,8 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     oknoInformacji = NULL;
     rej = new Rejestracja(0,gniazdo);
 
+    wiad = NULL;
+
     connect(this,SIGNAL(SIGczyRejestracja(int)),rej,SLOT(wynikRejestracji(int)));
 
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
@@ -37,19 +40,34 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
 
 ekranLogowania::~ekranLogowania()
 {
-    oknoInformacji = NULL;
-    delete oknoInformacji;
+   /* if(oknoInformacji)
+        delete oknoInformacji;*/
+
     delete ui;
 }
 
 void ekranLogowania::zakoncz()
 {
+    /*if(wiad)
+    {
+        delete wiad;
+        wiad = NULL;
+    }*/
+
+    wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+    wiad->wyslijDoSerwera();
 
     QApplication::exit();
 }
 
 void ekranLogowania::zaloguj()
 {
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
     if(login=="")
         oknoInformacji = new info(this, "Nie wstydź się! Wpisz login.");
 
@@ -58,10 +76,14 @@ void ekranLogowania::zaloguj()
 
     else if(login!="" && haslo!="")
     {
-            dostep = true;
+        /*if(wiad)
+        {
+            delete wiad;
+            wiad = NULL;
 
-            emit logowanie(login);
-
+        }*/
+        wiad = new Wiadomosc (LOGUJ_UZYTKOWNIKA, 2*login.length(),login + haslo,gniazdo);
+        wiad->wyslijDoSerwera();
     }
 
 }
@@ -94,4 +116,40 @@ void ekranLogowania::rejestruj()
 void ekranLogowania::zakonczRejestracje()
 {
     rej->hide();
+}
+
+void ekranLogowania::sprawdzZaloguj(int id)
+{
+    qDebug() << "WIADOMOSC WRACA!";
+    qDebug() << id;
+
+    if (!id==0)
+    {
+        if(oknoInformacji)
+        {
+            delete oknoInformacji;
+            oknoInformacji = NULL;
+        }
+
+        oknoInformacji = new info(this,QString("Witaj ponownie ") + login,true);
+
+        emit logowanie(login);
+
+    }
+    else
+    {
+        if(oknoInformacji)
+        {
+            delete oknoInformacji;
+            oknoInformacji = NULL;
+        }
+
+        oknoInformacji = new info(this,"Błędny login lub hasło - spróbuj ponownie.",false);
+        haslo="";
+        login="";
+        ui->textLogin->clear();
+        ui->textPass->clear();
+
+
+    }
 }

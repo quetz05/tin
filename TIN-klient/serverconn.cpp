@@ -33,17 +33,17 @@ void ServerConn::odbierajWiadomosci()
     //czytanie typu
     read(gniazdo,wiad,1);
     char typ = wiad[0];
-    qDebug()<< QString(wiad[0])<<"\n";
+    qDebug()<< QString("Naglowek: ") + QString(wiad[0])<<"\n";
 
     //czytanie ID
     read(gniazdo,wiad,4);
     unsigned int id = ntohs(*((unsigned int*)wiad));
-    qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+   // qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
 
     //czytanie dlugosci
     read(gniazdo,wiad,4);
     unsigned int rozmiar = *((unsigned int*)wiad);
-    qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+    //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
 
     QString wiadomosc;
 
@@ -54,11 +54,22 @@ void ServerConn::odbierajWiadomosci()
     {
         case REJESTRUJ:
 
-            //tu odczytujemy przydzielone ID
-            //id to jest ID, reszta nas nie ineteresuje
         emit czyRejestracja(id);
-
         break;
+
+    case LOGUJ_UZYTKOWNIKA:
+
+        emit czyZaloguj(id);
+        break;
+
+    case ROZPOCZNIJ_ROZMOWE:
+
+        emit nowaRozmowa(id);
+        break;
+
+   /* case  DODAJ_DO_ROZMOWY:
+        emit nowyRozmowca(id);
+        break;*/
     }
        /* case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
