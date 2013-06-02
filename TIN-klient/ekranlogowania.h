@@ -17,21 +17,26 @@ class ekranLogowania : public QDialog
 
 private slots:
 
+    //czyta login z pola tekstowego
     void czytajLogin(QString);
+    //czyta hasło z pola tekstowego
     void czytajHaslo(QString);
+    //konczy program
     void zakoncz();
+    //wysyła wiadomość do serwera w celu zalogowania uzytkownika
     void zaloguj();
+    //wysyła wiadomość do serwera w celu rejestracji
     void rejestruj();
+    //zamyka okno rejestracji (chowa de facto)
     void zakonczRejestracje();
 
-
-
 public slots:
+    //przesyła sygnał do okna rejestracji z wynikiem operacji (ID)
     void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
+    //sprawdza czy zalogowanie jest mozliwe (poprawne)
     void sprawdzZaloguj(int);
+    //niszczy okno informacji
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
-
-
 
 signals:
     void logowanie(const QString&);
@@ -41,7 +46,6 @@ public:
     explicit ekranLogowania(QWidget *parent = 0, int socket=0);
     ~ekranLogowania();
     QString pobierzLogin();
-    bool dostep;
     
 private:
     QString login;
