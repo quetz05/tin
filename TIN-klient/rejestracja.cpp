@@ -65,7 +65,10 @@ void Rejestracja::rejestruj()
     {
 
         Szyfrator szyfr;
-        Wiadomosc wiad(REJESTRUJ,login.length(),login + haslo,gniazdo );
+        QString s = "";
+        s.append(login);
+        s.append(haslo);
+        Wiadomosc wiad(REJESTRUJ,login.length(),s,gniazdo );
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,NULL,&wielkosc);
 

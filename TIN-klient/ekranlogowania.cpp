@@ -28,8 +28,6 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     connect(ui->pushZaloguj, SIGNAL(clicked()), this, SLOT(zaloguj()));
     connect(ui->pushRejestruj, SIGNAL(clicked()), this, SLOT(rejestruj()));
 
-
-
     connect(ui->textPass, SIGNAL(textChanged(const QString &)), this, SLOT(czytajHaslo(QString)));
     connect(ui->textLogin, SIGNAL(textChanged(const QString &)), this, SLOT(czytajLogin(QString)));
 
@@ -73,7 +71,10 @@ void ekranLogowania::zaloguj()
     {
 
         Szyfrator szyfr;
-        Wiadomosc wiad(LOGUJ_UZYTKOWNIKA, login.length(),login + haslo,gniazdo);
+        QString s = "";
+        s.append(login);
+        s.append(haslo);
+        Wiadomosc wiad(LOGUJ_UZYTKOWNIKA, login.length(),s,gniazdo);
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 

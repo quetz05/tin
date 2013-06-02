@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
         qDebug() << "Brak połączenia z serwerem...";
 
     Q_INIT_RESOURCE(znajomi_zasoby);
+    Q_INIT_RESOURCE(images);
 
     QApplication a(argc, argv);
 
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
     n = szyfr.stringDoKlucz(s);
 
     unsigned int size;
-
+/*
     Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("to jest jakiś bardzo długi tekst, który zaraz spróbuje przesłać sobie ja :)"), gniazdo);
     char *sz = szyfr.szyfruj(&wiad, NULL, &size);
 
@@ -55,7 +56,8 @@ int main(int argc, char *argv[])
   int i = a.exec();
 
   //Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-  //wiad.wyslijDoSerwera();
+  //wiad.wysl   ijDoSerwera();
+
 
       return i;
 
