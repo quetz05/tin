@@ -18,7 +18,7 @@ info::info(QWidget *parent, QString info, bool ok) :
     if(ok)
     {
         QGraphicsScene *scene =  new QGraphicsScene();
-        QPixmap pixmap(qApp->applicationDirPath() + "/images/ok.jpg");
+        QPixmap pixmap(":/images/ok.jpg");
         scene->addPixmap(pixmap);
         ui->picture->setScene(scene);
         ui->picture->show();
@@ -27,7 +27,7 @@ info::info(QWidget *parent, QString info, bool ok) :
     else
     {
         QGraphicsScene *scene =  new QGraphicsScene();
-        QPixmap pixmap(qApp->applicationDirPath() + "/images/error.jpg");
+        QPixmap pixmap(":/images/error.jpg");
         scene->addPixmap(pixmap);
         ui->picture->setScene(scene);
         ui->picture->show();

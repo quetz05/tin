@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
     //wyswietlanie loga
     QGraphicsScene *scene =  new QGraphicsScene();
-    QPixmap pixmap(qApp->applicationDirPath() + "/images/tin.jpg");
+    QPixmap pixmap(":/images/tin.jpg");
     scene->addPixmap(pixmap);
     ui->logoView->setScene(scene);
     ui->logoView->show();
