@@ -184,7 +184,7 @@ void UserConnection::run()
                 sup = new char[rozmiar];
                 memset(sup, '\0', rozmiar);
 
-                read(socket, sup, rozmiar);
+                qDebug() << "read == " << read(socket, sup, rozmiar);
 
                 wiadomosc = szyfr.deszyfrujDane(sup, NULL);
 

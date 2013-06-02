@@ -267,11 +267,23 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
 
     QList<QByteArray> wart = wynikowa.split('x');
 
+    char typ;
+    unsigned int ID;
+    unsigned int size;
+
     bool a1, a2, a3;
 
-    char typ = (char)wart[0].toInt(&a1);
-    unsigned int ID = wart[1].toInt(&a2);
-    unsigned int size = wart[2].toInt(&a3);
+    if (wart.length() != 3) {
+        qDebug() << "bad juju - trying different method";
+
+        QString dane(wynikowa.data());
+
+    } else {
+        typ = (char)wart[0].toInt(&a1);
+        ID = wart[1].toInt(&a2);
+        size = wart[2].toInt(&a3);
+
+    }
 
     ID = ntohs(ID);
 

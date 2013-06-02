@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     qDebug() << s;
     n = szyfr.stringDoKlucz(s);
 
-    /*unsigned int size;
+    unsigned int size;
 
     Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("to jest jakiś bardzo długi tekst, który zaraz spróbuje przesłać sobie ja :)"), gniazdo);
     char *sz = szyfr.szyfruj(&wiad, NULL, &size);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     Wiadomosc wiad3(WYSLIJ_WIADOMOSC, 12, QString(""), gniazdo);
     char *sz3 = szyfr.szyfruj(&wiad3, NULL, &size);
 
-    wiad.wyslijDoSerwera(sz3, size);*/
+    wiad.wyslijDoSerwera(sz3, size);
 
   int i = a.exec();
 
