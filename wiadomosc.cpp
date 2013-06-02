@@ -9,7 +9,7 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
     naglowek.typ = typ;
     naglowek.ID = htons(ID);
     trueDane = string;
-    dane = NULL;
+
 
     gniazdo = gnia;
 
