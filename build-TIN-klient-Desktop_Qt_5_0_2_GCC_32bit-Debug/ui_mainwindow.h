@@ -46,7 +46,6 @@ public:
     QPushButton *pushUsun;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout_4;
-    QPushButton *pushRozmawiaj;
     QPushButton *pushGrupRozmawiaj;
     QPushButton *pushWyslijPlik;
     QPushButton *pushGrupWyslijPlik;
@@ -115,11 +114,6 @@ public:
         verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         verticalLayout_4->setContentsMargins(0, 0, 0, 0);
-        pushRozmawiaj = new QPushButton(verticalLayoutWidget);
-        pushRozmawiaj->setObjectName(QStringLiteral("pushRozmawiaj"));
-
-        verticalLayout_4->addWidget(pushRozmawiaj);
-
         pushGrupRozmawiaj = new QPushButton(verticalLayoutWidget);
         pushGrupRozmawiaj->setObjectName(QStringLiteral("pushGrupRozmawiaj"));
 
@@ -171,8 +165,7 @@ public:
         titListaZnajomych->setText(QApplication::translate("MainWindow", "Lista znajomych", 0));
         pushDodaj->setText(QApplication::translate("MainWindow", "Dodaj", 0));
         pushUsun->setText(QApplication::translate("MainWindow", "Usu\305\204", 0));
-        pushRozmawiaj->setText(QApplication::translate("MainWindow", "Rozmawiaj", 0));
-        pushGrupRozmawiaj->setText(QApplication::translate("MainWindow", "Rozmowa grupowa", 0));
+        pushGrupRozmawiaj->setText(QApplication::translate("MainWindow", "Rozmowa", 0));
         pushWyslijPlik->setText(QApplication::translate("MainWindow", "Wyslij plik", 0));
         pushGrupWyslijPlik->setText(QApplication::translate("MainWindow", "Grupowe wysy\305\202anie", 0));
         menuPlik->setTitle(QApplication::translate("MainWindow", "Plik", 0));

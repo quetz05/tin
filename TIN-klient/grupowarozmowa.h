@@ -13,6 +13,10 @@ class GrupowaRozmowa : public QDialog
 {
     Q_OBJECT
 
+public slots:
+    void rozpocznijRozmowe(int);
+
+
 private slots:
 
     void wyjdz();
@@ -24,7 +28,7 @@ private slots:
 
     
 public:
-    explicit GrupowaRozmowa(QWidget *parent = 0, QList <Znajomy> lista = *(new QList <Znajomy>));
+    explicit GrupowaRozmowa(QWidget *parent = 0, QList <Znajomy> lista = *(new QList <Znajomy>), int socket = 0);
     ~GrupowaRozmowa();
     
 private:
@@ -33,9 +37,11 @@ private:
     QListWidgetItem *zaznaczonyUsun;
     QList <Znajomy> znajomi;
     QList <Znajomy> znajomiDodani;
+    int gniazdo;
 
     int znajdzZnajomego(QList <Znajomy> znaj, int ID);
     void odswiezListy();
+    QList <int> IDs;
 
 
 signals:
