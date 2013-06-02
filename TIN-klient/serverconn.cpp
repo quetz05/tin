@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <QDebug>
 #include "../wiadomosc.h"
+#include "szyfrator.h"
 
 ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
@@ -26,7 +27,7 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
-    qDebug() << "Dzialam se w tle";
+   /* qDebug() << "Dzialam se w tle";
     char wiad[4];
 
     //czytanie typu
@@ -43,9 +44,32 @@ void ServerConn::odbierajWiadomosci()
     read(gniazdo,wiad,4);
     unsigned int rozmiar = *((unsigned int*)wiad);
     //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+*/
+
+    char wiad[HEADER_SIZE];
+    char *sup;
+
+    read(gniazdo, wiad, HEADER_SIZE);
+
+    Szyfrator szyfr;
+    Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
+
+    qDebug() << "rozmiar == " << nagl.trueRozmiar;
+
+    char typ = nagl.typ;
+    unsigned int id = nagl.ID;
+    unsigned int rozmiar = nagl.trueRozmiar;
 
     QString wiadomosc;
 
+
+    sup = new char[rozmiar];
+
+    memset(sup, '\0', rozmiar);
+
+    read(gniazdo, sup, rozmiar);
+
+    wiadomosc = szyfr.deszyfrujDane(sup, NULL);
 
 
     //rozpoznanie typu wiadomosci
