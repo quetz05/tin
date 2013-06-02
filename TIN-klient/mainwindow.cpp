@@ -16,12 +16,19 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     el = new ekranLogowania(this,gniazdo);
     el->show();
 
+    wiad = NULL;
+
     connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
     connect(this, SIGNAL(elSIGczyRejestracja(int)), el, SLOT(rejCzyRejestracja(int)));
+    connect(this, SIGNAL(elSIGczyZaloguj(int)), el, SLOT(sprawdzZaloguj(int)));
 
     con = new ServerConn(NULL,gniazdo);
 
     connect(con, SIGNAL(czyRejestracja(int)), this, SLOT(elCzyRejestracja(int)));
+    connect(con, SIGNAL(czyZaloguj(int)), this, SLOT(elCzyZaloguj(int)));
+
+    connect(con, SIGNAL(nowaRozmowa(int)), this, SLOT(nowaRozmowa(int)));
+    connect(con, SIGNAL(nowyRozmowca(int)), this, SLOT(nowyRozmowca(int)));
 
 
     doda = NULL;
@@ -65,16 +72,30 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 MainWindow::~MainWindow()
 {
 
-    delete zaznaczonyZnajomy;
-    delete doda;
-    //delete wysz;
-    delete oknoInformacji;
+    if(zaznaczonyZnajomy)
+        delete zaznaczonyZnajomy;
+    if(doda)
+        delete doda;
+    if(oknoInformacji)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+
+    }
+    if(wiad)
+        delete wiad;
     delete ui;
 }
 
 
 void MainWindow::wyloguj()
 {
+    /*if(wiad)
+        delete wiad;*/
+
+    wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+    wiad->wyslijDoSerwera();
+
     QProcess::startDetached(QApplication::applicationFilePath());
     exit(12);
 }
@@ -97,6 +118,14 @@ void MainWindow::zaloguj(const QString &login)
 
 void MainWindow::zakoncz()
 {
+   /* if(wiad)
+    {
+       delete wiad;
+       wiad = NULL;
+    }*/
+    wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+    wiad->wyslijDoSerwera();
+
     QApplication::exit();
 }
 
@@ -108,20 +137,14 @@ void MainWindow::wyszukiwarkaZnajomych()
 
 void MainWindow::rozpocznijRozmowe()
 {
-    int id = 13;
-
-    QList <QString> rozmowca;
-    rozmowca.push_back(zaznaczonyZnajomy->text());
-
-    if(oknaRozmowy.count(id)==0)
+   /* if(wiad!=NULL)
     {
+        delete wiad;
+        wiad = NULL;
+    }*/
 
-        oknaRozmowy.insert(id,new oknoRozmowy(this,id,rozmowca,gniazdo));
-
-        connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
-
-        oknaRozmowy.value(id)->show();
-    }
+    wiad = new Wiadomosc(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
+    wiad->wyslijDoSerwera();
 
 }
 
@@ -147,7 +170,16 @@ void MainWindow::usunZnajomego()
         int ID = QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt();
 
         if(!bramaZnajomych->usunZnajomego(ID))
+        {
+            if(oknoInformacji)
+            {
+                delete oknoInformacji;
+                oknoInformacji = NULL;
+            }
+
             oknoInformacji = new info(this,"Wystąpił problem przy usuwaniu znajomego. To nie moja wina! Twórcy coś pokopali...",false);
+
+        }
         else
         {
             zaznaczonyZnajomy=NULL;
@@ -228,8 +260,8 @@ void MainWindow::rozpocznijGrupRozmowe()
 
 void MainWindow::zakonczGrupRoz()
 {
-    delete grRozmowa;
-    grRozmowa = NULL;
+    if(grRozmowa)
+        delete grRozmowa;
 }
 
 
@@ -262,6 +294,29 @@ void MainWindow::tworzGrupRoz(const QList<int> &lista)
 }
 
 void MainWindow::rozpocznijGrupWysylanie()
+{
+
+
+
+}
+
+void MainWindow::nowaRozmowa(int id)
+{
+    QList <QString> rozmowca;
+    rozmowca.push_back(zaznaczonyZnajomy->text());
+
+    if(oknaRozmowy.count(id)==0)
+    {
+
+        oknaRozmowy.insert(id,new oknoRozmowy(this,id,rozmowca,gniazdo));
+
+        connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
+
+        oknaRozmowy.value(id)->show();
+    }
+}
+
+void MainWindow::nowyRozmowca(int id)
 {
 
 

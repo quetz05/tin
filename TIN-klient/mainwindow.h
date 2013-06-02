@@ -59,6 +59,10 @@ private slots:
     void zaloguj(const QString&login);
 
     void elCzyRejestracja(int id) {emit elSIGczyRejestracja(id);}
+    void elCzyZaloguj(int id) {emit elSIGczyZaloguj(id);}
+
+    void nowaRozmowa(int id);
+    void nowyRozmowca(int id);
 
     
 public:
@@ -80,6 +84,7 @@ private:
     int gniazdo;
     GrupowaRozmowa *grRozmowa;
     ekranLogowania *el;
+    Wiadomosc *wiad;
 
 public:
     ServerConn *con;
@@ -90,6 +95,8 @@ signals:
     //sygnal do okna rozmowy
     void elSIGCzyRozmowa();
     void elSIGCzyRozmowaGrup();
+    //sygnal do zalogowania
+    void elSIGczyZaloguj(int);
 
 
 

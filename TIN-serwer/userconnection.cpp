@@ -56,13 +56,17 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
 void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 {
 
+
+
     if(idUsr==this->myid){
         rozmowy.insert(idRozm,ro);
     }// czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
     if(czy){// to my ja stworzylismy przed chwila
+        qDebug() << "Se rozmowa sie stworzyla";
         wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,0,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
         return;
     }
+    qDebug() << "Dodaj";
     wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,0,NULL);
 
 }
@@ -194,7 +198,8 @@ void UserConnection::loguj(QString name, QString pass)
     // jak taki jest to sprawdzamy czy sie haslo zgadza
     if(id >0){
         QString haslo = brama->getHashPassword(id);
-        if(haslo.compare(pass)){
+        if(!haslo.compare(pass)){
+            qDebug() << "Hasło się zgadza!";
             myid=id;
             wyslijPakiet(LOGUJ_UZYTKOWNIKA,id,0,NULL);
             emit dodajeSieDoListy(myid,this);

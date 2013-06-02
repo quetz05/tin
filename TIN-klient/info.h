@@ -15,8 +15,7 @@ public:
     explicit info(QWidget *parent = 0, QString info = "", bool ok = false);
     ~info();
 
-private slots:
-    void zakoncz();
+
     
 private:
     Ui::info *ui;

@@ -25,8 +25,10 @@ private slots:
     void zakonczRejestracje();
 
 
+
 public slots:
     void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
+    void sprawdzZaloguj(int);
 
 
 
@@ -44,6 +46,7 @@ private:
     QString login;
     QString haslo;
 
+    Wiadomosc *wiad;
 
     Rejestracja *rej;
     info *oknoInformacji;
