@@ -13,6 +13,7 @@ private:
     bool zalogowany;
     int socket;
     int myid;
+    int sekret;
     QMutex mutex; // muteks gwarantujacy nam ze tylko jeden pakiet na raz bedzie wysylany
     // na wszelki wypadek bo sloty wywoluja sie w innym watku
 
@@ -45,7 +46,7 @@ private:
      * @param dane same dane moze byc null wtedy stwierdzamy
      *        ze nie ma danych nawet jak rozmiar bedzie duzy
      */
-    void wyslijPakiet(char typ, unsigned int id, unsigned int daneRozm, QString* dane);
+    void wyslijPakiet(char typ, unsigned int id, QString* dane);
 
 protected:
     /**
