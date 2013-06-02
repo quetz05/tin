@@ -5,7 +5,7 @@
 #include "rozmowa.h"
 #include <QMap>
 #include <QMutex>
-
+#include "szyfrator.h"
 class UserConnection : public QThread
 {
     Q_OBJECT
@@ -13,7 +13,7 @@ private:
     bool zalogowany;
     int socket;
     int myid;
-    int sekret;
+    Klucz *sekret;
     QMutex mutex; // muteks gwarantujacy nam ze tylko jeden pakiet na raz bedzie wysylany
     // na wszelki wypadek bo sloty wywoluja sie w innym watku
 
