@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     odbiorSerwer.start();
 
-    Szyfrator szyfr;
+   /* Szyfrator szyfr;
 
     Klucz n = szyfr.wygenerujKlucz();
     QString s = szyfr.kluczDoStringa(&n);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     Wiadomosc wiad3(WYSLIJ_WIADOMOSC, 12, QString(""), gniazdo);
     char *sz3 = szyfr.szyfruj(&wiad3, NULL, &size);
 
-    wiad.wyslijDoSerwera(sz3, size);
+    wiad.wyslijDoSerwera(sz3, size);*/
 
   int i = a.exec();
 

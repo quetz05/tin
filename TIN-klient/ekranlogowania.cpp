@@ -18,7 +18,7 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     login = "";
 
     oknoInformacji = NULL;
-    rej = new Rejestracja(0,gniazdo);
+    rej = new Rejestracja(this,gniazdo);
 
     wiad = NULL;
 
@@ -73,7 +73,7 @@ void ekranLogowania::zaloguj()
     {
 
         Szyfrator szyfr;
-        Wiadomosc wiad(LOGUJ_UZYTKOWNIKA, 2*login.length(),login + haslo,gniazdo);
+        Wiadomosc wiad(LOGUJ_UZYTKOWNIKA, login.length(),login + haslo,gniazdo);
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 
