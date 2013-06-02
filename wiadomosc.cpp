@@ -10,6 +10,7 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
     naglowek.ID = htons(ID);
     trueDane = string;
 
+    gniazdo = gnia;
 
 
 /*
@@ -71,6 +72,8 @@ bool Wiadomosc::wyslijDoSerwera()
 
 bool Wiadomosc::wyslijDoSerwera(const char *co, unsigned int rozmiar)
 {
+
+    qDebug() << "payload == " << co;
 
     if (write(gniazdo, co, rozmiar) == -1) {
         qDebug() << "nie bangla";

@@ -5,6 +5,21 @@
 #include "../wiadomosc.h"
 
 
+/*
+ * ----- BARTKU !! ------
+ * bo ja podpiąłem w celach testowych swoje szyfrowanko
+ * a w zasadzie to tu odbiór
+ * i on pewnie się będzie bardzo źle zachowywał :P
+ * bo tylko funkcja odbioru zwykłej wiadomości została
+ * przeze mnie zmieniona
+ * Nagłówek ma zawsze 36 bajty
+ * a rozmiar masz potem zapisany w Naglowek.trueRozmiar
+ * zreszta w funkcji obslugi przychodzacych rzeczy tam
+ * zakomentowalem Twoj kod i napisalem swoj
+ * takze ten
+ * bede jak wstane
+ */
+
 ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
 {

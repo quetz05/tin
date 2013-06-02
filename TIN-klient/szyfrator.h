@@ -9,7 +9,7 @@ class Szyfrator
 public:
     Szyfrator();
 
-    char* szyfruj(Wiadomosc *wiad, int klucz);
+    char* szyfruj(Wiadomosc *wiad, int klucz, unsigned int *pSize);
 
     Naglowek deszyfrujNaglowek(char *data, int klucz);
     QString deszyfrujDane(char* data, int klucz);

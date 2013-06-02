@@ -80,23 +80,35 @@ void UserConnection::run()
     qDebug() << "wystartowal watek urzytkownika\n";
     while(!wyjscie){ // 0 kod wyjscia
      // tu obróbka danych i wyslanie nowych wiadomosci
-        char wiad[4];
+        char wiad[36];
+        char *sup;
 
+        read(socket, wiad, 36);
 
         Szyfrator szyfr;
-        read(socket,wiad,1);
-        char typ = wiad[0];
-        qDebug()<< wiad[0]<<"\n";
-        read(socket,wiad,4);
-        unsigned int id = ntohs(*((unsigned int*)wiad));
-        qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        read(socket,wiad,4);
-        unsigned int dlugosc =*((unsigned int*)wiad);
-        qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        unsigned int rozmiar = ntohs(*((unsigned int*)wiad));
-        qDebug() <<"Jestem blisko...";
-        qDebug() <<typ;
-        qDebug() <<"Jestem blisko...";
+
+        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, 1);
+
+        qDebug() << "rozmiar == " << nagl.trueRozmiar;
+
+        char typ = nagl.typ;
+        unsigned int id = nagl.ID;
+        unsigned int dlugosc = nagl.trueRozmiar;
+         unsigned int rozmiar = nagl.trueRozmiar;
+
+        //read(socket,wiad,1);
+        //char typ = wiad[0];
+        //qDebug()<< wiad[0]<<"\n";
+        //read(socket,wiad,4);
+        //unsigned int id = ntohs(*((unsigned int*)wiad));
+        //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+        //read(socket,wiad,4);
+        //unsigned int dlugosc =*((unsigned int*)wiad);
+        //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+        //unsigned int rozmiar = ntohs(*((unsigned int*)wiad));
+        //qDebug() <<"Jestem blisko...";
+        //qDebug() <<typ;
+        //qDebug() <<"Jestem blisko...";
         QString login;
         QString hash;
         QString wiadomosc;
@@ -123,7 +135,7 @@ void UserConnection::run()
                 break;
             case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
-                for(unsigned int i=0;i<((rozmiar/2));++i){
+                /*for(unsigned int i=0;i<((rozmiar/2));++i){
                     read(socket,wiad,2);
                     wiadomosc2.append(wiad);
                     //wiadomosc.append(*((QChar*)wiad));
@@ -132,7 +144,17 @@ void UserConnection::run()
                 qDebug() << wiadomosc2.c_str();
                 wiadomosc = szyfr.deSzyfruj(wiadomosc2.c_str(), 12);
 
-                qDebug() << wiadomosc;
+                qDebug() << wiadomosc;*/
+
+                sup = new char[dlugosc];
+                memset(sup, '\0', dlugosc);
+
+                read(socket, sup, dlugosc);
+
+                wiadomosc = szyfr.deszyfrujDane(sup, 1);
+
+                qDebug() << "got == " << wiadomosc;
+
                 break;
             case LOGUJ_UZYTKOWNIKA:
                 // tu trzeba nam jakas funkcje do logowania

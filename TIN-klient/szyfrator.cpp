@@ -11,9 +11,9 @@ Szyfrator::Szyfrator()
 
    //typ, ID, rozmiar, dane
 
-char* Szyfrator::szyfruj(Wiadomosc *wiad, int klucz)
+char* Szyfrator::szyfruj(Wiadomosc *wiad, int klucz, unsigned int *pSize)
 {
-    qDebug() << "--- szyfrowanie start ---";
+    //qDebug() << "--- szyfrowanie start ---";
 
     std::stringstream naglowek;
     std::string dane = wiad->trueDane.toStdString();
@@ -23,9 +23,9 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, int klucz)
     QByteArray prepDane(dane.c_str());
     prepDane = prepDane.toBase64();
 
-    qDebug() << "data encoded";
+    //qDebug() << "data encoded";
 
-    naglowek << prepDane.size();
+    naglowek << (prepDane.size() + 1);
 
     unsigned short size = naglowek.str().size();
 
@@ -37,12 +37,13 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, int klucz)
     QByteArray prepNaglowek(naglowek.str().c_str());
     prepNaglowek = prepNaglowek.toBase64();
 
-    qDebug() << "header encoded";
+    //qDebug() << "header encoded";
 
-    unsigned int payloadSize = prepNaglowek.length() + prepDane.length();
+    unsigned int payloadSize = prepNaglowek.length() + prepDane.length() + 1;
+    *pSize = payloadSize;
 
-    qDebug() << prepNaglowek.length() << " :: " << prepDane.length();
-    qDebug() << "paylodSize == " << payloadSize;
+    //qDebug() << prepNaglowek.length() << " :: " << prepDane.length();
+    //qDebug() << "paylodSize == " << payloadSize;
 
     char *wynik = new char[payloadSize];
     memset(wynik, '\0', payloadSize);
@@ -50,15 +51,15 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, int klucz)
     strcat(wynik, prepNaglowek.data());
     strcat(wynik, prepDane.data());
 
-    qDebug() << "payload == " << wynik;
+    //qDebug() << "payload == " << wynik;
 
-    qDebug() << "--- szyfrowanie stop ---";
+    //qDebug() << "--- szyfrowanie stop ---";
     return wynik;
 }
 
 Naglowek Szyfrator::deszyfrujNaglowek(char *data, int klucz)
 {
-    qDebug() << "--- naglowek deszyfr ---";
+    //qDebug() << "--- naglowek deszyfr ---";
 
     QByteArray dane = QByteArray::fromBase64(data);
 
@@ -83,26 +84,26 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, int klucz)
     naglowek.ID = ID;
     naglowek.trueRozmiar = size;
 
-    qDebug() << "got == " << naglowek.typ << " :: " << naglowek.ID << " :: " << naglowek.trueRozmiar;
-    qDebug() << "--- deszyfrowanie nagl stop ---";
+    //qDebug() << "got == " << naglowek.typ << " :: " << naglowek.ID << " :: " << naglowek.trueRozmiar;
+    //qDebug() << "--- deszyfrowanie nagl stop ---";
 
     return naglowek;
 }
 
 QString Szyfrator::deszyfrujDane(char *data, int klucz)
 {
-    qDebug() << "--- deszyfruj dane ---";
+    //qDebug() << "--- deszyfruj dane ---";
 
 
     QByteArray dane = QByteArray::fromBase64(data);
 
-    qDebug() << dane;
-    qDebug() << dane.data();
+    //qDebug() << dane;
+    //qDebug() << dane.data();
 
     QString x(dane.data());
 
-    qDebug() << x;
-    qDebug() << "--- deszyfruj dane stop ---";
+    //qDebug() << x;
+    //qDebug() << "--- deszyfruj dane stop ---";
 
     return QString(dane.data());
 
@@ -116,14 +117,14 @@ char* Szyfrator::szyfruj(QString dane, int klucz)
 
     magia = magia.toBase64();
 
-    qDebug() << "zaszyfrowano == " << magia.data();
-    qDebug() << "zaszyfrowano dlug == " << magia.length();
+    //qDebug() << "zaszyfrowano == " << magia.data();
+    //qDebug() << "zaszyfrowano dlug == " << magia.length();
 
     char *sz = new char[magia.length()];
 
     strcpy(sz, magia.data());
 
-    //qDebug() << "sz dlugosc == " << strlen(sz);
+    ////qDebug() << "sz dlugosc == " << strlen(sz);
 
     return sz;
 }

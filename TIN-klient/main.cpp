@@ -34,29 +34,15 @@ int main(int argc, char *argv[])
     //char *w = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
     //qDebug() << szyfr.deSzyfruj(w, 1);
 
-    Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("zażółć gęślą jaźń"), gniazdo);
-    char *sz = szyfr.szyfruj(&wiad, 1);
-    char *desz = new char[36];
+    unsigned int size;
 
-    strncpy(desz, sz, 36);
+    Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("to jest jakiś bardzo długi tekst, który zaraz spróbuje przesłać sobie ja :)"), gniazdo);
+    char *sz = szyfr.szyfruj(&wiad, 1, &size);
 
-    Naglowek nagl;
+    qDebug() << "proba wyslania";
 
-    nagl = szyfr.deszyfrujNaglowek(desz, 1);
+    wiad.wyslijDoSerwera(sz, size);
 
-    qDebug() << "rozmiar == " << nagl.trueRozmiar;
-
-    char *dane = new char[nagl.trueRozmiar];
-
-    for (int i = 36; i < 36 + nagl.trueRozmiar; ++i)
-        dane[i - 36] = sz[i];
-
-    qDebug() << "wywalka?";
-    //strlen(dane);
-
-    QString wynik = szyfr.deszyfrujDane(dane, 1).append('\0');
-
-    qDebug() << "odebrano == " << wynik;
 
     //wiad.wyslijDoSerwera();
 
@@ -66,9 +52,9 @@ int main(int argc, char *argv[])
 
   int i = a.exec();
 
-  Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-  wiad.wyslijDoSerwera();
+  //Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+  //wiad.wyslijDoSerwera();
 
-      return 0;
+      return i;
 
 }
