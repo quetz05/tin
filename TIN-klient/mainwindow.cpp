@@ -215,7 +215,7 @@ void MainWindow::zakonczRozmowe(int id)
     unsigned int wielkosc;
     char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 
-    if(write(gniazdo,wiadomosc,wielkosc)==-1){
+    if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
         qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
     }
 

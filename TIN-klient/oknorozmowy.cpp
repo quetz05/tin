@@ -49,7 +49,7 @@ void oknoRozmowy::wyslij()
         unsigned int wielkosc;
         char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
 
-        if(write(gniazdo,wiadom,wielkosc)==-1){
+        if(wiad.wyslijDoSerwera(wiadom, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
         }
 

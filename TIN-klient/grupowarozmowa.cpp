@@ -114,7 +114,7 @@ void GrupowaRozmowa::tworzRozmowe()
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 
-        if(write(gniazdo,wiadomosc,wielkosc)==-1){
+        if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu wiadomosci o ID do rozmowy";
         }
 
@@ -135,7 +135,7 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 
-        if(write(gniazdo,wiadomosc,wielkosc)==-1){
+        if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu id uzytkownika do nowej rozmowy";
         }
     }

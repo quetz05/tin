@@ -67,9 +67,9 @@ void Rejestracja::rejestruj()
         Szyfrator szyfr;
         Wiadomosc wiad(REJESTRUJ,2*login.length(),login + haslo,gniazdo );
         unsigned int wielkosc;
-        char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+        char *wiadomosc = szyfr.szyfruj(&wiad,NULL,&wielkosc);
 
-        if(write(gniazdo,wiadomosc,wielkosc)==-1){
+        if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy rejestracji";
         }
     }
