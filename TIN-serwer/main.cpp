@@ -5,10 +5,15 @@
 #include<cstdlib>
 #include "serwerapp.h"
 
+#include "Baza/bramauzytkownikow.h"
+
 int main(int argc, char *argv[])
 {
+ //   BramaUzytkownikow::getSharedInstance()->dodajUzytkownika("Jarek", "papo");
+
     QCoreApplication a(argc, argv);
-    SerwerApp aplikacja;
+
+      SerwerApp aplikacja;
 
     // moze tu sobie zrzucimy pewne wartości z argv zeby miec je jakby co i zeby nie przekazywac calosci do aplikacji
     //taka podstawowa obróbka

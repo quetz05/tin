@@ -19,9 +19,12 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     oknoInformacji = NULL;
     rej = new Rejestracja(0,gniazdo);
 
+    connect(this,SIGNAL(SIGczyRejestracja(int)),rej,SLOT(wynikRejestracji(int)));
+
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
     connect(ui->pushZaloguj, SIGNAL(clicked()), this, SLOT(zaloguj()));
     connect(ui->pushRejestruj, SIGNAL(clicked()), this, SLOT(rejestruj()));
+
 
 
     connect(ui->textPass, SIGNAL(textChanged(const QString &)), this, SLOT(czytajHaslo(QString)));

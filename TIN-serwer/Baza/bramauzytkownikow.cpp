@@ -99,10 +99,11 @@ int BramaUzytkownikow::sprawdzUzytkownika(QString login)
             baza.commit();
 
             id = pobierzID.value(0).toString().toInt();
-            }
+            } else {
 
             qDebug () << "Uzytkownik o danym loginie nie istnieje";
             id =  0;
+            }
 
         } else{
             qDebug() << "Pobranie ID fejl";

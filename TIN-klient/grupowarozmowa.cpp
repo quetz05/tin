@@ -32,6 +32,8 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista) :
 
 GrupowaRozmowa::~GrupowaRozmowa()
 {
+    zaznaczonyDodaj = NULL;
+    zaznaczonyUsun = NULL;
     delete zaznaczonyDodaj;
     delete zaznaczonyUsun;
     delete ui;

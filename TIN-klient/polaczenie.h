@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <QDebug>
 
 
 int gniazdo = 0;
@@ -17,7 +18,6 @@ bool polacz(char* adres, int port)
     //adres serwera (port 1111)
     struct sockaddr_in serwer;
     struct hostent *hp;
-    //char bufor[1024];
 
     //inet_aton(adres,address);
     struct in_addr ipv4addr;

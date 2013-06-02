@@ -17,6 +17,11 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     el->show();
 
     connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
+    connect(this, SIGNAL(elSIGczyRejestracja(int)), el, SLOT(rejCzyRejestracja(int)));
+
+    con = new ServerConn();
+
+    connect(con, SIGNAL(czyRejestracja(int)), this, SLOT(elCzyRejestracja(int)));
 
 
     doda = NULL;
@@ -208,6 +213,8 @@ void MainWindow::rozpocznijGrupRozmowe()
 {
     if(grRozmowa==NULL)
     {
+        znajomi = bramaZnajomych->getListaZnajomych();
+
         grRozmowa = new GrupowaRozmowa(this, znajomi);
 
         connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));

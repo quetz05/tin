@@ -2,7 +2,7 @@
 #define DODAWANIE_H
 
 #include <QDialog>
-#include <Baza/bramaznajomych.h>
+#include "Baza/bramaznajomych.h"
 #include <QListWidget>
 #include <QString>
 #include <iostream>

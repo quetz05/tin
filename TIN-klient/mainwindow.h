@@ -6,12 +6,14 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <wyszukiwarka.h>
-#include <dodawanie.h>
 #include <QProcess>
-#include "oknorozmowy.h"
 #include <QFileDialog>
+
 #include "grupowarozmowa.h"
 #include "ekranlogowania.h"
+#include "serverconn.h"
+#include "oknorozmowy.h"
+#include "dodawanie.h"
 
 
 namespace Ui {
@@ -55,6 +57,9 @@ private slots:
     void tworzGrupRoz(const QList<int> &);
 
     void zaloguj(const QString&login);
+
+    void elCzyRejestracja(int id) {emit elSIGczyRejestracja(id);}
+
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
@@ -74,8 +79,17 @@ private:
     QFileDialog *oknoWysylania;
     int gniazdo;
     GrupowaRozmowa *grRozmowa;
-
     ekranLogowania *el;
+
+public:
+    ServerConn *con;
+
+signals:
+    //sygnal do ekranu logowania
+    void elSIGczyRejestracja(int);
+    //sygnal do okna rozmowy
+    void elSIGCzyRozmowa();
+    void elSIGCzyRozmowaGrup();
 
 
 
