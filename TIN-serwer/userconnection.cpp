@@ -10,6 +10,23 @@
 #include <QString>
 #include "Baza/bramauzytkownikow.h"
 #include "rozmowa.h"
+#include "szyfrator.h"
+
+/*
+ * ----- BARTKU !! ------
+ * bo ja podpiąłem w celach testowych swoje szyfrowanko
+ * a w zasadzie to tu odbiór
+ * i on pewnie się będzie bardzo źle zachowywał :P
+ * bo tylko funkcja odbioru zwykłej wiadomości została
+ * przeze mnie zmieniona
+ * rozmiar nagłówka masz w #define HEADER_SIZE
+ * a rozmiar masz potem zapisany w Naglowek.trueRozmiar
+ * zreszta w funkcji obslugi przychodzacych rzeczy tam
+ * zakomentowalem Twoj kod i napisalem swoj
+ * takze ten
+ * bede jak wstane
+ */
+
 
 UserConnection::UserConnection(QObject *parent) :
     QThread(parent)
@@ -79,24 +96,39 @@ void UserConnection::run()
     qDebug() << "wystartowal watek urzytkownika\n";
     while(!wyjscie){ // 0 kod wyjscia
      // tu obróbka danych i wyslanie nowych wiadomosci
-        char wiad[4];
+        char wiad[HEADER_SIZE];
+        char *sup;
 
-        read(socket,wiad,1);
-        char typ = wiad[0];
-        qDebug()<< wiad[0]<<"\n";
-        read(socket,wiad,4);
-        unsigned int id = ntohs(*((unsigned int*)wiad));
-        qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        read(socket,wiad,4);
-        unsigned int dlugosc =*((unsigned int*)wiad);
-        qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        unsigned int rozmiar = ntohs(*((unsigned int*)wiad));
-        qDebug() <<"Jestem blisko...";
-        qDebug() <<typ;
-        qDebug() <<"Jestem blisko...";
+        read(socket, wiad, HEADER_SIZE);
+
+        Szyfrator szyfr;
+
+        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, 1);
+
+        qDebug() << "rozmiar == " << nagl.trueRozmiar;
+
+        char typ = nagl.typ;
+        unsigned int id = nagl.ID;
+        unsigned int dlugosc = nagl.trueRozmiar;
+         unsigned int rozmiar = nagl.trueRozmiar;
+
+        //read(socket,wiad,1);
+        //char typ = wiad[0];
+        //qDebug()<< wiad[0]<<"\n";
+        //read(socket,wiad,4);
+        //unsigned int id = ntohs(*((unsigned int*)wiad));
+        //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+        //read(socket,wiad,4);
+        //unsigned int dlugosc =*((unsigned int*)wiad);
+        //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
+        //unsigned int rozmiar = ntohs(*((unsigned int*)wiad));
+        //qDebug() <<"Jestem blisko...";
+        //qDebug() <<typ;
+        //qDebug() <<"Jestem blisko...";
         QString login;
         QString hash;
         QString wiadomosc;
+        std::string wiadomosc2 = "";
         switch(typ){
             case ODLACZ_UZYTKOWNIKA: // skladamy samokrytyke i odlaczamy sie z serwera
                 wyjscie=true;
@@ -119,11 +151,26 @@ void UserConnection::run()
                 break;
             case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
-                for(unsigned int i=0;i<((rozmiar/2));++i){
+                /*for(unsigned int i=0;i<((rozmiar/2));++i){
                     read(socket,wiad,2);
-                    wiadomosc.append(*((QChar*)wiad));
+                    wiadomosc2.append(wiad);
+                    //wiadomosc.append(*((QChar*)wiad));
                 }// nazbieralismy nasza wiadomosc
                 if(rozmowy.contains(id)) rozmowy[id]->wyslijWiadomosc(wiadomosc);
+                qDebug() << wiadomosc2.c_str();
+                wiadomosc = szyfr.deSzyfruj(wiadomosc2.c_str(), 12);
+
+                qDebug() << wiadomosc;*/
+
+                sup = new char[dlugosc];
+                memset(sup, '\0', dlugosc);
+
+                read(socket, sup, dlugosc);
+
+                wiadomosc = szyfr.deszyfrujDane(sup, 1);
+
+                qDebug() << "got == " << wiadomosc;
+
                 break;
             case LOGUJ_UZYTKOWNIKA:
                 // tu trzeba nam jakas funkcje do logowania

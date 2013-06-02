@@ -22,12 +22,14 @@
 class Naglowek
 {
     public:
-        char* typ;
-        char* ID;
-        char* rozmiar;
+        char typ;
+        unsigned int ID;
+        unsigned int rozmiar;
         int trueRozmiar;
 
-        ~Naglowek(){delete typ; delete ID, delete rozmiar;}
+        ~Naglowek(){
+            //delete typ; delete ID, delete rozmiar;
+        }
 };
 
 
@@ -39,11 +41,15 @@ public:
 
 
     Wiadomosc(char typ, unsigned int ID, QString string, int gnia);
-    ~Wiadomosc(){delete [] dane;}
+    ~Wiadomosc(){
+        if (dane)
+            delete [] dane;
+    }
 
     Naglowek naglowek;
     char *dane;
     bool wyslijDoSerwera();
+    bool wyslijDoSerwera(const char* co, unsigned int rozmiar);
 
     int gniazdo;
     QString trueDane;

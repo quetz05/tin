@@ -51,8 +51,8 @@ void oknoRozmowy::wyslij()
 {
     if(wiadomosc!="")
     {
-        Wiadomosc wiadom( WYSLIJ_WIADOMOSC,ID,wiadomosc,gniazdo );
-        wiadom.wyslijDoSerwera();
+        //Wiadomosc wiadom( WYSLIJ_WIADOMOSC,ID,wiadomosc,gniazdo );
+        //wiadom.wyslijDoSerwera();
 
         //ui->oknoWiadomosci->append(loginTwoj + ": " + wiadomosc);
         ui->liniaWiadomosci->clear();

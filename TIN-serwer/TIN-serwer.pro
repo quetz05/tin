@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     rozmowa.cpp \
     message.cpp \
     userconnection.cpp \
-    ../wiadomosc.cpp
+    ../wiadomosc.cpp \
+    szyfrator.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramauzytkownikow.h \
@@ -27,6 +28,7 @@ HEADERS  += mainwindow.h \
     userconnection.h \
     rozmowa.h \
     message.h \
-    ../wiadomosc.h
+    ../wiadomosc.h \
+    szyfrator.h
 
 FORMS    += mainwindow.ui

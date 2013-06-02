@@ -26,6 +26,7 @@ private slots:
     void wyjscie();
 
 public slots:
+    void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
     void wynikRejestracji(int wynik);
 
 

@@ -6,34 +6,44 @@
 
 Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
 {
-    naglowek.typ = new char;
-    *(naglowek.typ) = typ;
-
+    naglowek.typ = typ;
+    naglowek.ID = htons(ID);
     trueDane = string;
 
+    gniazdo = gnia;
 
+
+/*
+     *naglowek.typ = new char;
+    *(naglowek.typ) = typ;
+
+    //trueDane = string;
 
     unsigned int *wsk = new unsigned int(htons(ID));
     naglowek.ID = (char*)wsk;
-    naglowek.trueRozmiar = 2*trueDane.length();
+    //naglowek.trueRozmiar = 2*trueDane.length();
+
+    naglowek.trueRozmiar = strlen(string);
+
+    qDebug() << "trueRozmiar == " << naglowek.trueRozmiar;
 
     wsk = new unsigned int(htons(naglowek.trueRozmiar));
     naglowek.rozmiar = (char*)wsk;
     gniazdo = gnia;
 
-    QChar *tempDane = trueDane.data();
+    //QChar *tempDane = trueDane.data();
 
+    this->dane = string;
 
-    dane = (char*) tempDane;
-
+    //dane = (char*) tempDane;
+*/
 
 }
-
 
 bool Wiadomosc::wyslijDoSerwera()
 {
 
-     if (write(gniazdo, this->naglowek.typ, 1) == -1)
+     /*if (write(gniazdo, this->naglowek.typ, 1) == -1)
      {
          qDebug() << "Błąd przy wysylaniu naglowka wiadomosci...";
          return false;
@@ -55,7 +65,21 @@ bool Wiadomosc::wyslijDoSerwera()
      {
          qDebug() << "Błąd przy wysylaniu danych wiadomosci...";
          return false;
-     }
+     }*/
 
      return true;
+}
+
+bool Wiadomosc::wyslijDoSerwera(const char *co, unsigned int rozmiar)
+{
+
+    qDebug() << "payload == " << co;
+
+    if (write(gniazdo, co, rozmiar) == -1) {
+        qDebug() << "nie bangla";
+        return false;
+    }
+
+    return true;
+
 }

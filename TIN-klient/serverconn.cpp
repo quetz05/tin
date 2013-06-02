@@ -4,19 +4,23 @@
 #include <QDebug>
 #include "../wiadomosc.h"
 
-
 ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
 {
     gniazdo = socket;
+    //watek = new QThread();
 
+    //connect(watek, SIGNAL(started()), this, SLOT(odbierajWiadomosci()));
+
+    //this->moveToThread(watek);
+    //watek->start();
 }
 
 
-void ServerConn::doSetup(QThread &cThread)
+void ServerConn::doSetup(QThread *cThread)
 {
 
-    connect(&cThread,SIGNAL(started()),this, SLOT(odbierajWiadomosci()));
+    connect(cThread,SIGNAL(started()),this, SLOT(odbierajWiadomosci()));
 
 }
 

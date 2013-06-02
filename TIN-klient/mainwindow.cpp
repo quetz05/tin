@@ -90,11 +90,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::wyloguj()
 {
-    /*if(wiad)
-        delete wiad;*/
-
-    wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-    wiad->wyslijDoSerwera();
 
     QProcess::startDetached(QApplication::applicationFilePath());
     exit(12);
@@ -118,13 +113,6 @@ void MainWindow::zaloguj(const QString &login)
 
 void MainWindow::zakoncz()
 {
-   /* if(wiad)
-    {
-       delete wiad;
-       wiad = NULL;
-    }*/
-    wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-    wiad->wyslijDoSerwera();
 
     QApplication::exit();
 }
@@ -137,11 +125,11 @@ void MainWindow::wyszukiwarkaZnajomych()
 
 void MainWindow::rozpocznijRozmowe()
 {
-   /* if(wiad!=NULL)
+    if(wiad!=NULL)
     {
         delete wiad;
         wiad = NULL;
-    }*/
+    }
 
     wiad = new Wiadomosc(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
     wiad->wyslijDoSerwera();
@@ -165,6 +153,7 @@ void MainWindow::dodajZnajomego()
 
 void MainWindow::usunZnajomego()
 {
+
     if(zaznaczonyZnajomy!=NULL)
     {
         int ID = QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt();
@@ -261,7 +250,10 @@ void MainWindow::rozpocznijGrupRozmowe()
 void MainWindow::zakonczGrupRoz()
 {
     if(grRozmowa)
+    {
         delete grRozmowa;
+        grRozmowa = NULL;
+    }
 }
 
 

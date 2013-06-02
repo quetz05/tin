@@ -61,6 +61,12 @@ void dodawanie::czytajNick(const QString &nick)
 void dodawanie::dodajZnajomego()
 {
 
+    if(oknoInformacji)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
     if(znajomy.second==0)
         oknoInformacji = new info(this, "Bez ID to ja funkcji dodawania znajomych nie wywołam...",false);
 

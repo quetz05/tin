@@ -16,37 +16,45 @@ int main(int argc, char *argv[])
     else
         qDebug() << "Brak połączenia z serwerem...";
 
-
-
-
     Q_INIT_RESOURCE(znajomi_zasoby);
+
     QApplication a(argc, argv);
 
     QThread odbiorSerwer;
 
-
     MainWindow main(0,"",gniazdo);
 
-    main.con->doSetup(odbiorSerwer);
+    main.con->doSetup(&odbiorSerwer);
     main.con->moveToThread(&odbiorSerwer);
 
     odbiorSerwer.start();
 
+    Szyfrator szyfr;
 
-  /*  Szyfrator szyfr;
-    char *sz = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
+    //char *w = szyfr.szyfruj(QString("zażółć gęślą jaźń"), 1);
+    //qDebug() << szyfr.deSzyfruj(w, 1);
 
-    qDebug() << sz;
+    unsigned int size;
 
-    QString desz = szyfr.deSzyfruj(sz, 1);
+    Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("to jest jakiś bardzo długi tekst, który zaraz spróbuje przesłać sobie ja :)"), gniazdo);
+    char *sz = szyfr.szyfruj(&wiad, 1, &size);
 
-    qDebug() << desz;*/
+    qDebug() << "proba wyslania";
+
+    wiad.wyslijDoSerwera(sz, size);
+
+
+    //wiad.wyslijDoSerwera();
+
+    //QString desz = szyfr.deSzyfruj(sz, 1);
+
+    //qDebug() << desz;
 
   int i = a.exec();
 
-  Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-  wiad.wyslijDoSerwera();
+  //Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+  //wiad.wyslijDoSerwera();
 
-      return 0;
+      return i;
 
 }
