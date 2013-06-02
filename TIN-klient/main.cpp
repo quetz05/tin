@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
         qDebug() << "Brak połączenia z serwerem...";
 
     Q_INIT_RESOURCE(znajomi_zasoby);
+    Q_INIT_RESOURCE(images);
 
     QApplication a(argc, argv);
 
@@ -56,6 +57,7 @@ int main(int argc, char *argv[])
 
   //Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
   //wiad.wysl   ijDoSerwera();
+
 
       return i;
 

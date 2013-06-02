@@ -53,3 +53,4 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     Baza/znajomi_zasoby.qrc \
+    images/images.qrc
