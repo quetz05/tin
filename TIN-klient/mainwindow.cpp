@@ -1,47 +1,44 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <unistd.h>
 
 MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
-    zaznaczonyZnajomy = NULL;
-    //wysz = NULL;
-    uzytkownik = login;
-    bramaZnajomych = NULL;
     gniazdo = socket;
+    uzytkownik = login;
+    zaznaczonyZnajomy = NULL;
+    bramaZnajomych = NULL;
     grRozmowa = NULL;
+    doda = NULL;
+    oknoWysylania= new QFileDialog(this);
+
+    con = new ServerConn(NULL,gniazdo);
 
     el = new ekranLogowania(this,gniazdo);
     el->show();
 
-    wiad = NULL;
 
+    //ekran logowania
     connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
     connect(this, SIGNAL(elSIGczyRejestracja(int)), el, SLOT(rejCzyRejestracja(int)));
     connect(this, SIGNAL(elSIGczyZaloguj(int)), el, SLOT(sprawdzZaloguj(int)));
 
-    con = new ServerConn(0, gniazdo);
 
+    //serverconnect
     connect(con, SIGNAL(czyRejestracja(int)), this, SLOT(elCzyRejestracja(int)));
     connect(con, SIGNAL(czyZaloguj(int)), this, SLOT(elCzyZaloguj(int)));
+    connect(con, SIGNAL(nowaRozmowa(int)), this, SLOT(twojaNowaRozmowa(int)));
+    connect(con, SIGNAL(odbiorRozmowy(int)), this, SLOT(nowaRozmowa(int)));
 
-    connect(con, SIGNAL(nowaRozmowa(int)), this, SLOT(nowaRozmowa(int)));
-    connect(con, SIGNAL(nowyRozmowca(int)), this, SLOT(nowyRozmowca(int)));
-
-
-    doda = NULL;
-    oknoWysylania= new QFileDialog(this);
 
     ui->setupUi(this);
 
 
-    connect(ui->pushRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijRozmowe()));
     connect(ui->pushWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijWysylanie()));
 
     connect(ui->pushGrupRozmawiaj, SIGNAL(clicked()), this, SLOT(rozpocznijGrupRozmowe()));
-    connect(ui->pushGrupWyslijPlik, SIGNAL(clicked()), this, SLOT(rozpocznijGrupWysylanie()));
 
     connect(ui->pushSzukajZnajomych, SIGNAL(clicked()), this, SLOT(wyszukiwarkaZnajomych()));
 
@@ -53,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(ui->pushUsun, SIGNAL(clicked()), this, SLOT(usunZnajomego()));
     connect(ui->listaZnajomych, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(zaznaczenieZnajomego(QListWidgetItem *)));
 
+
+
     //wyswietlanie loga
     QGraphicsScene *scene =  new QGraphicsScene();
     QPixmap pixmap(qApp->applicationDirPath() + "/images/tin.jpg");
@@ -61,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     ui->logoView->show();
 
 
-    ui->pushRozmawiaj->setEnabled(false);
+
     ui->pushWyslijPlik->setEnabled(false);
     ui->pushUsun->setEnabled(false);
 
@@ -82,8 +81,7 @@ MainWindow::~MainWindow()
         oknoInformacji = NULL;
 
     }
-    if(wiad)
-        delete wiad;
+
     delete ui;
 }
 
@@ -123,18 +121,6 @@ void MainWindow::wyszukiwarkaZnajomych()
     //wysz->show();
 }
 
-void MainWindow::rozpocznijRozmowe()
-{
-    if(wiad!=NULL)
-    {
-        delete wiad;
-        wiad = NULL;
-    }
-
-    wiad = new Wiadomosc(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
-    wiad->wyslijDoSerwera();
-
-}
 
 void MainWindow::rozpocznijWysylanie()
 {
@@ -175,7 +161,6 @@ void MainWindow::usunZnajomego()
 
             wczytajZnajomych();
             ui->pushUsun->setEnabled(false);
-            ui->pushRozmawiaj->setEnabled(false);
             ui->pushWyslijPlik->setEnabled(false);
         }
     }
@@ -194,7 +179,6 @@ void MainWindow::zaznaczenieZnajomego(QListWidgetItem *znajomy)
     }
     else
     {*/
-        ui->pushRozmawiaj->setEnabled(true);
         ui->pushWyslijPlik->setEnabled(true);
     //}
 }
@@ -225,6 +209,18 @@ void MainWindow::zakonczDodawanie()
 
 void MainWindow::zakonczRozmowe(int id)
 {
+    Szyfrator szyfr;
+    Wiadomosc wiad(ZAKONCZ_ROZMOWE,id,"",gniazdo);
+    unsigned int wielkosc;
+    char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+    if(write(gniazdo,wiadomosc,wielkosc)==-1){
+        qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
+    }
+
+    delete [] wiadomosc;
+
+
     QMap <int, oknoRozmowy*>::Iterator it = oknaRozmowy.find(id);
     delete oknaRozmowy.value(id);
     oknaRozmowy.erase(it);
@@ -237,6 +233,8 @@ void MainWindow::rozpocznijGrupRozmowe()
         znajomi = bramaZnajomych->getListaZnajomych();
 
         grRozmowa = new GrupowaRozmowa(this, znajomi);
+
+        connect(this, SIGNAL(grTwojaNowaRozmowa(int)), grRozmowa, SLOT(rozpocznijRozmowe(int)));
 
         connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
         connect(grRozmowa, SIGNAL(tworz(const QList<int>&)), this, SLOT(tworzGrupRoz(QList<int>)));
@@ -257,50 +255,13 @@ void MainWindow::zakonczGrupRoz()
 }
 
 
-void MainWindow::tworzGrupRoz(const QList<int> &lista)
-{
-       //wyslij do serwera liste i przyjmij ID rozmowy
-    int id = 17;
-
-
-
-    QList <QString> rozmowcy;
-    for(int i=0; i<lista.length(); i++)
-    {
-        for(int j=0; j<znajomi.length(); j++)
-            if(znajomi[j].second==lista[i])
-                rozmowcy.push_back(znajomi[j].first);
-    }
-
-
-    if(oknaRozmowy.count(id)==0)
-    {
-
-        oknaRozmowy.insert(id,new oknoRozmowy(this,id,rozmowcy,gniazdo));
-
-        connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
-
-        oknaRozmowy.value(id)->show();
-    }
-
-}
-
-void MainWindow::rozpocznijGrupWysylanie()
-{
-
-
-
-}
-
 void MainWindow::nowaRozmowa(int id)
 {
-    QList <QString> rozmowca;
-    rozmowca.push_back(zaznaczonyZnajomy->text());
 
     if(oknaRozmowy.count(id)==0)
     {
 
-        oknaRozmowy.insert(id,new oknoRozmowy(this,id,rozmowca,gniazdo));
+        oknaRozmowy.insert(id,new oknoRozmowy(this,id,gniazdo));
 
         connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
 
@@ -308,9 +269,7 @@ void MainWindow::nowaRozmowa(int id)
     }
 }
 
-void MainWindow::nowyRozmowca(int id)
+void MainWindow::twojaNowaRozmowa(int id)
 {
-
-
-
+    emit grTwojaNowaRozmowa(id);
 }

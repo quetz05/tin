@@ -6,7 +6,6 @@
 #include <QThread>
 #include "polaczenie.h"
 #include <QDebug>
-#include "szyfrator.h"
 
 
 int main(int argc, char *argv[])

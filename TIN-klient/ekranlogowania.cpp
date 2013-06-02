@@ -1,6 +1,8 @@
 #include "ekranlogowania.h"
 #include "ui_ekranlogowania.h"
 #include <QDebug>
+#include "szyfrator.h"
+#include <unistd.h>
 
 
 ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
@@ -46,11 +48,6 @@ ekranLogowania::~ekranLogowania()
 
 void ekranLogowania::zakoncz()
 {
-    /*if(wiad)
-    {
-        delete wiad;
-        wiad = NULL;
-    }*/
 
     wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
     wiad->wyslijDoSerwera();
@@ -74,14 +71,16 @@ void ekranLogowania::zaloguj()
 
     else if(login!="" && haslo!="")
     {
-        /*if(wiad)
-        {
-            delete wiad;
-            wiad = NULL;
 
-        }*/
-        wiad = new Wiadomosc (LOGUJ_UZYTKOWNIKA, 2*login.length(),login + haslo,gniazdo);
-        wiad->wyslijDoSerwera();
+        Szyfrator szyfr;
+        Wiadomosc wiad(LOGUJ_UZYTKOWNIKA, 2*login.length(),login + haslo,gniazdo);
+        unsigned int wielkosc;
+        char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+        if(write(gniazdo,wiadomosc,wielkosc)==-1){
+            qDebug()<<"Błąd przy logowaniu";
+        }
+
     }
 
 }

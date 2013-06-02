@@ -1,8 +1,11 @@
 #include "oknorozmowy.h"
 #include "ui_oknorozmowy.h"
+#include <unistd.h>
+#include "szyfrator.h"
+#include <QDebug>
 
 
-oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int socket) :
+oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)
 {
@@ -17,16 +20,9 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int s
 
     ID = id;
 
-    rozmowcy = rozmowca;
     gniazdo = socket;
 
 
-    QString tytul;
-
-    for(int i = 0; i<rozmowcy.length();i++)
-        tytul = tytul + rozmowcy[i] + ",";
-
-    this->setWindowTitle(tytul);
 
     ui->setupUi(this);
 
@@ -51,8 +47,14 @@ void oknoRozmowy::wyslij()
 {
     if(wiadomosc!="")
     {
-        //Wiadomosc wiadom( WYSLIJ_WIADOMOSC,ID,wiadomosc,gniazdo );
-        //wiadom.wyslijDoSerwera();
+        Szyfrator szyfr;
+        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID, wiadomosc, gniazdo);
+        unsigned int wielkosc;
+        char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+        if(write(gniazdo,wiadom,wielkosc)==-1){
+            qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
+        }
 
         //ui->oknoWiadomosci->append(loginTwoj + ": " + wiadomosc);
         ui->liniaWiadomosci->clear();

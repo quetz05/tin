@@ -27,12 +27,22 @@
  * bede jak wstane
  */
 
+/*
+ * jak by co to sekret moze byc umieszczony w this->sekret
+ *  i będę konsekwętnie podawał tą wartość do szyfrowania wszystkiego
+ *
+ *
+ *
+ */
+
+
 
 UserConnection::UserConnection(QObject *parent) :
     QThread(parent)
 {
     zalogowany = false;
     myid=-1;
+    sekret = -1;
 }
 
 UserConnection::UserConnection(int socket)
@@ -40,6 +50,7 @@ UserConnection::UserConnection(int socket)
     myid=-1;
     this->socket = socket;
     zalogowany = false;
+    sekret = -1;
 }
 
 ///zrobione chyba wszystko
@@ -55,7 +66,7 @@ void UserConnection::nowaWiadomosc(int id)
     // pojawila sie nowa wiadomosc od rozmowy id losowy to wypychamy ja na gniazd
     if(rozmowy[id]->czyWiadomosc(myid)){
         QString wiadomosc = rozmowy[id]->odbiezWiadomosc(id);
-        wyslijPakiet(WYSLIJ_WIADOMOSC,id,wiadomosc.size(),&wiadomosc);
+        wyslijPakiet(WYSLIJ_WIADOMOSC,id,&wiadomosc);
     }
 }
 
@@ -80,11 +91,11 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
     }// czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
     if(czy){// to my ja stworzylismy przed chwila
         qDebug() << "Se rozmowa sie stworzyla";
-        wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,0,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
+        wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
         return;
     }
     qDebug() << "Dodaj";
-    wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,0,NULL);
+    wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
 
 }
 
@@ -109,8 +120,7 @@ void UserConnection::run()
 
         char typ = nagl.typ;
         unsigned int id = nagl.ID;
-        unsigned int dlugosc = nagl.trueRozmiar;
-         unsigned int rozmiar = nagl.trueRozmiar;
+        unsigned int rozmiar = nagl.trueRozmiar;
 
         //read(socket,wiad,1);
         //char typ = wiad[0];
@@ -134,7 +144,7 @@ void UserConnection::run()
                 wyjscie=true;
                 break;
             case REJESTRUJ:
-
+            /*
             qDebug() <<"Wszedłem w ciebie...";
 
                 //tu odczytujemy login i haslo
@@ -146,8 +156,17 @@ void UserConnection::run()
                 for(unsigned int i=0;i<(rozmiar -id)/2;++i){
                     read(socket,wiad,2);
                     hash.append(*((QChar*)wiad));
-                }
+                }*/
+                // musimy odczytac calosc a potem podzielic ja na login i haslo
+                sup = new char[rozmiar];
+                memset(sup, '\0', rozmiar);
+                read(socket, sup, rozmiar);
+                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
+                login = wiadomosc.left(id);
+                hash = wiadomosc.right(wiadomosc.size()-id);
+
                 rejestruj(login,hash);
+                delete [] sup;
                 break;
             case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
@@ -162,19 +181,21 @@ void UserConnection::run()
 
                 qDebug() << wiadomosc;*/
 
-                sup = new char[dlugosc];
-                memset(sup, '\0', dlugosc);
+                sup = new char[rozmiar];
+                memset(sup, '\0', rozmiar);
 
-                qDebug() << "read == " << read(socket, sup, dlugosc);
+                read(socket, sup, rozmiar);
 
                 wiadomosc = szyfr.deszyfrujDane(sup, NULL, dlugosc);
 
                 qDebug() << "got == " << wiadomosc;
+                delete [] sup;
+                if(rozmowy.contains(id)) rozmowy[id]->wyslijWiadomosc(wiadomosc);
 
                 break;
             case LOGUJ_UZYTKOWNIKA:
                 // tu trzeba nam jakas funkcje do logowania
-
+                /*
                 //tu odczytujemy login i haslo
                 for(unsigned int i=0;i<id/2;++i){
                     read(socket,wiad,2);
@@ -184,8 +205,17 @@ void UserConnection::run()
                 for(unsigned int i=0;i<(rozmiar -id)/2;++i){
                     read(socket,wiad,2);
                     hash.append(*((QChar*)wiad));
-                }
+                }*/
+                sup = new char[rozmiar];
+                memset(sup, '\0', rozmiar);
+                read(socket, sup, rozmiar);
+                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
+                login = wiadomosc.left(id);
+                hash = wiadomosc.right(wiadomosc.size()-id);
+
                 loguj(login,hash);
+                delete [] sup;
+
                 break;
   //          case SPRAWDZ_DOSTEPNOSC:// nie wiem czy to wogole bedziemy robic ale nie ch bedzie
   //              break;
@@ -225,14 +255,14 @@ void UserConnection::run()
 void UserConnection::rejestruj(QString name, QString pass)
 {
     BramaUzytkownikow  *brama = BramaUzytkownikow::getSharedInstance();
-    if(brama->sprawdzUzytkownika(name)==0){
+    if(brama->sprawdzUzytkownika(name)<=0){
         int id =brama->dodajUzytkownika(name,pass);
         // i wysylamy takie cos ze sie u
-        wyslijPakiet(REJESTRUJ,id,0,NULL);
+        wyslijPakiet(REJESTRUJ,id,NULL);
     }
     else{
         //tu wysylamy wiadomosc ze juz taki ktos jest i kij mu w oko
-        wyslijPakiet(REJESTRUJ,0,0,NULL);
+        wyslijPakiet(REJESTRUJ,0,NULL);
     }
 }
 
@@ -243,31 +273,44 @@ void UserConnection::loguj(QString name, QString pass)
     // najpierw sprawdzamy czy gosc istnieje
     int id = brama->sprawdzUzytkownika(name);
     // jak taki jest to sprawdzamy czy sie haslo zgadza
-    if(id !=0){
+    if(id >0){
         QString haslo = brama->getHashPassword(id);
         if(!haslo.compare(pass)){
             qDebug() << "Hasło się zgadza!";
             myid=id;
-            wyslijPakiet(LOGUJ_UZYTKOWNIKA,id,0,NULL);
+            wyslijPakiet(LOGUJ_UZYTKOWNIKA,id,NULL);
             emit dodajeSieDoListy(myid,this);
             return;
         }
     }
-    wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,0,NULL);
+    wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,NULL);
     // nie udalo sie zalogowac trzeba naszego goscia o tym powiadomic
 }
 // tu bedziemy wysylac nanana
-void UserConnection::wyslijPakiet(char typ, unsigned int id, unsigned int daneRozm, QString *dane)
+void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
+    Szyfrator szyfr;
+    // tworzymy wiadomość
+    Wiadomosc wiad(typ,id,*dane,this->socket);
+    unsigned int wielkosc;
+    char * wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
     mutex.lock(); //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony
+    // i wysylamy pod mutexem
+    if(write(socket,wiadomosc,wielkosc)==-1){
+        qDebug()<<"Błąd przy nadawaniu wiadomosci\n";
+    }
 
+    // to będzie z goła inaczej
+    /*
     if(write(socket,&typ,1)==-1){
         qDebug()<<"Błąd przy nadawaniu typu nagłówka\n";
     }
+    id = htons(id);
     char *usrid = (char*)(&id);
     if(write(socket,usrid,4)==-1){
         qDebug()<<"Błąd przy nadawaniu id\n";
     }
+    daneRozm = htons(daneRozm);
     usrid = (char*)(&daneRozm);
     if(write(socket,&usrid,4)==-1){
         qDebug()<<"Błąd przy nadawaniu rozmiaru danych\n";
@@ -278,6 +321,7 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, unsigned int daneRo
             qDebug()<<"Błąd przy nadawaniu danych\n";
         }
     }
+    */
     mutex.unlock();
 }
 

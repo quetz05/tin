@@ -66,9 +66,9 @@ void ServerConn::odbierajWiadomosci()
         emit nowaRozmowa(id);
         break;
 
-   /* case  DODAJ_DO_ROZMOWY:
-        emit nowyRozmowca(id);
-        break;*/
+    case  DODAJ_DO_ROZMOWY:
+        emit odbiorRozmowy(id);
+        break;
     }
        /* case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
