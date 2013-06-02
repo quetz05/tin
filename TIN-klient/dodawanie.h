@@ -32,6 +32,9 @@ private slots:
     void dodajZnajomego();
     void wyjscie();
 
+public slots:
+    void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
+
 signals:
     void zakoncz();
     

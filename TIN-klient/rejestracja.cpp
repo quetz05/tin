@@ -45,11 +45,11 @@ Rejestracja::~Rejestracja()
 
 void Rejestracja::rejestruj()
 {
-   /* if(oknoInformacji!=NULL)
+    if(oknoInformacji)
     {
         delete oknoInformacji;
         oknoInformacji = NULL;
-    }*/
+    }
 
    /* if(wiad!=NULL)
     {
@@ -106,11 +106,11 @@ void Rejestracja::wyjscie()
 void Rejestracja::wynikRejestracji(int wynik)
 {
 
-    /*if(oknoInformacji!=NULL)
+    if(oknoInformacji)
     {
         delete oknoInformacji;
         oknoInformacji = NULL;
-    }*/
+    }
 
     if (!wynik==0)
     {

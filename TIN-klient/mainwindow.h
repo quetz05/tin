@@ -64,10 +64,14 @@ private slots:
     void nowaRozmowa(int id);
     void nowyRozmowca(int id);
 
+public slots:
+    void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
+
     
 public:
     explicit MainWindow(QWidget *parent = 0, QString login="", int socket=0);
     ~MainWindow();
+    ServerConn *con;
 
 private:
 
@@ -86,8 +90,6 @@ private:
     ekranLogowania *el;
     Wiadomosc *wiad;
 
-public:
-    ServerConn *con;
 
 signals:
     //sygnal do ekranu logowania
