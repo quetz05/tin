@@ -12,6 +12,22 @@
 #include "rozmowa.h"
 #include "szyfrator.h"
 
+/*
+ * ----- BARTKU !! ------
+ * bo ja podpiąłem w celach testowych swoje szyfrowanko
+ * a w zasadzie to tu odbiór
+ * i on pewnie się będzie bardzo źle zachowywał :P
+ * bo tylko funkcja odbioru zwykłej wiadomości została
+ * przeze mnie zmieniona
+ * rozmiar nagłówka masz w #define HEADER_SIZE
+ * a rozmiar masz potem zapisany w Naglowek.trueRozmiar
+ * zreszta w funkcji obslugi przychodzacych rzeczy tam
+ * zakomentowalem Twoj kod i napisalem swoj
+ * takze ten
+ * bede jak wstane
+ */
+
+
 UserConnection::UserConnection(QObject *parent) :
     QThread(parent)
 {
@@ -80,10 +96,10 @@ void UserConnection::run()
     qDebug() << "wystartowal watek urzytkownika\n";
     while(!wyjscie){ // 0 kod wyjscia
      // tu obróbka danych i wyslanie nowych wiadomosci
-        char wiad[36];
+        char wiad[HEADER_SIZE];
         char *sup;
 
-        read(socket, wiad, 36);
+        read(socket, wiad, HEADER_SIZE);
 
         Szyfrator szyfr;
 

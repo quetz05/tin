@@ -4,6 +4,8 @@
 #include <QString>
 #include "../wiadomosc.h"
 
+#define HEADER_SIZE 36
+
 class Szyfrator
 {
 public:
