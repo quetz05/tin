@@ -2,7 +2,7 @@
 #include "ui_oknorozmowy.h"
 
 
-oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int socket) :
+oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)
 {
@@ -17,16 +17,9 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, QList<QString> rozmowca, int s
 
     ID = id;
 
-    rozmowcy = rozmowca;
     gniazdo = socket;
 
 
-    QString tytul;
-
-    for(int i = 0; i<rozmowcy.length();i++)
-        tytul = tytul + rozmowcy[i] + ",";
-
-    this->setWindowTitle(tytul);
 
     ui->setupUi(this);
 

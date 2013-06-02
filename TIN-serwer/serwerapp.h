@@ -15,6 +15,7 @@ private:
     QMap<int,UserConnection*> users;// mapa urzytkowników do przetrzymania
     QMap<int,rozmowa*>   rozmowy;
     int port;
+    int sockett;
 public:
     /**
      * @brief SerwerApp domyslny konstruktor

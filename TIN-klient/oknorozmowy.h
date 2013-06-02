@@ -22,7 +22,7 @@ private slots:
     void zakoncz();
 
 public:
-    explicit oknoRozmowy(QWidget *parent = 0, int id = 0, QList <QString> rozmowca=*(new QList<QString>), int socket=0);
+    explicit oknoRozmowy(QWidget *parent = 0, int id = 0, int socket=0);
     ~oknoRozmowy();
 
 

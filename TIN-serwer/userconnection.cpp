@@ -222,8 +222,16 @@ void UserConnection::run()
             case ZAKONCZ_ROZMOWE:
                 // uzytkownik chce zakonczyc rozmowe
                 emit opuszczamRozmowe(myid,id);
+                sup = new char[rozmiar];
+                memset(sup, '\0', rozmiar);
+                read(socket, sup, rozmiar);
+                delete [] sup;
                 break;
             case ROZPOCZNIJ_ROZMOWE:// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
+                sup = new char[rozmiar];
+                memset(sup, '\0', rozmiar);
+                read(socket, sup, rozmiar);
+                delete [] sup;
                 emit tworzeRozmowe(myid); // tu musimy pamietac aby potem rozruzniac zaproszenia
             // do naszych wlasnych rozmow
                 break;
@@ -295,9 +303,17 @@ void UserConnection::loguj(QString name, QString pass)
 // tu bedziemy wysylac nanana
 void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
+
     Szyfrator szyfr;
+
     // tworzymy wiadomość
-    Wiadomosc wiad(typ,id,*dane,this->socket);
+    QString dane1;
+    if(dane==NULL){
+        dane1 = "";
+    }else{
+        dane1 = *dane;
+    }
+    Wiadomosc wiad(typ,id,dane1,this->socket);
     unsigned int wielkosc;
     char * wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
     mutex.lock(); //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony

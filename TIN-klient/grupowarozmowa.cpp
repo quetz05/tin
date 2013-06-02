@@ -1,7 +1,10 @@
 #include "grupowarozmowa.h"
 #include "ui_grupowarozmowa.h"
+#include "szyfrator.h"
+#include <QDebug>
+#include <unistd.h>
 
-GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista) :
+GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista, int socket) :
     QDialog(parent),
     ui(new Ui::GrupowaRozmowa)
 {
@@ -9,12 +12,15 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista) :
 
     ui->setupUi(this);
 
+    gniazdo = socket;
+
     znajomi = lista;
     zaznaczonyDodaj = NULL;
     zaznaczonyUsun = NULL;
 
     connect(ui->pushAnuluj, SIGNAL(clicked()), this, SLOT(wyjdz()));
     connect(ui->pushTworz, SIGNAL(clicked()), this, SLOT(tworzRozmowe()));
+
 
     connect(ui->pushDodaj, SIGNAL(clicked()), this, SLOT(dodajDoRozmowy()));
     connect(ui->pushUsun, SIGNAL(clicked()), this, SLOT(usunZRozmowy()));
@@ -32,10 +38,10 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista) :
 
 GrupowaRozmowa::~GrupowaRozmowa()
 {
-    zaznaczonyDodaj = NULL;
-    zaznaczonyUsun = NULL;
-    delete zaznaczonyDodaj;
-    delete zaznaczonyUsun;
+    if(zaznaczonyDodaj != NULL)
+         delete zaznaczonyDodaj;
+    if(zaznaczonyUsun != NULL)
+        delete zaznaczonyUsun;
     delete ui;
 }
 
@@ -98,18 +104,44 @@ void GrupowaRozmowa::tworzRozmowe()
 {
     if(!znajomiDodani.empty())
     {
-
-        QList <int> IDs;
         for(int i = 0; i<znajomiDodani.length(); i++)
             IDs.push_back(znajomiDodani[i].second);
 
-        emit tworz(IDs);
+        //emit tworz(IDs);
 
-        emit wyjdz();
+        Szyfrator szyfr;
+        Wiadomosc wiad(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
+        unsigned int wielkosc;
+        char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+        if(write(gniazdo,wiadomosc,wielkosc)==-1){
+            qDebug()<<"Błąd przy wysyłaniu wiadomosci o ID do rozmowy";
+        }
+
     }
 
+}
+
+
+void GrupowaRozmowa::rozpocznijRozmowe(int id)
+{
+
+    for(int i = 0;i<IDs.length();i++)
+    {
+
+
+        Szyfrator szyfr;
+        Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
+        unsigned int wielkosc;
+        char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+        if(write(gniazdo,wiadomosc,wielkosc)==-1){
+            qDebug()<<"Błąd przy wysyłaniu id uzytkownika do nowej rozmowy";
+        }
+    }
 
 }
+
 
 void GrupowaRozmowa::odswiezListy()
 {
@@ -125,8 +157,6 @@ void GrupowaRozmowa::odswiezListy()
     if(!znajomiDodani.empty())
         for(int i = 0; i<znajomiDodani.length(); i++)
             ui->listDodane->addItem(znajomiDodani[i].first +"  "+"|"+QString::number(znajomiDodani[i].second)+"|");
-
-
 
 
 }
