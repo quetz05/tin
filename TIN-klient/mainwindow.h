@@ -64,6 +64,8 @@ private slots:
     void nowaRozmowa(int id);
     void twojaNowaRozmowa(int id);
 
+    void odbierajWiadomosc(int id, QString wiadomosc);
+
 
 public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}

@@ -23,6 +23,8 @@ signals:
     //sygnał, że ktoś chce z nami rozmawiać
     void odbiorRozmowy(int);
 
+    void odebranaWiadomosc(int,QString);
+
 public slots:
 
     void odbierajWiadomosci();

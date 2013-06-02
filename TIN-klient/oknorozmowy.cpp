@@ -5,22 +5,19 @@
 #include <QDebug>
 
 
-oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket) :
+oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
     QDialog(parent),
     ui(new Ui::oknoRozmowy)
 {
     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-   // Wiadomosc wiadom( ROZPOCZNIJ_ROZMOWE,0,QString(""),gniazdo );
-    //wiadom.wyslijDoSerwera();
     wiad = NULL;
-
-    /*@TODO funkcja read/ parę wątków*/
-
 
     ID = id;
 
     gniazdo = socket;
+
+    uzytkownik = login;
 
 
 
@@ -48,7 +45,7 @@ void oknoRozmowy::wyslij()
     if(wiadomosc!="")
     {
         Szyfrator szyfr;
-        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID, wiadomosc, gniazdo);
+        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID,uzytkownik +QString(": ")  + wiadomosc, gniazdo);
         unsigned int wielkosc;
         char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
 
@@ -62,6 +59,7 @@ void oknoRozmowy::wyslij()
 
 }
 
+
 void oknoRozmowy::zakoncz()
 {
 
@@ -70,4 +68,10 @@ void oknoRozmowy::zakoncz()
 
        koniecRozmowy(ID);
 }
+
+void oknoRozmowy::wyswietlWiadomosc(QString wiadomosc)
+{
+    ui->oknoWiadomosci->append(wiadomosc);
+}
+
 

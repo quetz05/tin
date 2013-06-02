@@ -69,6 +69,14 @@ void ServerConn::odbierajWiadomosci()
     case  DODAJ_DO_ROZMOWY:
         emit odbiorRozmowy(id);
         break;
+
+   case WYSLIJ_WIADOMOSC:
+
+        emit odebranaWiadomosc(id, wiadomosc);
+
+
+
+
     }
        /* case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
 
@@ -81,33 +89,7 @@ void ServerConn::odbierajWiadomosci()
             //odbior wiadomosci -> wysłanie do okna
 
             break;
-
-        case LOGUJ_UZYTKOWNIKA:
-            // tu trzeba nam jakas funkcje do logowania
-
-            //tu odczytujemy login i haslo
-            for(unsigned int i=0;i<id;++i)
-            {
-                read(socket,wiad,2);
-                login.append(*((QChar*)wiad));
-            }
-
-            for(unsigned int i=0;i<rozmiar -id;++i)
-            {
-                read(socket,wiad,2);
-                hash.append(*((QChar*)wiad));
-            }
-            loguj(login,hash);
-            break;
-
-
-        case ROZPOCZNIJ_ROZMOWE:// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
-            emit tworzeRozmowe(myid); // tu musimy pamietac aby potem rozruzniac zaproszenia
-        // do naszych wlasnych rozmow
-            break;
-
-    }*/
-
+*/
 
 
 }

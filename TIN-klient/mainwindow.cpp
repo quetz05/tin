@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(czyZaloguj(int)), this, SLOT(elCzyZaloguj(int)));
     connect(con, SIGNAL(nowaRozmowa(int)), this, SLOT(twojaNowaRozmowa(int)));
     connect(con, SIGNAL(odbiorRozmowy(int)), this, SLOT(nowaRozmowa(int)));
+    connect(con, SIGNAL(odebranaWiadomosc(int,QString)), this, SLOT(odbierajWiadomosc(int, QString)));
 
 
     ui->setupUi(this);
@@ -261,7 +262,7 @@ void MainWindow::nowaRozmowa(int id)
     if(oknaRozmowy.count(id)==0)
     {
 
-        oknaRozmowy.insert(id,new oknoRozmowy(this,id,gniazdo));
+        oknaRozmowy.insert(id,new oknoRozmowy(this,id,gniazdo,uzytkownik));
 
         connect(oknaRozmowy.value(id), SIGNAL(koniecRozmowy(int)), this, SLOT(zakonczRozmowe(int)));
 
@@ -272,4 +273,9 @@ void MainWindow::nowaRozmowa(int id)
 void MainWindow::twojaNowaRozmowa(int id)
 {
     emit grTwojaNowaRozmowa(id);
+}
+
+void MainWindow::odbierajWiadomosc(int id, QString wiadomosc)
+{
+    oknaRozmowy.value(id)->wyswietlWiadomosc(wiadomosc);
 }
