@@ -116,6 +116,7 @@ void UserConnection::run()
         Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
 
         qDebug() << "rozmiar == " << nagl.trueRozmiar;
+        qDebug() << "typ == " << nagl.typ;
 
         char typ = nagl.typ;
         unsigned int id = nagl.ID;
@@ -140,7 +141,8 @@ void UserConnection::run()
         std::string wiadomosc2 = "";
         switch(typ){
             case ODLACZ_UZYTKOWNIKA:{ // skladamy samokrytyke i odlaczamy sie z serwera
-                wyjscie=true;}
+            qDebug() << "wyjscie --- ";
+            wyjscie=true;}
                 break;
             case REJESTRUJ:{
             /*

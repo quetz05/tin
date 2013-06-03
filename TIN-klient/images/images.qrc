@@ -1,1 +1,8 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/images">
+        <file>dodaj.jpg</file>
+        <file>error.jpg</file>
+        <file>ok.jpg</file>
+        <file>tin.jpg</file>
+    </qresource>
+</RCC>
