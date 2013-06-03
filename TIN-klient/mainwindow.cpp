@@ -236,8 +236,8 @@ void MainWindow::rozpocznijGrupRozmowe()
         grRozmowa = new GrupowaRozmowa(this, znajomi);
 
         connect(this, SIGNAL(grTwojaNowaRozmowa(int)), grRozmowa, SLOT(rozpocznijRozmowe(int)));
-
         connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
+
         grRozmowa->show();
 
     }
@@ -247,11 +247,8 @@ void MainWindow::rozpocznijGrupRozmowe()
 
 void MainWindow::zakonczGrupRoz()
 {
-    if(grRozmowa)
-    {
         delete grRozmowa;
         grRozmowa = NULL;
-    }
 }
 
 

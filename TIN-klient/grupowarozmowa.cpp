@@ -128,8 +128,6 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
 
     for(int i = 0;i<IDs.length();i++)
     {
-
-
         Szyfrator szyfr;
         Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
         unsigned int wielkosc;
