@@ -241,10 +241,22 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
     *pSize = payloadSize;
 
     char *wynik = new char[payloadSize];
+    char *temp1 = new char[wynikowaNaglowek.length() + 1];
+    char *temp2 = new char[wynikowaDane.length() + 1];
     memset(wynik, '\0', payloadSize);
+    memset(temp2, '\0', wynikowaDane.length() + 1);
+    memset(temp1, '\0', wynikowaNaglowek.length() + 1);
 
-    strcat(wynik, wynikowaNaglowek.data());
-    strcat(wynik, wynikowaDane.data());
+    strncpy(temp1, wynikowaNaglowek.data(), wynikowaNaglowek.length());
+    strncpy(temp2, wynikowaDane.data(), wynikowaDane.length());
+
+    strcat(wynik, temp1);
+    strcat(wynik, temp2);
+
+    wynikowaDane.clear();
+    wynikowaNaglowek.clear();
+    prepDane.clear();
+    prepNaglowek.clear();
 
     return wynik;
 }
@@ -259,14 +271,11 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
 
     wynikowa = QByteArray::fromBase64(wynikowa);
 
-    qDebug() << "wynikowa == " << wynikowa;
-
     unsigned short ileX = wynikowa.count('x');
 
     if (ileX > 2)
         wynikowa.chop(ileX - 2);
 
-    qDebug() << "chopped == " << wynikowa;
 
     QList<QByteArray> wart = wynikowa.split('x');
 

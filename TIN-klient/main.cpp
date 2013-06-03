@@ -32,29 +32,12 @@ int main(int argc, char *argv[])
 
     odbiorSerwer.start();
 
-   /* Szyfrator szyfr;
+    Szyfrator szyfr;
 
     Klucz n = szyfr.wygenerujKlucz();
     QString s = szyfr.kluczDoStringa(&n);
     qDebug() << s;
     n = szyfr.stringDoKlucz(s);
-
-    unsigned int size;
-/*
-    Wiadomosc wiad(WYSLIJ_WIADOMOSC, 12, QString("to jest jakiś bardzo długi tekst, który zaraz spróbuje przesłać sobie ja :)"), gniazdo);
-    char *sz = szyfr.szyfruj(&wiad, NULL, &size);
-
-    wiad.wyslijDoSerwera(sz, size);
-
-    Wiadomosc wiad2(WYSLIJ_WIADOMOSC, 12, QString("zażółć gęślą jaźń"), gniazdo);
-    char *sz2 = szyfr.szyfruj(&wiad2, NULL, &size);
-
-    wiad.wyslijDoSerwera(sz2, size);
-
-    Wiadomosc wiad3(WYSLIJ_WIADOMOSC, 12, QString(""), gniazdo);
-    char *sz3 = szyfr.szyfruj(&wiad3, NULL, &size);
-
-    wiad.wyslijDoSerwera(sz3, size);*/
 
     int i = a.exec();
 
