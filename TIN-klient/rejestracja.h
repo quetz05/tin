@@ -8,7 +8,10 @@
 namespace Ui {
 class Rejestracja;
 }
-
+ /**
+  *@brief The Rejestracja class
+  * Klasa pozwalajaca na rejestracje nowego uzytkownika
+  */
 class Rejestracja : public QDialog
 {
     Q_OBJECT
@@ -44,7 +47,6 @@ private:
     QString haslo2;
     int gniazdo;
     Wiadomosc *wiad;
-
     info *oknoInformacji;
 };
 
