@@ -25,40 +25,49 @@ private slots:
     /**
     * @brief czytajLogin
     * czyta login z pola tekstowego
+    * */
     void czytajLogin(QString);
     /**
     * @brief czytajHaslo
     * czyta hasło z pola tekstowego
+    * */
     void czytajHaslo(QString);
     /**
     * @brief zakoncz
     * konczy program
+    * */
     void zakoncz();
     /**
     * @brief  zaloguj
     * wysyła wiadomość do serwera w celu zalogowania uzytkownika
+    * */
     void zaloguj();
     /**
     * @brief rejestruj
     * wysyła wiadomość do serwera w celu rejestracji
+    * */
     void rejestruj();
     /**
     * @brief zakonczRejestracje
     * zamyka okno rejestracji (chowa de facto)
+    * */
     void zakonczRejestracje();
 
 public slots:
     /**
     * @brief rejCzyRejestracja
     * przesyła sygnał do okna rejestracji z wynikiem operacji (ID)
+    * */
     void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
     /**
     * @brief sprawdzZaloguj
     * sprawdza czy zalogowanie jest mozliwe (poprawne)
+    * */
     void sprawdzZaloguj(int);
      /**
     * @brief koniecInfo
     * niszczy okno informacji
+    * */
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
 
 signals:
@@ -71,6 +80,7 @@ public:
     /**
     * @brief pobierzLogin
     * pobiera login
+    * */
     QString pobierzLogin();
     
 private:
