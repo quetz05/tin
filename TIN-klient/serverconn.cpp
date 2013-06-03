@@ -46,6 +46,7 @@ void ServerConn::odbierajWiadomosci()
     //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
 */
 
+    while(1) {
     char wiad[HEADER_SIZE];
     char *sup;
 
@@ -115,5 +116,5 @@ void ServerConn::odbierajWiadomosci()
             break;
 */
 
-
+}
 }

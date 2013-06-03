@@ -18,6 +18,9 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(znajomi_zasoby);
     Q_INIT_RESOURCE(images);
 
+    qDebug() << qVersion();
+    qDebug() << QT_VERSION_STR;
+
     QApplication a(argc, argv);
 
     QThread odbiorSerwer;
@@ -53,10 +56,14 @@ int main(int argc, char *argv[])
 
     wiad.wyslijDoSerwera(sz3, size);*/
 
-  int i = a.exec();
+    int i = a.exec();
 
-  //Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-  //wiad.wysl   ijDoSerwera();
+
+  Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,QString(""),gniazdo);
+  unsigned int rozmiar;
+  char *sz = szyfr.szyfruj(&wiad, NULL, &rozmiar);
+
+  wiad.wyslijDoSerwera(sz, rozmiar);
 
 
       return i;
