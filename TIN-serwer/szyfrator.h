@@ -5,7 +5,6 @@
 #include "../wiadomosc.h"
 
 #define HEADER_SIZE 56
-
 typedef struct Klucz {
 
     unsigned int k[4];

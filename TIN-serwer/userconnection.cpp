@@ -328,6 +328,7 @@ void UserConnection::loguj(QString name, QString pass)
 // tu bedziemy wysylac nanana
 void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
+    mutex.lock();
 
     qDebug() << "---------- bede slal! typ == " << (int)typ << " ---------";
 
@@ -343,12 +344,12 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     Wiadomosc wiad(typ,id,dane1,this->socket);
     unsigned int wielkosc;
     char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
-    mutex.lock(); //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony
+     //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony
     // i wysylamy pod mutexem
     if(write(socket,wiadomosc,wielkosc)==-1){
         qDebug()<<"Błąd przy nadawaniu wiadomosci\n";
     }
-    delete wiadomosc;
+    //delete wiadomosc;
     // to będzie z goła inaczej
     /*
     if(write(socket,&typ,1)==-1){

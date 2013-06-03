@@ -214,14 +214,12 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
     QByteArray prepDane(dane.c_str());
     prepDane = prepDane.toBase64();
 
-    naglowek << prepDane.length();
+    QByteArray wynikowaDane;
+    encrypt(&prepDane, &wynikowaDane, klucz);
 
-    //QByteArray wynikowaDane;
-    //encrypt(&prepDane, &wynikowaDane, klucz);
+    wynikowaDane = wynikowaDane.toBase64();
 
-    //wynikowaDane = wynikowaDane.toBase64();
-
-    //naglowek << wynikowaDane.size();
+    naglowek << wynikowaDane.size() + 1;
 
     unsigned short size = naglowek.str().size();
 
@@ -233,39 +231,25 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
     QByteArray prepNaglowek(naglowek.str().c_str());
     prepNaglowek = prepNaglowek.toBase64();
 
-    //QByteArray wynikowaNaglowek;
+    QByteArray wynikowaNaglowek;
 
-    //encrypt(&prepNaglowek, &wynikowaNaglowek, klucz);
+    encrypt(&prepNaglowek, &wynikowaNaglowek, klucz);
 
-    //wynikowaNaglowek = wynikowaNaglowek.toBase64();
+    wynikowaNaglowek = wynikowaNaglowek.toBase64();
 
-    unsigned int payloadSize = prepDane.length() + prepNaglowek.length();
-    //unsigned int payloadSize = wynikowaDane.length() + wynikowaNaglowek.length();
+    unsigned int payloadSize = wynikowaDane.length() + wynikowaNaglowek.length() + 1;
     *pSize = payloadSize;
 
     char *wynik = new char[payloadSize];
-//    char *temp1 = new char[wynikowaNaglowek.length() + 1];
-//    char *temp2 = new char[wynikowaDane.length() + 1];
     memset(wynik, '\0', payloadSize);
-//    memset(temp2, '\0', wynikowaDane.length() + 1);
-//    memset(temp1, '\0', wynikowaNaglowek.length() + 1);
 
-//    strncpy(temp1, wynikowaNaglowek.data(), wynikowaNaglowek.length());
-//    strncpy(temp2, wynikowaDane.data(), wynikowaDane.length());
+    int i = 0;
 
-//    strcat(wynik, temp1);
-//    strcat(wynik, temp2);
+    for (i = 0; i < wynikowaNaglowek.length(); ++i)
+        wynik[i] = wynikowaNaglowek[i];
 
-    strncat(wynik, prepNaglowek.data(), prepNaglowek.length());
-    strncat(wynik, prepDane.data(), prepDane.length());
-
-    //strncat(wynik, wynikowaNaglowek.data(), wynikowaNaglowek.length());
-    //strncat(wynik, wynikowaDane.data(), wynikowaNaglowek.length());
-
-    //wynikowaDane.clear();
-    //wynikowaNaglowek.clear();
-    //prepDane.clear();
-    //prepNaglowek.clear();
+    for (int j = 0; j < wynikowaDane.length(); ++j)
+        wynik[i + j] = wynikowaDane[j];
 
     return wynik;
 }
@@ -274,37 +258,29 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
 {
 
     QByteArray dane = QByteArray::fromBase64(data);
-    //QByteArray wynikowa;
+    QByteArray wynikowa;
 
-    //decrypt(&dane, &wynikowa, klucz);
+    decrypt(&dane, &wynikowa, klucz);
 
-    //wynikowa = QByteArray::fromBase64(wynikowa);
+    wynikowa = QByteArray::fromBase64(wynikowa);
 
-    unsigned short ileX = dane.count('x');
+    unsigned short ileX = wynikowa.count('x');
 
     if (ileX > 2)
-        dane.chop(ileX - 2);
+        wynikowa.chop(ileX - 2);
 
 
-    QList<QByteArray> wart = dane.split('x');
+    QList<QByteArray> wart = wynikowa.split('x');
 
-    char typ;
-    unsigned int ID;
-    unsigned int size;
+    char typ = -1;
+    unsigned int ID = 0;
+    unsigned int size = 0;
 
     bool a1, a2, a3;
 
-    if (wart.length() != 3) {
-        qDebug() << "bad juju - trying different method";
-
-        QString dane(wynikowa.data());
-
-    } else {
-        typ = (char)wart[0].toInt(&a1);
-        ID = wart[1].toInt(&a2);
-        size = wart[2].toInt(&a3);
-
-    }
+    typ = (char)wart[0].toInt(&a1);
+    ID = wart[1].toInt(&a2);
+    size = wart[2].toInt(&a3);
 
     ID = ntohs(ID);
 
@@ -313,20 +289,17 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
     naglowek.ID = ID;
     naglowek.trueRozmiar = size;
 
-    qDebug() << typ << " :: "<< ID << " :: " << size;
-
     return naglowek;
 }
 
 QString Szyfrator::deszyfrujDane(char *data, Klucz *klucz)
 {
     QByteArray dane = QByteArray::fromBase64(data);
-    //QByteArray wynikowa;
+    QByteArray wynikowa;
 
-    //decrypt(&dane, &wynikowa, klucz);
+    decrypt(&dane, &wynikowa, klucz);
 
-    //wynikowa = QByteArray::fromBase64(wynikowa);
+    wynikowa = QByteArray::fromBase64(wynikowa);
 
-    return QString(dane.data());
-
+    return QString(wynikowa.data());
 }

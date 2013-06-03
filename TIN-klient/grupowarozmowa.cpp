@@ -107,8 +107,6 @@ void GrupowaRozmowa::tworzRozmowe()
         for(int i = 0; i<znajomiDodani.length(); i++)
             IDs.push_back(znajomiDodani[i].second);
 
-        //emit tworz(IDs);
-
         Szyfrator szyfr;
         Wiadomosc wiad(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
         unsigned int wielkosc;

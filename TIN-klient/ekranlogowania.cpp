@@ -38,8 +38,6 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
 
 ekranLogowania::~ekranLogowania()
 {
-   /* if(oknoInformacji)
-        delete oknoInformacji;*/
 
     delete ui;
 }
@@ -47,8 +45,11 @@ ekranLogowania::~ekranLogowania()
 void ekranLogowania::zakoncz()
 {
 
+    Szyfrator szyfr;
+    unsigned int size;
     wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
-    wiad->wyslijDoSerwera();
+    char *sz = szyfr.szyfruj(wiad, NULL, &size);
+    wiad->wyslijDoSerwera(sz, size);
 
     QApplication::exit();
 }

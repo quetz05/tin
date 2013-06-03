@@ -5,6 +5,7 @@ rozmowa::rozmowa(int id,QObject *parent) :
     QObject(parent)
 {
     myid= id;
+    last = "";
 }
 
 QString rozmowa::odbiezWiadomosc(int id)
@@ -22,6 +23,9 @@ QString rozmowa::odbiezWiadomosc(int id)
 
             QString wiad = "";
             wiad.append(messages[i].Czytaj(id));
+            last = "";
+            last.append(messages[i].Czytaj(id));
+
             if(messages[i].iluPrzeczytalo()==userNbr){ //sprawdzamy czy czytamy tą wiadomość jako ostatni jezeli tak to ja usuwamy
                 messages.remove(i);
             }
@@ -38,7 +42,7 @@ QString rozmowa::odbiezWiadomosc(int id)
 
     }
     mutex.unlock();
-    return QString("wiadomosc_1");
+    return last;
 }
 // sprawdzamy czy czeka na nas jakas wiadomosc
 bool rozmowa::czyWiadomosc(int id)

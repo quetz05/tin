@@ -36,8 +36,6 @@ dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych, int socket
 
 dodawanie::~dodawanie()
 {
-    //oknoInformacji = NULL;
-    //brama = NULL;
     delete brama;
     delete oknoInformacji;
     delete ui;
@@ -86,17 +84,6 @@ void dodawanie::dodajZnajomego()
          }
     else
        oknoInformacji = new info(this, "Coś się zepsuło i nie mogłem dodać znajomego. Pewnie twórcy coś skopali w kodzie...",false);
-
-
-    /*
-        Szyfrator szyfr;
-        Wiadomosc wiad(CZY_ISTNIEJE, znajomy.second,znajomy.first,gniazdo);
-        unsigned int wielkosc;
-        char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
-
-        if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
-            qDebug()<<"Błąd pry sprawdzaniu istnienia znajomego";
-        }*/
 
 }
 

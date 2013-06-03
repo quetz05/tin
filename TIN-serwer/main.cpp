@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
     // moze tu sobie zrzucimy pewne wartości z argv zeby miec je jakby co i zeby nie przekazywac calosci do aplikacji
     //taka podstawowa obróbka
-    int port = 1111;
+    int port = 1112;
     /*if(argc>1)
     {
         port = atoi(argv[1]);

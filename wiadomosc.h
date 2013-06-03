@@ -39,7 +39,6 @@ public:
 
     Naglowek naglowek;
     bool wyslijDoSerwera(const char* co, unsigned int rozmiar);
-    bool wyslijDoSerwera() { return true; }
 
     int gniazdo;
     QString trueDane;

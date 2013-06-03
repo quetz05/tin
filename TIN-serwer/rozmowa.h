@@ -17,6 +17,9 @@ class rozmowa : public QObject
     int userNbr;
     ///wiadomości czekające na odebranie przez co najmniej jednego urzytkownika
     QVector<message> messages;
+
+    QString last;
+
     /// muteks gwarantujący dostęp przez tylko jeden wontek do struktury
     QMutex mutex;
     int myid;

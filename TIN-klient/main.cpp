@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    if(polacz((char*)"127.0.0.1",1111))
+    if(polacz((char*)"127.0.0.1",1112))
         qDebug() << "Połączony z serwerem...";
     else
         qDebug() << "Brak połączenia z serwerem...";
@@ -32,23 +32,15 @@ int main(int argc, char *argv[])
 
     odbiorSerwer.start();
 
-    Szyfrator szyfr;
-
-    unsigned int size;
-    Wiadomosc w(WYSLIJ_WIADOMOSC, 12, QString("wiadomosc super usera"), gniazdo);
-    char *s = szyfr.szyfruj(&w, NULL, &size);
-    w.wyslijDoSerwera(s, size);
-
     int i = a.exec();
 
 
-  Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,QString(""),gniazdo);
-  unsigned int rozmiar;
-  char *sz = szyfr.szyfruj(&wiad, NULL, &rozmiar);
+    Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,QString(""),gniazdo);
+    unsigned int rozmiar;
+    char *sz = szyfr.szyfruj(&wiad, NULL, &rozmiar);
 
-  wiad.wyslijDoSerwera(sz, rozmiar);
+    wiad.wyslijDoSerwera(sz, rozmiar);
 
-
-      return i;
+    return i;
 
 }
