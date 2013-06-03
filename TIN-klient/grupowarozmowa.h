@@ -46,7 +46,6 @@ private:
 
 signals:
     void koniec();
-    void tworz(const QList<int>&);
 };
 
 #endif // GRUPOWAROZMOWA_H

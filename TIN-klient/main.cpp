@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
     odbiorSerwer.start();
 
-    Szyfrator szyfr;
+   /* Szyfrator szyfr;
 
     Klucz n = szyfr.wygenerujKlucz();
     QString s = szyfr.kluczDoStringa(&n);

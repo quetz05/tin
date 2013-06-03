@@ -24,7 +24,7 @@ dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych) :
 
     //wyswietlanie loga
     QGraphicsScene *scene =  new QGraphicsScene();
-    QPixmap pixmap(qApp->applicationDirPath() + "/images/dodaj.jpg");
+    QPixmap pixmap(":/images/dodaj.jpg");
     scene->addPixmap(pixmap);
     ui->picture->setScene(scene);
     ui->picture->show();

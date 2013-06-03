@@ -238,7 +238,6 @@ void MainWindow::rozpocznijGrupRozmowe()
         connect(this, SIGNAL(grTwojaNowaRozmowa(int)), grRozmowa, SLOT(rozpocznijRozmowe(int)));
 
         connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
-        connect(grRozmowa, SIGNAL(tworz(const QList<int>&)), this, SLOT(tworzGrupRoz(QList<int>)));
         grRozmowa->show();
 
     }

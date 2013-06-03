@@ -18,7 +18,7 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     login = "";
 
     oknoInformacji = NULL;
-    rej = new Rejestracja(0,gniazdo);
+    rej = new Rejestracja(this,gniazdo);
 
     wiad = NULL;
 
