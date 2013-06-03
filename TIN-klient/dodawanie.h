@@ -15,6 +15,11 @@ namespace Ui {
 class dodawanie;
 }
 
+/**
+* @brief The dodawanie class
+* Klasa okna pozwalajaca na dodawanie nowych znajomych do lokalnej losty kontaktów
+*
+*/
 class dodawanie : public QDialog
 {
     Q_OBJECT
@@ -24,18 +29,39 @@ public:
     ~dodawanie();
 
 private slots:
-    //czytanie nicku
+    /**
+    * @brief czytajNick
+    * Slot czytajacy nick z pola tekstowego do QStringa
+    */
     void czytajNick(const QString &);
-    //czytanie ID
+    /**
+    * @brief czytajID
+    * Slot czytajacy ID z pola tekstowego do QStringa
+    */
     void czytajID(const QString &);
-    //dodanie znajomego do listy
+      /**
+    * @brief dodajZnajomego
+    * Slot dodajacy znajomego do lokalnej bazy danych konta
+    */
     void dodajZnajomego();
+    /**
+    * @brief wysjcie
+    * Metoda zamykajaca okno
+    *
+    */
     void wyjscie();
 
 public slots:
+    /**
+    * @brief koniecInfo
+    * Slot zamykajacy i niszczacy okno informacyjne
+    */
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
-    //slot sprawdzający czy użytkownik istnieje po wcześniejszym sygnale z serwera
-    void sprawdzenieIstnienie(const int);
+    /**
+    * @brief sprawdzenieIstnienie
+    * Slot sprawdzający czy użytkownik o danym id istnieje po wcześniejszym sygnale z serwera
+    */
+    void sprawdzenieIstnienie(const int id);
 
 signals:
     void zakoncz();
@@ -45,7 +71,6 @@ private:
     Znajomy znajomy;
     BramaZnajomych *brama;
     int gniazdo;
-
     info *oknoInformacji;
 };
 

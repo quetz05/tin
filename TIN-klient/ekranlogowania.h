@@ -10,6 +10,11 @@ namespace Ui {
 class ekranLogowania;
 }
 
+/**
+* @brief The ekranLogowania class
+* Klasa okna pozwalajaca na zalogowanie sie na swoje konto
+*
+*/
 class ekranLogowania : public QDialog
 {
     Q_OBJECT
@@ -17,25 +22,52 @@ class ekranLogowania : public QDialog
 
 private slots:
 
-    //czyta login z pola tekstowego
+    /**
+    * @brief czytajLogin
+    * czyta login z pola tekstowego
+    * */
     void czytajLogin(QString);
-    //czyta hasło z pola tekstowego
+    /**
+    * @brief czytajHaslo
+    * czyta hasło z pola tekstowego
+    * */
     void czytajHaslo(QString);
-    //konczy program
+    /**
+    * @brief zakoncz
+    * konczy program
+    * */
     void zakoncz();
-    //wysyła wiadomość do serwera w celu zalogowania uzytkownika
+    /**
+    * @brief  zaloguj
+    * wysyła wiadomość do serwera w celu zalogowania uzytkownika
+    * */
     void zaloguj();
-    //wysyła wiadomość do serwera w celu rejestracji
+    /**
+    * @brief rejestruj
+    * wysyła wiadomość do serwera w celu rejestracji
+    * */
     void rejestruj();
-    //zamyka okno rejestracji (chowa de facto)
+    /**
+    * @brief zakonczRejestracje
+    * zamyka okno rejestracji (chowa de facto)
+    * */
     void zakonczRejestracje();
 
 public slots:
-    //przesyła sygnał do okna rejestracji z wynikiem operacji (ID)
+    /**
+    * @brief rejCzyRejestracja
+    * przesyła sygnał do okna rejestracji z wynikiem operacji (ID)
+    * */
     void rejCzyRejestracja(int id) {emit SIGczyRejestracja(id);}
-    //sprawdza czy zalogowanie jest mozliwe (poprawne)
+    /**
+    * @brief sprawdzZaloguj
+    * sprawdza czy zalogowanie jest mozliwe (poprawne)
+    * */
     void sprawdzZaloguj(int);
-    //niszczy okno informacji
+     /**
+    * @brief koniecInfo
+    * niszczy okno informacji
+    * */
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
 
 signals:
@@ -45,14 +77,16 @@ signals:
 public:
     explicit ekranLogowania(QWidget *parent = 0, int socket=0);
     ~ekranLogowania();
+    /**
+    * @brief pobierzLogin
+    * pobiera login
+    * */
     QString pobierzLogin();
     
 private:
     QString login;
     QString haslo;
-
     Wiadomosc *wiad;
-
     Rejestracja *rej;
     info *oknoInformacji;
     int gniazdo;

@@ -8,7 +8,10 @@
 namespace Ui {
 class GrupowaRozmowa;
 }
-
+/**
+* @brief the GrupowaRozmowa class
+* Pozwala tworzyc grupowe rozmowy
+*/
 class GrupowaRozmowa : public QDialog
 {
     Q_OBJECT
@@ -20,8 +23,20 @@ public slots:
 private slots:
 
     void wyjdz();
+    /**
+    * @brief tworzRozmowe
+    * Wysyla sygnal do serwera o stworzenie nowej rozmowy
+    */
     void tworzRozmowe();
+    /**
+    * @brief dodajDoRozmowy
+    * dodaje znajomego do listy użytkowników w przyszlej rozmowie
+    */
     void dodajDoRozmowy();
+        /**
+    * @brief dodajDoRozmowy
+    * usuwa znajomego z listy użytkowników w przyszlej rozmowie
+    */
     void usunZRozmowy();
     void zaznaczenieDodaj(QListWidgetItem*);
     void zaznaczenieUsun(QListWidgetItem*);
@@ -38,7 +53,6 @@ private:
     QList <Znajomy> znajomi;
     QList <Znajomy> znajomiDodani;
     int gniazdo;
-
     int znajdzZnajomego(QList <Znajomy> znaj, int ID);
     void odswiezListy();
     QList <int> IDs;

@@ -50,7 +50,7 @@ void ServerConn::odbierajWiadomosci()
         char wiad[HEADER_SIZE];
         char *sup;
 
-        if (read(gniazdo, wiad, HEADER_SIZE) == 0)
+    read(gniazdo, wiad, HEADER_SIZE);
             break;
 
         Szyfrator szyfr;
@@ -104,8 +104,8 @@ void ServerConn::odbierajWiadomosci()
 
        case CZY_ISTNIEJE:
             emit czyIstnieje(id);
-            break;
-       }
+    }
+*/
 
     }
 }
