@@ -69,9 +69,16 @@ UserConnection::~UserConnection()
 
 void UserConnection::nowaWiadomosc(int id)
 {
+
+    qDebug() << "nowa Wiadomosc SLOT!!";
+
     // pojawila sie nowa wiadomosc od rozmowy id losowy to wypychamy ja na gniazd
-    if(rozmowy[id]->czyWiadomosc(myid)){
-        QString wiadomosc = rozmowy[id]->odbiezWiadomosc(id);
+    //if(rozmowy[id]->czyWiadomosc(myid)){
+    if(true) {
+        qDebug() << "jest ifem";
+
+        QString wiadomosc = "";
+        wiadomosc.append(rozmowy[id]->odbiezWiadomosc(id));
         wyslijPakiet(WYSLIJ_WIADOMOSC,id,&wiadomosc);
     }
 }
@@ -102,6 +109,7 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
     }
     qDebug() << "Dodaj";
     wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
+    connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
 
 }
 
@@ -117,7 +125,8 @@ void UserConnection::run()
         char wiad[HEADER_SIZE];
         char *sup;
 
-        read(socket, wiad, HEADER_SIZE);
+        if (read(socket, wiad, HEADER_SIZE) == 0)
+            break;
 
         Szyfrator szyfr;
 
@@ -333,13 +342,13 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     }
     Wiadomosc wiad(typ,id,dane1,this->socket);
     unsigned int wielkosc;
-    char * wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
+    char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
     mutex.lock(); //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony
     // i wysylamy pod mutexem
     if(write(socket,wiadomosc,wielkosc)==-1){
         qDebug()<<"Błąd przy nadawaniu wiadomosci\n";
     }
-    delete [] wiadomosc;
+    delete wiadomosc;
     // to będzie z goła inaczej
     /*
     if(write(socket,&typ,1)==-1){

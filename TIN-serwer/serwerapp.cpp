@@ -115,7 +115,8 @@ void SerwerApp::stworzRozmowe(int idUsr)
 {
     int i =1;
     while(rozmowy.contains(i)) { ++i; }
-    rozmowy.insert(i,new rozmowa());
+    rozmowy.insert(i,new rozmowa(i));
+
     emit dodajeDoRozmowy(idUsr,i,rozmowy[i],1);
 }
 ///zrobione

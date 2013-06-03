@@ -50,11 +50,13 @@ void ServerConn::odbierajWiadomosci()
         char wiad[HEADER_SIZE];
         char *sup;
 
-        read(gniazdo, wiad, HEADER_SIZE);
+        if (read(gniazdo, wiad, HEADER_SIZE) == 0)
+            break;
 
         Szyfrator szyfr;
         Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
 
+        qDebug() << "----- got message typ == " << nagl.typ << " ---- ";
         qDebug() << "rozmiar == " << nagl.trueRozmiar;
 
         char typ = nagl.typ;

@@ -214,12 +214,14 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
     QByteArray prepDane(dane.c_str());
     prepDane = prepDane.toBase64();
 
-    QByteArray wynikowaDane;
-    encrypt(&prepDane, &wynikowaDane, klucz);
+    naglowek << prepDane.length();
 
-    wynikowaDane = wynikowaDane.toBase64();
+    //QByteArray wynikowaDane;
+    //encrypt(&prepDane, &wynikowaDane, klucz);
 
-    naglowek << wynikowaDane.size();
+    //wynikowaDane = wynikowaDane.toBase64();
+
+    //naglowek << wynikowaDane.size();
 
     unsigned short size = naglowek.str().size();
 
@@ -231,13 +233,14 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
     QByteArray prepNaglowek(naglowek.str().c_str());
     prepNaglowek = prepNaglowek.toBase64();
 
-    QByteArray wynikowaNaglowek;
+    //QByteArray wynikowaNaglowek;
 
-    encrypt(&prepNaglowek, &wynikowaNaglowek, klucz);
+    //encrypt(&prepNaglowek, &wynikowaNaglowek, klucz);
 
-    wynikowaNaglowek = wynikowaNaglowek.toBase64();
+    //wynikowaNaglowek = wynikowaNaglowek.toBase64();
 
-    unsigned int payloadSize = wynikowaDane.length() + wynikowaNaglowek.length();
+    unsigned int payloadSize = prepDane.length() + prepNaglowek.length();
+    //unsigned int payloadSize = wynikowaDane.length() + wynikowaNaglowek.length();
     *pSize = payloadSize;
 
     char *wynik = new char[payloadSize];
@@ -253,8 +256,11 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
 //    strcat(wynik, temp1);
 //    strcat(wynik, temp2);
 
-    strncat(wynik, wynikowaNaglowek.data(), wynikowaNaglowek.length());
-    strncat(wynik, wynikowaDane.data(), wynikowaNaglowek.length());
+    strncat(wynik, prepNaglowek.data(), prepNaglowek.length());
+    strncat(wynik, prepDane.data(), prepDane.length());
+
+    //strncat(wynik, wynikowaNaglowek.data(), wynikowaNaglowek.length());
+    //strncat(wynik, wynikowaDane.data(), wynikowaNaglowek.length());
 
     //wynikowaDane.clear();
     //wynikowaNaglowek.clear();
@@ -268,19 +274,19 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
 {
 
     QByteArray dane = QByteArray::fromBase64(data);
-    QByteArray wynikowa;
+    //QByteArray wynikowa;
 
-    decrypt(&dane, &wynikowa, klucz);
+    //decrypt(&dane, &wynikowa, klucz);
 
-    wynikowa = QByteArray::fromBase64(wynikowa);
+    //wynikowa = QByteArray::fromBase64(wynikowa);
 
-    unsigned short ileX = wynikowa.count('x');
+    unsigned short ileX = dane.count('x');
 
     if (ileX > 2)
-        wynikowa.chop(ileX - 2);
+        dane.chop(ileX - 2);
 
 
-    QList<QByteArray> wart = wynikowa.split('x');
+    QList<QByteArray> wart = dane.split('x');
 
     char typ;
     unsigned int ID;
@@ -315,12 +321,12 @@ Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
 QString Szyfrator::deszyfrujDane(char *data, Klucz *klucz)
 {
     QByteArray dane = QByteArray::fromBase64(data);
-    QByteArray wynikowa;
+    //QByteArray wynikowa;
 
-    decrypt(&dane, &wynikowa, klucz);
+    //decrypt(&dane, &wynikowa, klucz);
 
-    wynikowa = QByteArray::fromBase64(wynikowa);
+    //wynikowa = QByteArray::fromBase64(wynikowa);
 
-    return QString(wynikowa.data());
+    return QString(dane.data());
 
 }
