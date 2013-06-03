@@ -241,22 +241,25 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
     *pSize = payloadSize;
 
     char *wynik = new char[payloadSize];
-    char *temp1 = new char[wynikowaNaglowek.length() + 1];
-    char *temp2 = new char[wynikowaDane.length() + 1];
+//    char *temp1 = new char[wynikowaNaglowek.length() + 1];
+//    char *temp2 = new char[wynikowaDane.length() + 1];
     memset(wynik, '\0', payloadSize);
-    memset(temp2, '\0', wynikowaDane.length() + 1);
-    memset(temp1, '\0', wynikowaNaglowek.length() + 1);
+//    memset(temp2, '\0', wynikowaDane.length() + 1);
+//    memset(temp1, '\0', wynikowaNaglowek.length() + 1);
 
-    strncpy(temp1, wynikowaNaglowek.data(), wynikowaNaglowek.length());
-    strncpy(temp2, wynikowaDane.data(), wynikowaDane.length());
+//    strncpy(temp1, wynikowaNaglowek.data(), wynikowaNaglowek.length());
+//    strncpy(temp2, wynikowaDane.data(), wynikowaDane.length());
 
-    strcat(wynik, temp1);
-    strcat(wynik, temp2);
+//    strcat(wynik, temp1);
+//    strcat(wynik, temp2);
 
-    wynikowaDane.clear();
-    wynikowaNaglowek.clear();
-    prepDane.clear();
-    prepNaglowek.clear();
+    strncat(wynik, wynikowaNaglowek.data(), wynikowaNaglowek.length());
+    strncat(wynik, wynikowaDane.data(), wynikowaNaglowek.length());
+
+    //wynikowaDane.clear();
+    //wynikowaNaglowek.clear();
+    //prepDane.clear();
+    //prepNaglowek.clear();
 
     return wynik;
 }

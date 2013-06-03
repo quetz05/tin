@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(nowaRozmowa(int)), this, SLOT(twojaNowaRozmowa(int)));
     connect(con, SIGNAL(odbiorRozmowy(int)), this, SLOT(nowaRozmowa(int)));
     connect(con, SIGNAL(odebranaWiadomosc(int,QString)), this, SLOT(odbierajWiadomosc(int, QString)));
+    connect(con, SIGNAL(czyIstnieje(const int)),this,SLOT(czyIstnieje(int)));
 
 
     ui->setupUi(this);
@@ -102,7 +103,7 @@ void MainWindow::zaloguj(const QString &login)
     uzytkownik = login;
 
     bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
-    doda = new dodawanie(this,bramaZnajomych);
+    doda = new dodawanie(this,bramaZnajomych,gniazdo);
 
     //wczytywanie listy znajomych
     wczytajZnajomych();
@@ -133,6 +134,7 @@ void MainWindow::dodajZnajomego()
 {
 
     connect(doda, SIGNAL(zakoncz()), this, SLOT(zakonczDodawanie()));
+    connect(this, SIGNAL(odSIGczyIstnieje(const int)),doda, SLOT(sprawdzenieIstnienie(int)));
 
     doda->show();
 
@@ -233,9 +235,10 @@ void MainWindow::rozpocznijGrupRozmowe()
     {
         znajomi = bramaZnajomych->getListaZnajomych();
 
-        grRozmowa = new GrupowaRozmowa(this, znajomi);
+        grRozmowa = new GrupowaRozmowa(this, znajomi, gniazdo);
 
         connect(this, SIGNAL(grTwojaNowaRozmowa(int)), grRozmowa, SLOT(rozpocznijRozmowe(int)));
+
 
         connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
         grRozmowa->show();
@@ -277,4 +280,11 @@ void MainWindow::twojaNowaRozmowa(int id)
 void MainWindow::odbierajWiadomosc(int id, QString wiadomosc)
 {
     oknaRozmowy.value(id)->wyswietlWiadomosc(wiadomosc);
+}
+
+void MainWindow::czyIstnieje(const int odp)
+{
+
+    emit odSIGczyIstnieje(odp);
+
 }

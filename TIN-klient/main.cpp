@@ -34,10 +34,10 @@ int main(int argc, char *argv[])
 
     Szyfrator szyfr;
 
-    Klucz n = szyfr.wygenerujKlucz();
-    QString s = szyfr.kluczDoStringa(&n);
-    qDebug() << s;
-    n = szyfr.stringDoKlucz(s);
+    unsigned int size;
+    Wiadomosc w(WYSLIJ_WIADOMOSC, 12, QString("wiadomosc super usera"), gniazdo);
+    char *s = szyfr.szyfruj(&w, NULL, &size);
+    w.wyslijDoSerwera(s, size);
 
     int i = a.exec();
 

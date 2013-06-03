@@ -45,13 +45,15 @@ signals:
      * @param rozmowa wskaznik na rozmowe do ktorej go dodalismy
      * @param czyTworze wskaznik mowiacy czy rozmowa jest tworzona a zatem czy mamy wyslac uzytkownikowi potwierdzenie stwozenia czy
      */
-    void dodajeDoRozmowy(int idUsr,int idRozm,rozmowa* rozmowa,bool czyTworze);
+    //void dodajeDoRozmowy(int idUsr,int idRozm,rozmowa* rozmowa,bool czyTworze);
+    void dodajeDoRozmowy(int,int,rozmowa*,bool);
     /**
      * @brief dodanoUrzytkownika komunikat o zalogowaniu urzytkownika
      * @param idUsr identyfikator urzytkownika
      * @param status status 1 powodzenie 0 niepowodzenie(ktos juz sie zalogowal na to konto
      */
-    void dodanoUrzytkownika(int idUsr,int status);
+    void dodanoUrzytkownika(int, int);
+    //void dodanoUrzytkownika(int idUsr,int status);
 public slots:
     //nasza funkcyja odpalajaca apke
     void run();
@@ -64,27 +66,32 @@ public slots:
      * @param idUsr urzytkownik którego chcemy podłączyć 
      * @param idRozm rozmowa do której chcemy podłączyć
      */
-    void dodajDoRozmowy(int idUsr,int idRozm);
+    void dodajDoRozmowy(int, int);
+    //void dodajDoRozmowy(int idUsr,int idRozm);
     /**
      * @brief stworzRozmowe urzytkownik o danym id chce stworzyć rozmowę 
      * @param idUsr id urzytkownika który tworzy rozmowe 
      * @return zwraca id rozmowy 
      *  pytanie czy musi się sam do własnej rozmowy dodać? chyba tak będzie łatwiej 
      */
-    void stworzRozmowe(int idUsr);
+    void stworzRozmowe(int);
+    //void stworzRozmowe(int idUsr);
     /**
      * @brief opuscRozmowe zadanie opuszczenia rozmowy przez urzytkownika
      * @param idUsr identyfikator urzytkownika opuszczajacego rozmowe
      * @param idRozm identyfikator rozmowy opuszczanej
      */
-    void opuscRozmowe(int idUsr,int idRozm);
+    void opuscRozmowe(int, int);
+    //void opuscRozmowe(int idUsr,int idRozm);
     /**
      * @brief dodajDoMapy zadanie dodania urzytkownika do mapy urzytkownikow nastepuje po dokonaniu miliarda operacji wstepnych (logowania,rejestracji)
      * @param idUsr id urzytkownika 
      */
-    void dodajDoMapy(int idUsr, UserConnection *usr);
+    void dodajDoMapy(int, UserConnection*);
+    //void dodajDoMapy(int idUsr, UserConnection *usr);
 
-    void wyszedl(int idUsr);
+    void wyszedl(int);
+    //void wyszedl(int idUsr);
 };
 
 #endif // SERWERAPP_H

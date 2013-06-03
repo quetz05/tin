@@ -12,17 +12,11 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
     wiad = NULL;
-
     ID = id;
-
     gniazdo = socket;
-
     uzytkownik = login;
 
-
-
     ui->setupUi(this);
-
 
     connect(ui->liniaWiadomosci, SIGNAL(textChanged(const QString &)), this, SLOT(wpisywanieWiadomosci(QString)));
     connect(ui->pushWyslij, SIGNAL(clicked()), this, SLOT(wyslij()));
@@ -45,7 +39,11 @@ void oknoRozmowy::wyslij()
     if(wiadomosc!="")
     {
         Szyfrator szyfr;
-        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID,uzytkownik +QString(": ")  + wiadomosc, gniazdo);
+        QString data;
+        data.append(uzytkownik);
+        data.append(": ");
+        data.append(wiadomosc);
+        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID,data, gniazdo);
         unsigned int wielkosc;
         char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
 
@@ -55,6 +53,7 @@ void oknoRozmowy::wyslij()
 
         //ui->oknoWiadomosci->append(loginTwoj + ": " + wiadomosc);
         ui->liniaWiadomosci->clear();
+        wiadomosc = "";
     }
 
 }

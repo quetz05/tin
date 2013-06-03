@@ -50,7 +50,7 @@ void rozmowa::usunSluchacza(int idUsr)
     --userNbr;
     for(int i=0;i<messages.size();++i){
         messages[i].usunInf(idUsr);
-        if(messages[i].iluPrzeczytalo()==userNbr){
+        if(messages[i].iluPrzeczytalo() == userNbr){
             messages.remove(i);
         }
     }

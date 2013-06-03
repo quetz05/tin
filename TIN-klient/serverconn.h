@@ -22,7 +22,10 @@ signals:
     void nowaRozmowa(int);
     //sygnał, że ktoś chce z nami rozmawiać
     void odbiorRozmowy(int);
+    //sygnał z odpowiedzią na istnienie nowego znajomego
+    void czyIstnieje(const int);
 
+    //sygnał odebrania nowej wiadomosci
     void odebranaWiadomosc(int,QString);
 
 public slots:

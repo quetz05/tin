@@ -64,22 +64,34 @@ void SerwerApp::run()
         int sock2=accept(sockfd,(struct sockaddr*)&cliaddr,&addrlen);
         UserConnection *con= new UserConnection(sock2);
         // uzytkownik moze dodac rozmowce
-        QObject::connect(con,SIGNAL(dodajeRozmowce(int ,int )),this,SLOT(dodajDoRozmowy(int ,int )));
+
+        // sprawdzić różne typy connect'ów
+        // w szczególności QBlockedConnection
+
+        qDebug() << "connection pointer == " << con;
+        bool status;
+        status = connect(con,SIGNAL(dodajeRozmowce(int ,int )),this,SLOT(dodajDoRozmowy(int ,int )), Qt::DirectConnection);
+        qDebug() << status;
         // uzytkownik moze stworzyc rozmowe
-        QObject::connect(con,SIGNAL(tworzeRozmowe(int )),this,SLOT(stworzRozmowe(int )));
+        status = connect(con,SIGNAL(tworzeRozmowe(int )),this,SLOT(stworzRozmowe(int )), Qt::DirectConnection);
         // uzytkownik moze opuscic rozmowe
-        QObject::connect(con,SIGNAL(opuszczamRozmowe(int  ,int )),this,SLOT(opuscRozmowe(int ,int )));
+        status = connect(con,SIGNAL(opuszczamRozmowe(int  ,int )),this,SLOT(opuscRozmowe(int ,int )), Qt::DirectConnection);
+        qDebug() << status;
         // uzytkownik moze dodac sie do zalogowanych jak juz sie zaloguje
-        QObject::connect(con,SIGNAL(dodajeSieDoListy(int,UserConnection*)),this,SLOT(dodajDoMapy(int,UserConnection*)));
+        status = connect(con,SIGNAL(dodajeSieDoListy(int,UserConnection*)),this,SLOT(dodajDoMapy(int,UserConnection*)), Qt::DirectConnection);
+        qDebug() << status;
         // uzytkownik moze zostac dodany do rozmowy
-        QObject::connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*,bool)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*,bool)));
+        status = connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*,bool)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*,bool)), Qt::DirectConnection);
+        qDebug() << status;
         //rozglaszamy ze ktos sie pojawil i czy mu sie udalo
-        QObject::connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)));
+        status = connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)), Qt::DirectConnection);
+        qDebug() << status;
         // uzytkownik zglasza ze wychodzi
-        QObject::connect(con,SIGNAL(finished(int)),this,SLOT(wyszedl(int)));
+        status = connect(con,SIGNAL(finished(int)),this,SLOT(wyszedl(int)), Qt::DirectConnection);
+        qDebug() << status;
 
         //RUDUDUDUDUDUDU wreszcie odpalamy nasz super watek
-        con->start();
+        //con->start();
     }
 
     //na koncu wychodzimy z apki
@@ -102,7 +114,7 @@ void SerwerApp::dodajDoRozmowy(int idUsr, int idRozm)
 void SerwerApp::stworzRozmowe(int idUsr)
 {
     int i =1;
-    while(rozmowy.contains(i))++i;
+    while(rozmowy.contains(i)) { ++i; }
     rozmowy.insert(i,new rozmowa());
     emit dodajeDoRozmowy(idUsr,i,rozmowy[i],1);
 }

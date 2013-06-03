@@ -7,6 +7,15 @@
 
 #include "Baza/bramauzytkownikow.h"
 
+/*
+ * Bartku - potrzeba takie rzeczy :
+ * 1. Przesył wiadomości dalej -> nie jest podpięte tam zdaje się emit z rozmowy jest nie podpiety i wiad
+ *    omosc nie przechodzi do pozostalych w rozmowie
+ * 2. Nowy nagłówek : CZY_ISTNIEJE -> sprawdza czy istnieje user w bazie na serwerze, w danych piszesz "0"
+ *    jeśli nie istnieje i "1" jeśli istnieje
+ */
+
+
 int main(int argc, char *argv[])
 {
  //   BramaUzytkownikow::getSharedInstance()->dodajUzytkownika("Jarek", "papo");

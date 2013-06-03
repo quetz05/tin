@@ -2,13 +2,15 @@
 #include "ui_dodawanie.h"
 
 
-dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych) :
+dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych, int socket) :
     QDialog(parent),
     ui(new Ui::dodawanie)
 {
     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
     ui->setupUi(this);
+
+    gniazdo = socket;
 
     brama = bramaZnajomych;
     oknoInformacji = NULL;
@@ -34,7 +36,7 @@ dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych) :
 
 dodawanie::~dodawanie()
 {
-    oknoInformacji = NULL;
+    //oknoInformacji = NULL;
     //brama = NULL;
     delete brama;
     delete oknoInformacji;
@@ -84,6 +86,44 @@ void dodawanie::dodajZnajomego()
          }
     else
        oknoInformacji = new info(this, "Coś się zepsuło i nie mogłem dodać znajomego. Pewnie twórcy coś skopali w kodzie...",false);
+
+
+    /*
+        Szyfrator szyfr;
+        Wiadomosc wiad(CZY_ISTNIEJE, znajomy.second,znajomy.first,gniazdo);
+        unsigned int wielkosc;
+        char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+
+        if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
+            qDebug()<<"Błąd pry sprawdzaniu istnienia znajomego";
+        }*/
+
+}
+
+void dodawanie::sprawdzenieIstnienie(const int odp)
+{
+
+
+    if(oknoInformacji)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    if(odp!=0)
+    {
+
+        if(brama->dodajZnajomego(znajomy.second, znajomy.first))
+             {
+
+                oknoInformacji = new info(this, "Znajomy dodany!",true);
+
+             }
+        else
+           oknoInformacji = new info(this, "Coś się zepsuło i nie mogłem dodać znajomego. Pewnie twórcy coś skopali w kodzie...",false);
+    }
+    else
+        oknoInformacji = new info(this, "Brak znajomego o podanych danych w bazie :( Na pewno masz innych kolegów!",false);
 
 
 }

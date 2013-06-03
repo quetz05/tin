@@ -47,74 +47,63 @@ void ServerConn::odbierajWiadomosci()
 */
 
     while(1) {
-    char wiad[HEADER_SIZE];
-    char *sup;
+        char wiad[HEADER_SIZE];
+        char *sup;
 
-    read(gniazdo, wiad, HEADER_SIZE);
+        read(gniazdo, wiad, HEADER_SIZE);
 
-    Szyfrator szyfr;
-    Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
+        Szyfrator szyfr;
+        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
 
-    qDebug() << "rozmiar == " << nagl.trueRozmiar;
+        qDebug() << "rozmiar == " << nagl.trueRozmiar;
 
-    char typ = nagl.typ;
-    unsigned int id = nagl.ID;
-    unsigned int rozmiar = nagl.trueRozmiar;
+        char typ = nagl.typ;
+        unsigned int id = nagl.ID;
+        unsigned int rozmiar = nagl.trueRozmiar;
 
-    QString wiadomosc;
-
-
-    sup = new char[rozmiar];
-
-    memset(sup, '\0', rozmiar);
-
-    read(gniazdo, sup, rozmiar);
-
-    wiadomosc = szyfr.deszyfrujDane(sup, NULL);
+        QString wiadomosc;
 
 
-    //rozpoznanie typu wiadomosci
-    switch(typ)
-    {
-        case REJESTRUJ:
+        sup = new char[rozmiar];
 
-        emit czyRejestracja(id);
-        break;
+        memset(sup, '\0', rozmiar);
 
-    case LOGUJ_UZYTKOWNIKA:
+        read(gniazdo, sup, rozmiar);
 
-        emit czyZaloguj(id);
-        break;
-
-    case ROZPOCZNIJ_ROZMOWE:
-
-        emit nowaRozmowa(id);
-        break;
-
-    case  DODAJ_DO_ROZMOWY:
-        emit odbiorRozmowy(id);
-        break;
-
-   case WYSLIJ_WIADOMOSC:
-
-        emit odebranaWiadomosc(id, wiadomosc);
+        wiadomosc = szyfr.deszyfrujDane(sup, NULL);
 
 
+        //rozpoznanie typu wiadomosci
+        switch(typ)
+        {
+            case REJESTRUJ:
 
+            emit czyRejestracja(id);
+            break;
+
+        case LOGUJ_UZYTKOWNIKA:
+
+            emit czyZaloguj(id);
+            break;
+
+        case ROZPOCZNIJ_ROZMOWE:
+
+            emit nowaRozmowa(id);
+            break;
+
+        case  DODAJ_DO_ROZMOWY:
+            emit odbiorRozmowy(id);
+            break;
+
+       case WYSLIJ_WIADOMOSC:
+
+            emit odebranaWiadomosc(id, wiadomosc);
+            break;
+
+       case CZY_ISTNIEJE:
+            emit czyIstnieje(id);
+            break;
+       }
 
     }
-       /* case WYSLIJ_WIADOMOSC: // zeby nie bylo wiadomosc przyszla do nas :)
-
-            for(unsigned int i=0;i<rozmiar;++i)
-            {
-                read(socket,wiad,2);
-                wiadomosc.append(*((QChar*)wiad));
-            }// nazbieralismy nasza wiadomosc
-
-            //odbior wiadomosci -> wysłanie do okna
-
-            break;
-*/
-
-}
 }
