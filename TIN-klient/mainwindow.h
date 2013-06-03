@@ -16,7 +16,11 @@
 #include "dodawanie.h"
 #include "szyfrator.h"
 
-
+ /**
+    * @brief The MainWindow class
+    * Klasa glownego okna aplikacji klienckiej zajmujaca sie tworzeniem 
+    * nowych, pomniejszych okien i udostepniajaca wszystkie funkcje programu
+    */
 namespace Ui {
 class MainWindow;
 }
@@ -34,8 +38,6 @@ private slots:
     void zakoncz();
     //wyswietla okno do wyszukiwania znajomych
     void wyszukiwarkaZnajomych();
-    //rozpoczyna rozmowe
-    //void rozpocznijRozmowe(QList<int>);
     //rozpoczyna wysylanie pliku
     void rozpocznijWysylanie();
     //wyswietla okno dodawania znajomego
@@ -44,15 +46,10 @@ private slots:
     void usunZnajomego();
     //zaznacza konkretnego znajomego
     void zaznaczenieZnajomego(QListWidgetItem *znajomy);
-
     void zakonczDodawanie();
-
     void zakonczRozmowe(int id);
-
     void wczytajZnajomych();
-
     void rozpocznijGrupRozmowe();
-
     void zakonczGrupRoz();
     void zaloguj(const QString&login);
     void elCzyRejestracja(int id) {emit elSIGczyRejestracja(id);}
@@ -75,7 +72,6 @@ public:
 private:
 
     Ui::MainWindow *ui;
-    //wyszukiwarka *wysz;
     QListWidgetItem *zaznaczonyZnajomy;
     dodawanie *doda;
     QMap <int,oknoRozmowy*> oknaRozmowy;
