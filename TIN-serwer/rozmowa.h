@@ -19,12 +19,13 @@ class rozmowa : public QObject
     QVector<message> messages;
     /// muteks gwarantujący dostęp przez tylko jeden wontek do struktury
     QMutex mutex;
+    int myid;
 public:
     /**
      * @brief rozmowa domyslny konstruktor rozmowy
      * @param parent ojciec obiekt
      */
-    explicit rozmowa(QObject *parent = 0);
+    explicit rozmowa(int id,QObject *parent = 0);
     /**
      * @brief odbiezWiadomosc pozwala uzytkownikowi odebrac pierwsza nieprzeczytana wiadomosc
      *  UWAGA!!! najpierw sprawdz czy takowa istnieje czyWiadomosc()
@@ -60,7 +61,7 @@ signals:
     /**
      * @brief nowaWiadomosc sygnal emitowany gdy pojawi sie nowa wiadomosc
      */
-    void nowaWiadomosc();
+    void nowaWiadomosc(int);
 
 public slots:
     

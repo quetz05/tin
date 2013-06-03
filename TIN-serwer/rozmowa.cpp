@@ -1,27 +1,44 @@
 #include "rozmowa.h"
+#include <QDebug>
 
-rozmowa::rozmowa(QObject *parent) :
+rozmowa::rozmowa(int id,QObject *parent) :
     QObject(parent)
 {
+    myid= id;
 }
 
 QString rozmowa::odbiezWiadomosc(int id)
 {
+
+    qDebug() << "odbiezWiadomosc( " << id << ");";
 
     //z powodu zapisu nie mozemy pozwolic na odczytywanie bez mutka
     mutex.lock();
     for(int i=0;i<messages.size();++i){
         if(!messages[i].czyPrzeczytal(id)){
             mutex.unlock();
-            QString wiad =messages[i].Czytaj(id);
+
+            qDebug() << "------ sending message for id == " << id;
+
+            QString wiad = "";
+            wiad.append(messages[i].Czytaj(id));
             if(messages[i].iluPrzeczytalo()==userNbr){ //sprawdzamy czy czytamy tą wiadomość jako ostatni jezeli tak to ja usuwamy
                 messages.remove(i);
             }
             return wiad;
         }
+
+        /*mutex.unlock();
+        QString wiad = "";
+        wiad.append(messages[i].Czytaj(id));
+        messages.remove(i);*/
+
+        //return wiad;
+
+
     }
     mutex.unlock();
-    return QString("0");
+    return QString("wiadomosc_1");
 }
 // sprawdzamy czy czeka na nas jakas wiadomosc
 bool rozmowa::czyWiadomosc(int id)
@@ -35,13 +52,17 @@ bool rozmowa::czyWiadomosc(int id)
 
 void rozmowa::wyslijWiadomosc(QString wiadomosc)
 {
+
     // mutek sie przyda bo zapis nie jest atomowy wiec i odczyt musimy bronic
     mutex.lock();
 
     messages.insert(messages.end(),message(wiadomosc));// wstawiamy wiadomosc na koniec a przynajmniej tak nam sie w tej chwili wydaje
     mutex.unlock();
     //po dodaniu nowej wiadomosci informujemy wszystkich ze takowa sie pojawila
-    emit nowaWiadomosc();
+
+    qDebug() << "emitujemy nowa wiadomosc";
+
+    emit nowaWiadomosc(myid);
 }
 
 void rozmowa::usunSluchacza(int idUsr)
@@ -50,7 +71,7 @@ void rozmowa::usunSluchacza(int idUsr)
     --userNbr;
     for(int i=0;i<messages.size();++i){
         messages[i].usunInf(idUsr);
-        if(messages[i].iluPrzeczytalo()==userNbr){
+        if(messages[i].iluPrzeczytalo() == userNbr){
             messages.remove(i);
         }
     }

@@ -50,11 +50,13 @@ void ServerConn::odbierajWiadomosci()
         char wiad[HEADER_SIZE];
         char *sup;
 
-        read(gniazdo, wiad, HEADER_SIZE);
+    read(gniazdo, wiad, HEADER_SIZE);
+            break;
 
         Szyfrator szyfr;
         Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
 
+        qDebug() << "----- got message typ == " << nagl.typ << " ---- ";
         qDebug() << "rozmiar == " << nagl.trueRozmiar;
 
         char typ = nagl.typ;
@@ -98,11 +100,12 @@ void ServerConn::odbierajWiadomosci()
        case WYSLIJ_WIADOMOSC:
 
             emit odebranaWiadomosc(id, wiadomosc);
+            break;
 
-
-
-
-        }
+       case CZY_ISTNIEJE:
+            emit czyIstnieje(id);
+    }
+*/
 
     }
 }

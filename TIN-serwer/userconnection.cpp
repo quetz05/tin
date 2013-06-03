@@ -36,8 +36,7 @@
 
 
 
-UserConnection::UserConnection(QObject *parent) :
-    QThread(parent)
+UserConnection::UserConnection(QObject *parent)
 {
     zalogowany = false;
     myid=-1;
@@ -50,6 +49,14 @@ UserConnection::UserConnection(int socket)
     this->socket = socket;
     zalogowany = false;
     sekret = NULL;
+
+    watek = new QThread();
+
+    this->moveToThread(watek);
+
+    connect(watek, SIGNAL(started()), this, SLOT(run()));
+
+    watek->start();
 }
 
 ///zrobione chyba wszystko
@@ -62,9 +69,16 @@ UserConnection::~UserConnection()
 
 void UserConnection::nowaWiadomosc(int id)
 {
+
+    qDebug() << "nowa Wiadomosc SLOT!!";
+
     // pojawila sie nowa wiadomosc od rozmowy id losowy to wypychamy ja na gniazd
-    if(rozmowy[id]->czyWiadomosc(myid)){
-        QString wiadomosc = rozmowy[id]->odbiezWiadomosc(id);
+    //if(rozmowy[id]->czyWiadomosc(myid)){
+    if(true) {
+        qDebug() << "jest ifem";
+
+        QString wiadomosc = "";
+        wiadomosc.append(rozmowy[id]->odbiezWiadomosc(id));
         wyslijPakiet(WYSLIJ_WIADOMOSC,id,&wiadomosc);
     }
 }
@@ -83,7 +97,7 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
 void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 {
 
-
+    qDebug() << "TUTAJ TUTAJ TUTAJ TUTAJ";
 
     if(idUsr==this->myid){
         rozmowy.insert(idRozm,ro);
@@ -95,6 +109,7 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
     }
     qDebug() << "Dodaj";
     wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
+    connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
 
 }
 
@@ -104,12 +119,14 @@ void UserConnection::run()
 {
     bool wyjscie=false;
     qDebug() << "wystartowal watek urzytkownika\n";
+    qDebug() << "moj adres == " << this;
     while(!wyjscie){ // 0 kod wyjscia
      // tu obróbka danych i wyslanie nowych wiadomosci
         char wiad[HEADER_SIZE];
         char *sup;
 
-        read(socket, wiad, HEADER_SIZE);
+        if (read(socket, wiad, HEADER_SIZE) == 0)
+            break;
 
         Szyfrator szyfr;
 
@@ -172,17 +189,6 @@ void UserConnection::run()
                 break;
         case WYSLIJ_WIADOMOSC:{ // zeby nie bylo wiadomosc przyszla do nas :)
 
-                /*for(unsigned int i=0;i<((rozmiar/2));++i){
-                    read(socket,wiad,2);
-                    wiadomosc2.append(wiad);
-                    //wiadomosc.append(*((QChar*)wiad));
-                }// nazbieralismy nasza wiadomosc
-                if(rozmowy.contains(id)) rozmowy[id]->wyslijWiadomosc(wiadomosc);
-                qDebug() << wiadomosc2.c_str();
-                wiadomosc = szyfr.deSzyfruj(wiadomosc2.c_str(), 12);
-
-                qDebug() << wiadomosc;*/
-
                 sup = new char[rozmiar];
                 memset(sup, '\0', rozmiar);
 
@@ -192,7 +198,10 @@ void UserConnection::run()
 
                 qDebug() << "got == " << wiadomosc;
                 delete [] sup;
-                if(rozmowy.contains(id)) rozmowy[id]->wyslijWiadomosc(wiadomosc);
+                if(rozmowy.contains(id)) {
+                    qDebug() << "this is the rozmowa you are looking for";
+                    rozmowy[id]->wyslijWiadomosc(wiadomosc);
+                }
             }
                 break;
             case LOGUJ_UZYTKOWNIKA:{
@@ -310,6 +319,7 @@ void UserConnection::loguj(QString name, QString pass)
             wyslijPakiet(LOGUJ_UZYTKOWNIKA,id,NULL);
             emit dodajeSieDoListy(myid,this);
             return;
+
         }
     }
     wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,NULL);
@@ -318,6 +328,8 @@ void UserConnection::loguj(QString name, QString pass)
 // tu bedziemy wysylac nanana
 void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
+
+    qDebug() << "---------- bede slal! typ == " << (int)typ << " ---------";
 
     Szyfrator szyfr;
 
@@ -330,13 +342,13 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     }
     Wiadomosc wiad(typ,id,dane1,this->socket);
     unsigned int wielkosc;
-    char * wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
+    char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
     mutex.lock(); //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony
     // i wysylamy pod mutexem
     if(write(socket,wiadomosc,wielkosc)==-1){
         qDebug()<<"Błąd przy nadawaniu wiadomosci\n";
     }
-    delete [] wiadomosc;
+    delete wiadomosc;
     // to będzie z goła inaczej
     /*
     if(write(socket,&typ,1)==-1){
