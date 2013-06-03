@@ -8,7 +8,10 @@
 namespace Ui {
 class GrupowaRozmowa;
 }
-
+/**
+* @brief the GrupowaRozmowa class
+* Pozwala tworzyc grupowe rozmowy
+*/
 class GrupowaRozmowa : public QDialog
 {
     Q_OBJECT
