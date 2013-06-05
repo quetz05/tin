@@ -2,7 +2,7 @@
 #define SERVERCONN_H
 
 #include <QThread>
-//#include "polaczenie.h"
+#include <sys/select.h>
 
 
 class ServerConn: public QObject
@@ -21,7 +21,6 @@ public:
 
 signals:
 
-
     void czyRejestracja(int);
     void czyZaloguj(int);
     //sygnał, że tworzona jest nowa rozmowa
@@ -30,7 +29,6 @@ signals:
     void odbiorRozmowy(int);
     //sygnał z odpowiedzią na istnienie nowego znajomego
     void czyIstnieje(const int);
-
     //sygnał odebrania nowej wiadomosci
     void odebranaWiadomosc(int,QString);
 

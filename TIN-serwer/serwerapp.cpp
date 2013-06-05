@@ -40,7 +40,7 @@ void SerwerApp::run()
         quit();
         return;
     }
-    struct sockaddr_in sadr;// strukturka adresu dla funkcji bind jeszcze nie wiem jak to działa
+    struct sockaddr_in sadr;// strukturka adresu dla funkcji bind
     sadr.sin_family= AF_INET;
     sadr.sin_addr.s_addr = INADDR_ANY;
     sadr.sin_port = htons(port);
@@ -90,8 +90,7 @@ void SerwerApp::run()
         status = connect(con,SIGNAL(finished(int)),this,SLOT(wyszedl(int)), Qt::DirectConnection);
         qDebug() << status;
 
-        //RUDUDUDUDUDUDU wreszcie odpalamy nasz super watek
-        //con->start();
+
     }
 
     //na koncu wychodzimy z apki

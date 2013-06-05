@@ -81,7 +81,6 @@ void Rejestracja::rejestruj()
 void Rejestracja::czytajHaslo(const QString &pass)
 {
     haslo = pass;
-
 }
 
 void Rejestracja::czytajHaslo2(const QString &pass)
@@ -119,7 +118,12 @@ void Rejestracja::wynikRejestracji(int wynik)
 
     if (!wynik==0)
     {
-        oknoInformacji = new info(this,QString("Rejestracja przebiegła pomyślnie! Twoje ID to") + QString(wynik) + QString("Witamy w ekipie!"),true);
+        QString inf = "";
+        inf.append("Rejestracja przebiegła pomyślnie! Twoje ID to ");
+        inf.append(QString::number(wynik));
+        inf.append(". Witamy w ekipie!");
+
+        oknoInformacji = new info(this,inf,true);
 
         wyjscie();
     }

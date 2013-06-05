@@ -10,7 +10,10 @@
 #include <QString>
 #include "Baza/bramauzytkownikow.h"
 #include "rozmowa.h"
-
+#include <sys/select.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <stdio.h>
 
 UserConnection::UserConnection(QObject *parent)
 {
@@ -113,18 +116,24 @@ void UserConnection::run()
         temp = new char[HEADER_SIZE + 1];
         memset(temp, '\0', HEADER_SIZE + 1);
         memset(naglowek, '\0', HEADER_SIZE + 1);
-
+        fd_set writefds;
         while (ilePrzeczytano < HEADER_SIZE) {
-            qDebug() << "attempting read, actual == " << ilePrzeczytano;
-            nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
+
+            FD_ZERO(&writefds);
+            FD_SET(socket,&writefds);
+
+            if(select(socket+1,&writefds,NULL,NULL,NULL)){
+                qDebug() << "attempting read, actual == " << ilePrzeczytano;
+                nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
 
             if (nowaPartia == -1) {
                 wyjscie = true;
                 break;
             }
 
-            strncat(naglowek, temp, nowaPartia);
-            ilePrzeczytano += nowaPartia;
+                strncat(naglowek, temp, nowaPartia);
+                ilePrzeczytano += nowaPartia;
+            }
         }
 
         if (wyjscie)
@@ -143,9 +152,15 @@ void UserConnection::run()
         nowaPartia = 0;
 
         while (ilePrzeczytano < nagl.trueRozmiar) {
-            nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
-            strncat(content, temp, nowaPartia);
-            ilePrzeczytano += nowaPartia;
+
+            FD_ZERO(&writefds);
+            FD_SET(socket,&writefds);
+
+            if(select(socket+1,&writefds,NULL,NULL,NULL)){
+                nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
+                strncat(content, temp, nowaPartia);
+                ilePrzeczytano += nowaPartia;
+            }
         }
 
         wiadomosc = szyfr.deszyfrujDane(content, sekret);
@@ -230,7 +245,7 @@ void UserConnection::rejestruj(QString name, QString pass)
         wyslijPakiet(REJESTRUJ,id,NULL);
     }
     else{
-        //tu wysylamy wiadomosc ze juz taki ktos jest i kij mu w oko
+        //tu wysylamy wiadomosc ze juz taki ktos jest
         wyslijPakiet(REJESTRUJ,0,NULL);
     }
 }

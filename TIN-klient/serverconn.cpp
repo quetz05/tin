@@ -9,12 +9,6 @@ ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
 {
     gniazdo = socket;
-    //watek = new QThread();
-
-    //connect(watek, SIGNAL(started()), this, SLOT(odbierajWiadomosci()));
-
-    //this->moveToThread(watek);
-    //watek->start();
 }
 
 
@@ -34,7 +28,6 @@ void ServerConn::odbierajWiadomosci()
     char *temp;
     unsigned int ilePrzeczytano = 0;
     unsigned int nowaPartia = 0;
-
     QString wiadomosc;
 
     while(1) {
@@ -102,4 +95,3 @@ void ServerConn::odbierajWiadomosci()
         }
 
     }
-}

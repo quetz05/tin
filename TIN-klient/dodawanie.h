@@ -25,7 +25,7 @@ class dodawanie : public QDialog
     Q_OBJECT
     
 public:
-    explicit dodawanie(QWidget *parent = 0, BramaZnajomych *bramaZnajomych=NULL, int socket=0);
+    explicit dodawanie(QWidget *parent = 0, BramaZnajomych *bramaZnajomych=NULL, int socket=0, int id=0);
     ~dodawanie();
 
 private slots:
@@ -72,6 +72,7 @@ private:
     BramaZnajomych *brama;
     int gniazdo;
     info *oknoInformacji;
+    int uzytkownikID;
 };
 
 #endif // DODAWANIE_H
