@@ -21,64 +21,77 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
-        qDebug() << "server conn is online";
+    Szyfrator szyfr;
+    Naglowek nagl;
+    char naglowek[HEADER_SIZE + 1];
+    char *content;
+    char *temp;
+    unsigned int ilePrzeczytano = 0;
+    unsigned int nowaPartia = 0;
+    QString wiadomosc;
 
-        char wiad[HEADER_SIZE];
-        char *sup;
+    while(1) {
 
-        read(gniazdo, wiad, HEADER_SIZE);
+        ilePrzeczytano = 0;
+        nowaPartia = 0;
 
-        Szyfrator szyfr;
-        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
+        temp = new char[HEADER_SIZE + 1];
+        memset(temp, '\0', HEADER_SIZE + 1);
+        memset(naglowek, '\0', HEADER_SIZE + 1);
 
-        qDebug() << "----- got message typ == " << nagl.typ << " ---- ";
-        qDebug() << "rozmiar == " << nagl.trueRozmiar;
+        while (ilePrzeczytano < HEADER_SIZE) {
+            nowaPartia = read(gniazdo, temp, HEADER_SIZE - ilePrzeczytano);
+            strncat(naglowek, temp, nowaPartia);
+            ilePrzeczytano += nowaPartia;
+        }
 
-        char typ = nagl.typ;
-        unsigned int id = nagl.ID;
-        unsigned int rozmiar = nagl.trueRozmiar;
+        nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
 
-        QString wiadomosc;
+        ilePrzeczytano = 0;
+        nowaPartia = 0;
+        delete [] temp;
 
-        sup = new char[rozmiar];
+        temp = new char[nagl.trueRozmiar + 1];
+        content = new char[nagl.trueRozmiar + 1];
+        memset(temp, '\0', nagl.trueRozmiar + 1);
+        memset(content, '\0', nagl.trueRozmiar + 1);
 
-        memset(sup, '\0', rozmiar);
+        if (ilePrzeczytano < nagl.trueRozmiar) {
+            nowaPartia = read(gniazdo, temp, nagl.trueRozmiar - ilePrzeczytano);
+            strncat(content, temp, nowaPartia);
+            ilePrzeczytano += nowaPartia;
+        }
 
-        read(gniazdo, sup, rozmiar);
+        wiadomosc = szyfr.deszyfrujDane(content, NULL);
 
-        wiadomosc = szyfr.deszyfrujDane(sup, NULL);
+        delete [] temp;
+        delete [] content;
 
         //rozpoznanie typu wiadomosci
-        switch(typ)
-        {
+        switch(nagl.typ) {
             case REJESTRUJ:
-
-            emit czyRejestracja(id);
+                emit czyRejestracja(nagl.ID);
             break;
 
-        case LOGUJ_UZYTKOWNIKA:
-
-            emit czyZaloguj(id);
+            case LOGUJ_UZYTKOWNIKA:
+                emit czyZaloguj(nagl.ID);
             break;
 
-        case ROZPOCZNIJ_ROZMOWE:
-
-            emit nowaRozmowa(id);
+            case ROZPOCZNIJ_ROZMOWE:
+                emit nowaRozmowa(nagl.ID);
             break;
 
-        case  DODAJ_DO_ROZMOWY:
-            emit odbiorRozmowy(id);
+            case  DODAJ_DO_ROZMOWY:
+                emit odbiorRozmowy(nagl.ID);
             break;
 
-       case WYSLIJ_WIADOMOSC:
-
-            emit odebranaWiadomosc(id, wiadomosc);
+            case WYSLIJ_WIADOMOSC:
+                emit odebranaWiadomosc(nagl.ID, wiadomosc);
             break;
 
-       case CZY_ISTNIEJE:
-            emit czyIstnieje(id);
-    }
-
+            case CZY_ISTNIEJE:
+                emit czyIstnieje(nagl.ID);
+            break;
+        }
 
     }
-}

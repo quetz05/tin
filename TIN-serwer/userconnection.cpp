@@ -97,15 +97,9 @@ void UserConnection::run()
     unsigned int ilePrzeczytano = 0;
     unsigned int nowaPartia = 0;
     bool wyjscie = false;
-    char naglowek[HEADER_SIZE];
+    char naglowek[HEADER_SIZE + 1];
     char *content;
     char *temp;
-
-    char *sup;
-
-    char typ = 0;
-    unsigned int id = 0;
-    unsigned int rozmiar = 0;
 
     QString login;
     QString hash;
@@ -119,9 +113,9 @@ void UserConnection::run()
 
         ilePrzeczytano = 0;
         nowaPartia = 0;
-        temp = new char[HEADER_SIZE];
-        memset(temp, '\0', HEADER_SIZE);
-        memset(naglowek, '\0', HEADER_SIZE);
+        temp = new char[HEADER_SIZE + 1];
+        memset(temp, '\0', HEADER_SIZE + 1);
+        memset(naglowek, '\0', HEADER_SIZE + 1);
         fd_set writefds;
         while (ilePrzeczytano < HEADER_SIZE) {
 
@@ -131,34 +125,31 @@ void UserConnection::run()
             if(select(socket+1,&writefds,NULL,NULL,NULL)){
                 qDebug() << "attempting read, actual == " << ilePrzeczytano;
                 nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
+
+            if (nowaPartia == -1) {
+                wyjscie = true;
+                break;
+            }
+
                 strncat(naglowek, temp, nowaPartia);
                 ilePrzeczytano += nowaPartia;
             }
         }
 
-        qDebug() << "przeczytano lacznie == " << ilePrzeczytano;
-        qDebug() << "naglowek == " << naglowek;
-
-        //if (read(socket, wiad, HEADER_SIZE) == 0)
-            //break;
+        if (wyjscie)
+            break;
 
         nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
 
-        typ = nagl.typ;
-        id = nagl.ID;
-        rozmiar = nagl.trueRozmiar;
-
         delete [] temp;
 
-        temp = new char[nagl.trueRozmiar];
-        content = new char[nagl.trueRozmiar];
-        memset(temp, '\0', nagl.trueRozmiar);
-        memset(content, '\0', nagl.trueRozmiar);
+        temp = new char[nagl.trueRozmiar + 1];
+        content = new char[nagl.trueRozmiar + 1];
+        memset(temp, '\0', nagl.trueRozmiar + 1);
+        memset(content, '\0', nagl.trueRozmiar + 1);
 
         ilePrzeczytano = 0;
         nowaPartia = 0;
-
-        qDebug() << "naglowek zaraportowal rozmiar == " << nagl.trueRozmiar;
 
         while (ilePrzeczytano < nagl.trueRozmiar) {
 
@@ -171,9 +162,6 @@ void UserConnection::run()
                 ilePrzeczytano += nowaPartia;
             }
         }
-
-        qDebug() << "przeczytano Dane rozmiar == " << ilePrzeczytano;
-        qDebug() << "dane == " << content;
 
         wiadomosc = szyfr.deszyfrujDane(content, sekret);
 
@@ -188,29 +176,29 @@ void UserConnection::run()
             } break;
 
             case REJESTRUJ : {
-                login = wiadomosc.left(id);
-                hash = wiadomosc.right(wiadomosc.size()-id);
+                login = wiadomosc.left(nagl.ID);
+                hash = wiadomosc.right(wiadomosc.size()-nagl.ID);
                 rejestruj(login,hash);
             } break;
 
             case WYSLIJ_WIADOMOSC:{ // zeby nie bylo wiadomosc przyszla do nas :)
                 qDebug() << "got == " << wiadomosc;
-                if(rozmowy.contains(id)) {
+                if(rozmowy.contains(nagl.ID)) {
                     qDebug() << "this is the rozmowa you are looking for";
-                    rozmowy[id]->wyslijWiadomosc(wiadomosc);
+                    rozmowy[nagl.ID]->wyslijWiadomosc(wiadomosc);
                 }
             } break;
 
             case LOGUJ_UZYTKOWNIKA:{
-                login = wiadomosc.left(id);
-                hash = wiadomosc.right(wiadomosc.size()-id);
+                login = wiadomosc.left(nagl.ID);
+                hash = wiadomosc.right(wiadomosc.size()-nagl.ID);
                 loguj(login,hash);
             } break;
   //          case SPRAWDZ_DOSTEPNOSC:// nie wiem czy to wogole bedziemy robic ale nie ch bedzie
   //              break;
             case ZAKONCZ_ROZMOWE:{
                 // uzytkownik chce zakonczyc rozmowe
-                emit opuszczamRozmowe(myid,id);
+                emit opuszczamRozmowe(myid,nagl.ID);
             } break;
 
             case ROZPOCZNIJ_ROZMOWE:{// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
@@ -222,7 +210,7 @@ void UserConnection::run()
             case DODAJ_DO_ROZMOWY:{
 
                 int idRozm = wiadomosc.toInt();
-                emit dodajeRozmowce(id,idRozm);
+                emit dodajeRozmowce(nagl.ID,idRozm);
 
             } break;
 
@@ -288,48 +276,22 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
     mutex.lock();
 
-    qDebug() << "---------- bede slal! typ == " << (int)typ << " ---------";
-
     Szyfrator szyfr;
 
     // tworzymy wiadomość
     QString dane1;
-    if(dane==NULL){
+    if(dane == NULL){
         dane1 = "";
-    }else{
+    } else {
         dane1 = *dane;
     }
-    Wiadomosc wiad(typ,id,dane1,this->socket);
+
+    Wiadomosc wiad(typ, id, dane1, this->socket);
     unsigned int wielkosc;
     char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
-     //i zabezpieczone panie jakby ktory tak chcial wejsc nie proszony
-    // i wysylamy pod mutexem
-    if(write(socket,wiadomosc,wielkosc)==-1){
-        qDebug()<<"Błąd przy nadawaniu wiadomosci\n";
-    }
-    //delete wiadomosc;
-    // to będzie z goła inaczej
-    /*
-    if(write(socket,&typ,1)==-1){
-        qDebug()<<"Błąd przy nadawaniu typu nagłówka\n";
-    }
-    id = htons(id);
-    char *usrid = (char*)(&id);
-    if(write(socket,usrid,4)==-1){
-        qDebug()<<"Błąd przy nadawaniu id\n";
-    }
-    daneRozm = htons(daneRozm);
-    usrid = (char*)(&daneRozm);
-    if(write(socket,&usrid,4)==-1){
-        qDebug()<<"Błąd przy nadawaniu rozmiaru danych\n";
-    }
-    if(dane!=NULL){
-        usrid = (char*)(dane->data());
-        if(write(socket,&usrid,2*daneRozm)==-1){
-            qDebug()<<"Błąd przy nadawaniu danych\n";
-        }
-    }
-    */
+
+    wiad.wyslijDoSerwera(wiadomosc, wielkosc);
+
     mutex.unlock();
 }
 
