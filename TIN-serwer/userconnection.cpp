@@ -11,41 +11,17 @@
 #include "Baza/bramauzytkownikow.h"
 #include "rozmowa.h"
 
-/*
- * ----- BARTKU !! ------
- * bo ja podpiąłem w celach testowych swoje szyfrowanko
- * a w zasadzie to tu odbiór
- * i on pewnie się będzie bardzo źle zachowywał :P
- * bo tylko funkcja odbioru zwykłej wiadomości została
- * przeze mnie zmieniona
- * rozmiar nagłówka masz w #define HEADER_SIZE
- * a rozmiar masz potem zapisany w Naglowek.trueRozmiar
- * zreszta w funkcji obslugi przychodzacych rzeczy tam
- * zakomentowalem Twoj kod i napisalem swoj
- * takze ten
- * bede jak wstane
- */
-
-/*
- * jak by co to sekret moze byc umieszczony w this->sekret
- *  i będę konsekwętnie podawał tą wartość do szyfrowania wszystkiego
- *
- *
- *
- */
-
-
 
 UserConnection::UserConnection(QObject *parent)
 {
     zalogowany = false;
-    myid=-1;
+    myid = -1;
     sekret = NULL;
 }
 
 UserConnection::UserConnection(int socket)
 {
-    myid=-1;
+    myid = -1;
     this->socket = socket;
     zalogowany = false;
     sekret = NULL;
@@ -75,8 +51,6 @@ void UserConnection::nowaWiadomosc(int id)
     // pojawila sie nowa wiadomosc od rozmowy id losowy to wypychamy ja na gniazd
     //if(rozmowy[id]->czyWiadomosc(myid)){
     if(true) {
-        qDebug() << "jest ifem";
-
         QString wiadomosc = "";
         wiadomosc.append(rozmowy[id]->odbiezWiadomosc(id));
         wyslijPakiet(WYSLIJ_WIADOMOSC,id,&wiadomosc);
@@ -117,157 +91,130 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 ///@todo
 void UserConnection::run()
 {
-    bool wyjscie=false;
-    qDebug() << "wystartowal watek urzytkownika\n";
-    qDebug() << "moj adres == " << this;
+    unsigned int ilePrzeczytano = 0;
+    unsigned int nowaPartia = 0;
+    bool wyjscie = false;
+    char naglowek[HEADER_SIZE];
+    char *content;
+    char *temp;
+
+    char *sup;
+
+    char typ = 0;
+    unsigned int id = 0;
+    unsigned int rozmiar = 0;
+
+    QString login;
+    QString hash;
+    QString wiadomosc;
+
+    Szyfrator szyfr;
+    Naglowek nagl;
+
     while(!wyjscie){ // 0 kod wyjscia
-     // tu obróbka danych i wyslanie nowych wiadomosci
-        char wiad[HEADER_SIZE];
-        char *sup;
+        // tu obróbka danych i wyslanie nowych wiadomosci
 
-        if (read(socket, wiad, HEADER_SIZE) == 0)
-            break;
+        ilePrzeczytano = 0;
+        nowaPartia = 0;
+        temp = new char[HEADER_SIZE];
+        memset(temp, '\0', HEADER_SIZE);
+        memset(naglowek, '\0', HEADER_SIZE);
 
-        Szyfrator szyfr;
+        while (ilePrzeczytano < HEADER_SIZE) {
+            qDebug() << "attempting read, actual == " << ilePrzeczytano;
+            nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
+            strncat(naglowek, temp, nowaPartia);
+            ilePrzeczytano += nowaPartia;
+        }
 
-        Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
+        qDebug() << "przeczytano lacznie == " << ilePrzeczytano;
+        qDebug() << "naglowek == " << naglowek;
 
-        qDebug() << "rozmiar == " << nagl.trueRozmiar;
-        qDebug() << "typ == " << nagl.typ;
+        //if (read(socket, wiad, HEADER_SIZE) == 0)
+            //break;
 
-        char typ = nagl.typ;
-        unsigned int id = nagl.ID;
-        unsigned int rozmiar = nagl.trueRozmiar;
+        nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
 
-        //read(socket,wiad,1);
-        //char typ = wiad[0];
-        //qDebug()<< wiad[0]<<"\n";
-        //read(socket,wiad,4);
-        //unsigned int id = ntohs(*((unsigned int*)wiad));
-        //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        //read(socket,wiad,4);
-        //unsigned int dlugosc =*((unsigned int*)wiad);
-        //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-        //unsigned int rozmiar = ntohs(*((unsigned int*)wiad));
-        //qDebug() <<"Jestem blisko...";
-        //qDebug() <<typ;
-        //qDebug() <<"Jestem blisko...";
-        QString login;
-        QString hash;
-        QString wiadomosc;
-        std::string wiadomosc2 = "";
-        switch(typ){
-            case ODLACZ_UZYTKOWNIKA:{ // skladamy samokrytyke i odlaczamy sie z serwera
-            qDebug() << "wyjscie --- ";
-            wyjscie=true;}
-                break;
-            case REJESTRUJ:{
-            /*
-            qDebug() <<"Wszedłem w ciebie...";
+        typ = nagl.typ;
+        id = nagl.ID;
+        rozmiar = nagl.trueRozmiar;
 
-                //tu odczytujemy login i haslo
-                for(unsigned int i=0;i<id/2;++i){
-                    read(socket,wiad,2);
-                    login.append(*((QChar*)wiad));
-                }
+        delete [] temp;
 
-                for(unsigned int i=0;i<(rozmiar -id)/2;++i){
-                    read(socket,wiad,2);
-                    hash.append(*((QChar*)wiad));
-                }*/
-                // musimy odczytac calosc a potem podzielic ja na login i haslo
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-                read(socket, sup, rozmiar);
-                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
+        temp = new char[nagl.trueRozmiar];
+        content = new char[nagl.trueRozmiar];
+        memset(temp, '\0', nagl.trueRozmiar);
+        memset(content, '\0', nagl.trueRozmiar);
+
+        ilePrzeczytano = 0;
+        nowaPartia = 0;
+
+        qDebug() << "naglowek zaraportowal rozmiar == " << nagl.trueRozmiar;
+
+        while (ilePrzeczytano < nagl.trueRozmiar) {
+            nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
+            strncat(content, temp, nowaPartia);
+            ilePrzeczytano += nowaPartia;
+        }
+
+        qDebug() << "przeczytano Dane rozmiar == " << ilePrzeczytano;
+        qDebug() << "dane == " << content;
+
+        wiadomosc = szyfr.deszyfrujDane(content, sekret);
+
+        delete [] temp;
+        delete [] content;
+
+        switch (nagl.typ){
+
+            case ODLACZ_UZYTKOWNIKA : { // skladamy samokrytyke i odlaczamy sie z serwera
+                qDebug() << "wyjscie --- ";
+                wyjscie=true;
+            } break;
+
+            case REJESTRUJ : {
                 login = wiadomosc.left(id);
                 hash = wiadomosc.right(wiadomosc.size()-id);
-
                 rejestruj(login,hash);
-                delete [] sup;
-            }
-                break;
-        case WYSLIJ_WIADOMOSC:{ // zeby nie bylo wiadomosc przyszla do nas :)
+            } break;
 
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-
-                qDebug() << "read == " << read(socket, sup, rozmiar);
-
-                wiadomosc = szyfr.deszyfrujDane(sup, NULL);
-
+            case WYSLIJ_WIADOMOSC:{ // zeby nie bylo wiadomosc przyszla do nas :)
                 qDebug() << "got == " << wiadomosc;
-                delete [] sup;
                 if(rozmowy.contains(id)) {
                     qDebug() << "this is the rozmowa you are looking for";
                     rozmowy[id]->wyslijWiadomosc(wiadomosc);
                 }
-            }
-                break;
-            case LOGUJ_UZYTKOWNIKA:{
-                // tu trzeba nam jakas funkcje do logowania
-                /*
-                //tu odczytujemy login i haslo
-                for(unsigned int i=0;i<id/2;++i){
-                    read(socket,wiad,2);
-                    login.append(*((QChar*)wiad));
-                }
+            } break;
 
-                for(unsigned int i=0;i<(rozmiar -id)/2;++i){
-                    read(socket,wiad,2);
-                    hash.append(*((QChar*)wiad));
-                }*/
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-                read(socket, sup, rozmiar);
-                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
+            case LOGUJ_UZYTKOWNIKA:{
                 login = wiadomosc.left(id);
                 hash = wiadomosc.right(wiadomosc.size()-id);
-
                 loguj(login,hash);
-                delete [] sup;
-            }
-
-                break;
+            } break;
   //          case SPRAWDZ_DOSTEPNOSC:// nie wiem czy to wogole bedziemy robic ale nie ch bedzie
   //              break;
             case ZAKONCZ_ROZMOWE:{
                 // uzytkownik chce zakonczyc rozmowe
                 emit opuszczamRozmowe(myid,id);
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-                read(socket, sup, rozmiar);
-                delete [] sup;
-            }
-                break;
+            } break;
+
             case ROZPOCZNIJ_ROZMOWE:{// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-                read(socket, sup, rozmiar);
-                delete [] sup;
+
                 emit tworzeRozmowe(myid); // tu musimy pamietac aby potem rozruzniac zaproszenia
             // do naszych wlasnych rozmow
-            }
-            break;
+            } break;
+
             case DODAJ_DO_ROZMOWY:{
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-                read(socket, sup, rozmiar);
-                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
+
                 int idRozm = wiadomosc.toInt();
                 emit dodajeRozmowce(id,idRozm);
-                delete [] sup;
-            }
-            break;
+
+            } break;
+
             case NAWIAZ_BEZPIECZNE:{
-                sup = new char[rozmiar];
-                memset(sup, '\0', rozmiar);
-                read(socket, sup, rozmiar);
-                wiadomosc = szyfr.deszyfrujDane(sup, sekret);
                 Klucz nk = szyfr.stringDoKlucz(wiadomosc);
                 sekret = new Klucz(nk);
-            }
-            break;
+            } break;
             /*case PLIK_TRANSFER:
                 break;
             case PLIK_CHETNI:
@@ -278,10 +225,6 @@ void UserConnection::run()
                 break;
 */
         }
-        /*for(int i=0;i<rozmiar;++i){
-            read(socket,wiad,2);
-            qDebug() << *((QChar*)wiad);
-        }*/
 
     }
     sprzataj();
