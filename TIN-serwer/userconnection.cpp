@@ -77,12 +77,14 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
     qDebug() << "TUTAJ TUTAJ TUTAJ TUTAJ";
 
     if(idUsr==this->myid){
+
+
         rozmowy.insert(idRozm,ro);
         // czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
         if(czy){// to my ja stworzylismy przed chwila
             qDebug() << "Se rozmowa sie stworzyla";
             wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
-            return;
+            //return;
         }
         qDebug() << "Dodaj";
         wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
@@ -291,6 +293,8 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     Wiadomosc wiad(typ, id, dane1, this->socket);
     unsigned int wielkosc;
     char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
+
+    qDebug() << "WYSYŁAM typ: " <<id;
 
     wiad.wyslijDoSerwera(wiadomosc, wielkosc);
 

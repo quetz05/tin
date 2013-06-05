@@ -112,6 +112,7 @@ void SerwerApp::dodajDoRozmowy(int idUsr, int idRozm)
 ///zrobione
 void SerwerApp::stworzRozmowe(int idUsr)
 {
+    qDebug() << "tworze rozmowe";
     int i =1;
     while(rozmowy.contains(i)) { ++i; }
     rozmowy.insert(i,new rozmowa(i));

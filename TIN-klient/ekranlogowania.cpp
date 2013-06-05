@@ -122,22 +122,20 @@ void ekranLogowania::sprawdzZaloguj(int id)
     qDebug() << "WIADOMOSC WRACA!";
     qDebug() << id;
 
-    if(oknoInformacji)
-    {
-        delete oknoInformacji;
-        oknoInformacji = NULL;
-    }
 
     if (!id==0)
     {
-
-        oknoInformacji = new info(this,QString("Witaj ponownie ") + login,true);
-
         emit logowanie(login,id);
 
     }
     else
     {
+
+        if(oknoInformacji)
+        {
+            delete oknoInformacji;
+            oknoInformacji = NULL;
+        }
         oknoInformacji = new info(this,"Błędny login lub hasło - spróbuj ponownie.",false);
         haslo="";
         login="";
