@@ -27,31 +27,14 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
-   /* qDebug() << "Dzialam se w tle";
-    char wiad[4];
-
-    //czytanie typu
-    read(gniazdo,wiad,1);
-    char typ = wiad[0];
-    qDebug()<< QString("Naglowek: ") + QString(wiad[0])<<"\n";
-
-    //czytanie ID
-    read(gniazdo,wiad,4);
-    unsigned int id = ntohs(*((unsigned int*)wiad));
-   // qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-
-    //czytanie dlugosci
-    read(gniazdo,wiad,4);
-    unsigned int rozmiar = *((unsigned int*)wiad);
-    //qDebug()<< ntohs(*((unsigned int*)wiad))<<"\n";
-*/
-
     while(1) {
+
+        qDebug() << "server conn is online";
+
         char wiad[HEADER_SIZE];
         char *sup;
 
-    read(gniazdo, wiad, HEADER_SIZE);
-            break;
+        read(gniazdo, wiad, HEADER_SIZE);
 
         Szyfrator szyfr;
         Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
@@ -65,7 +48,6 @@ void ServerConn::odbierajWiadomosci()
 
         QString wiadomosc;
 
-
         sup = new char[rozmiar];
 
         memset(sup, '\0', rozmiar);
@@ -73,7 +55,6 @@ void ServerConn::odbierajWiadomosci()
         read(gniazdo, sup, rozmiar);
 
         wiadomosc = szyfr.deszyfrujDane(sup, NULL);
-
 
         //rozpoznanie typu wiadomosci
         switch(typ)
@@ -105,7 +86,7 @@ void ServerConn::odbierajWiadomosci()
        case CZY_ISTNIEJE:
             emit czyIstnieje(id);
     }
-*/
+
 
     }
 }
