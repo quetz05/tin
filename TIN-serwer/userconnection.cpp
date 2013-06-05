@@ -108,6 +108,8 @@ void UserConnection::run()
     Szyfrator szyfr;
     Naglowek nagl;
 
+    fd_set writefds;
+
     while(!wyjscie){ // 0 kod wyjscia
         // tu obróbka danych i wyslanie nowych wiadomosci
 
@@ -116,7 +118,7 @@ void UserConnection::run()
         temp = new char[HEADER_SIZE + 1];
         memset(temp, '\0', HEADER_SIZE + 1);
         memset(naglowek, '\0', HEADER_SIZE + 1);
-        fd_set writefds;
+
         while (ilePrzeczytano < HEADER_SIZE) {
 
             FD_ZERO(&writefds);
@@ -126,7 +128,7 @@ void UserConnection::run()
                 qDebug() << "attempting read, actual == " << ilePrzeczytano;
                 nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
 
-            if (nowaPartia == -1) {
+            if (nowaPartia == 0) {
                 wyjscie = true;
                 break;
             }

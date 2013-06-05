@@ -110,7 +110,7 @@ void MainWindow::zaloguj(const QString &login,const int id)
     tytul.append(login);
     tytul.append(" (");
     tytul.append(QString::number(id));
-    tytul.append(")");
+    tytul.append(") - Super TIN - TIN");
     this->setWindowTitle(tytul);
 
     bramaZnajomych = new BramaZnajomych(QString(uzytkownik));

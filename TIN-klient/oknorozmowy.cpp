@@ -18,6 +18,12 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
 
     ui->setupUi(this);
 
+    QString title = "[ ";
+    title.append(QString::number(id));
+    title.append(" ] -- Super TIN - TIN : Rozmowa --");
+
+    this->setWindowTitle(title);
+
     connect(ui->liniaWiadomosci, SIGNAL(textChanged(const QString &)), this, SLOT(wpisywanieWiadomosci(QString)));
     connect(ui->pushWyslij, SIGNAL(clicked()), this, SLOT(wyslij()));
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
