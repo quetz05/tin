@@ -15,7 +15,9 @@ QString rozmowa::odbiezWiadomosc(int id)
 
     //z powodu zapisu nie mozemy pozwolic na odczytywanie bez mutka
     mutex.lock();
-    qDebug() <<  messages.size();
+//    qDebug() << "Wielkosc mesage: " << messages.size();
+//    qDebug() << "Wielkosc mesage: " << userNbr;
+
     for(int i=0;i<messages.size();++i){
         if(!messages[i].czyPrzeczytal(id)){
             mutex.unlock();
