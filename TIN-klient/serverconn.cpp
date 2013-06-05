@@ -9,12 +9,6 @@ ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
 {
     gniazdo = socket;
-    //watek = new QThread();
-
-    //connect(watek, SIGNAL(started()), this, SLOT(odbierajWiadomosci()));
-
-    //this->moveToThread(watek);
-    //watek->start();
 }
 
 
@@ -27,8 +21,6 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
-    while(1) {
-
         qDebug() << "server conn is online";
 
         char wiad[HEADER_SIZE];

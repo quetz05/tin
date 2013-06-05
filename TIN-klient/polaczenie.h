@@ -13,13 +13,11 @@
 int gniazdo = 0;
 
 
-bool polacz(char* adres, int port)
+bool polacz(const char* adres, int port)
 {
-    //adres serwera (port 1111)
+    //adres serwera
     struct sockaddr_in serwer;
     struct hostent *hp;
-
-    //inet_aton(adres,address);
     struct in_addr ipv4addr;
     inet_pton(AF_INET, adres, &ipv4addr);
 
@@ -53,12 +51,6 @@ bool polacz(char* adres, int port)
         qDebug() << "Blad przy polaczeniu...";
         return false;
     }
-
-   /* if (write( gniazdo, DATA, sizeof DATA ) == -1)
-    {
-        qDebug() << "Błąd przy wysylaniu wiadomosci...";
-        return false;
-    }*/
 
     return true;
 }

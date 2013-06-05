@@ -2,7 +2,7 @@
 #include "ui_dodawanie.h"
 
 
-dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych, int socket) :
+dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych, int socket, int id) :
     QDialog(parent),
     ui(new Ui::dodawanie)
 {
@@ -16,6 +16,7 @@ dodawanie::dodawanie(QWidget *parent, BramaZnajomych *bramaZnajomych, int socket
     oknoInformacji = NULL;
     znajomy.first = "";
     znajomy.second = 0;
+    uzytkownikID = id;
 
 
     connect(ui->pushOK, SIGNAL(clicked()), this, SLOT(wyjscie()));
@@ -72,6 +73,9 @@ void dodawanie::dodajZnajomego()
 
     else if(znajomy.first=="")
         oknoInformacji = new info(this, "Takich bez nicku to mamy bez liku... Wpisz proszę nick znajomego.",false);
+
+    else if(znajomy.second == uzytkownikID)
+        oknoInformacji = new info(this, "Samemu do lustra pić nie wypada... Zaproś kolegów :)",false);
 
     else if(brama->czyWBazie(znajomy.second))
         oknoInformacji = new info(this, "Albo mnie mylą zera i jedynki, albo masz już na liście znajomego o tym ID", false);

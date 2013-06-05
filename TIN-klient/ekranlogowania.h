@@ -71,7 +71,7 @@ public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
 
 signals:
-    void logowanie(const QString&);
+    void logowanie(const QString&,const int);
     void SIGczyRejestracja(int);
     
 public:

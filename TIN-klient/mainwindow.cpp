@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     grRozmowa = NULL;
     doda = NULL;
     oknoWysylania= new QFileDialog(this);
+    oknoInformacji = NULL;
 
     con = new ServerConn(NULL,socket);
 
@@ -22,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
 
     //ekran logowania
-    connect(el, SIGNAL(logowanie(const QString&)), this, SLOT(zaloguj(QString)));
+    connect(el, SIGNAL(logowanie(const QString&, const int)), this, SLOT(zaloguj(QString,int)));
     connect(this, SIGNAL(elSIGczyRejestracja(int)), el, SLOT(rejCzyRejestracja(int)));
     connect(this, SIGNAL(elSIGczyZaloguj(int)), el, SLOT(sprawdzZaloguj(int)));
 
@@ -45,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 
     connect(ui->pushSzukajZnajomych, SIGNAL(clicked()), this, SLOT(wyszukiwarkaZnajomych()));
 
-    connect(ui->actionSzukajZnajomych, SIGNAL(triggered()), this, SLOT(wyszukiwarkaZnajomych()));
     connect(ui->actionZakoncz, SIGNAL(triggered()), this, SLOT(zakoncz()));
     connect(ui->actionWyloguj, SIGNAL(triggered()), this, SLOT(wyloguj()));
 
@@ -96,15 +96,23 @@ void MainWindow::wyloguj()
     exit(12);
 }
 
-void MainWindow::zaloguj(const QString &login)
+void MainWindow::zaloguj(const QString &login,const int id)
 {
 
     el->hide();
 
     uzytkownik = login;
+    uzytkownikID = id;
+
+    QString tytul = "";
+    tytul.append(login);
+    tytul.append(" (");
+    tytul.append(QString::number(id));
+    tytul.append(")");
+    this->setWindowTitle(tytul);
 
     bramaZnajomych = new BramaZnajomych(QString(uzytkownik));
-    doda = new dodawanie(this,bramaZnajomych,gniazdo);
+    doda = new dodawanie(this,bramaZnajomych,gniazdo,uzytkownikID);
 
     //wczytywanie listy znajomych
     wczytajZnajomych();
@@ -118,16 +126,16 @@ void MainWindow::zakoncz()
     QApplication::exit();
 }
 
-void MainWindow::wyszukiwarkaZnajomych()
-{
-    //wysz = new wyszukiwarka(this);
-    //wysz->show();
-}
-
 
 void MainWindow::rozpocznijWysylanie()
 {
-    oknoWysylania->show();
+    if(oknoInformacji)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Sorry, but this feature has not yet been implemented",false);
 
 }
 
@@ -175,16 +183,8 @@ void MainWindow::zaznaczenieZnajomego(QListWidgetItem *znajomy)
     zaznaczonyZnajomy = znajomy;
     ui->pushUsun->setEnabled(true);
 
-    //dostępność opcji rozmowy/wysłania pliku
-  /*  if(zaznaczonyZnajomy->foreground()==Qt::darkGreen)
-    {
-        ui->pushRozmawiaj->setEnabled(true);
-        ui->pushWyslijPlik->setEnabled(true);
-    }
-    else
-    {*/
-        ui->pushWyslijPlik->setEnabled(true);
-    //}
+    ui->pushWyslijPlik->setEnabled(true);
+
 }
 
 void MainWindow::wczytajZnajomych()
@@ -199,9 +199,6 @@ void MainWindow::wczytajZnajomych()
         {
             ui->listaZnajomych->addItem(znajomi[i].first +"  "+"|"+QString::number(znajomi[i].second)+"|");
         }
-
-        //ui->listaZnajomych->item(0)->setForeground(Qt::darkGreen);
-        //ui->listaZnajomych->item(1)->setForeground(Qt::darkGreen);
     }
 }
 
@@ -223,7 +220,6 @@ void MainWindow::zakonczRozmowe(int id)
     }
 
     delete [] wiadomosc;
-
 
     QMap <int, oknoRozmowy*>::Iterator it = oknaRozmowy.find(id);
     delete oknaRozmowy.value(id);
@@ -285,4 +281,15 @@ void MainWindow::czyIstnieje(const int odp)
 
     emit odSIGczyIstnieje(odp);
 
+}
+
+void MainWindow::wyszukiwarkaZnajomych()
+{
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Sorry, but this feature has not yet been implemented",false);
 }
