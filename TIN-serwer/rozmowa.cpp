@@ -4,6 +4,7 @@
 rozmowa::rozmowa(int id,QObject *parent) :
     QObject(parent)
 {
+    userNbr = 0;
     myid= id;
     last = "";
 }
