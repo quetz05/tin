@@ -10,7 +10,10 @@
 #include <QString>
 #include "Baza/bramauzytkownikow.h"
 #include "rozmowa.h"
-
+#include <sys/select.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <stdio.h>
 
 UserConnection::UserConnection(QObject *parent)
 {
@@ -119,12 +122,18 @@ void UserConnection::run()
         temp = new char[HEADER_SIZE];
         memset(temp, '\0', HEADER_SIZE);
         memset(naglowek, '\0', HEADER_SIZE);
-
+        fd_set writefds;
         while (ilePrzeczytano < HEADER_SIZE) {
-            qDebug() << "attempting read, actual == " << ilePrzeczytano;
-            nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
-            strncat(naglowek, temp, nowaPartia);
-            ilePrzeczytano += nowaPartia;
+
+            FD_ZERO(&writefds);
+            FD_SET(socket,&writefds);
+
+            if(select(socket+1,&writefds,NULL,NULL,NULL)){
+                qDebug() << "attempting read, actual == " << ilePrzeczytano;
+                nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
+                strncat(naglowek, temp, nowaPartia);
+                ilePrzeczytano += nowaPartia;
+            }
         }
 
         qDebug() << "przeczytano lacznie == " << ilePrzeczytano;
@@ -152,9 +161,15 @@ void UserConnection::run()
         qDebug() << "naglowek zaraportowal rozmiar == " << nagl.trueRozmiar;
 
         while (ilePrzeczytano < nagl.trueRozmiar) {
-            nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
-            strncat(content, temp, nowaPartia);
-            ilePrzeczytano += nowaPartia;
+
+            FD_ZERO(&writefds);
+            FD_SET(socket,&writefds);
+
+            if(select(socket+1,&writefds,NULL,NULL,NULL)){
+                nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
+                strncat(content, temp, nowaPartia);
+                ilePrzeczytano += nowaPartia;
+            }
         }
 
         qDebug() << "przeczytano Dane rozmiar == " << ilePrzeczytano;
