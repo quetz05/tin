@@ -15,9 +15,10 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     oknoWysylania= new QFileDialog(this);
     oknoInformacji = NULL;
 
-    con = new ServerConn(NULL,gniazdo);
+    con = new ServerConn(NULL,socket);
 
-    el = new ekranLogowania(this,gniazdo);
+
+    el = new ekranLogowania(this,socket);
     el->show();
 
 

@@ -21,12 +21,12 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
+        qDebug() << "server conn is online";
 
-    while(1) {
         char wiad[HEADER_SIZE];
         char *sup;
 
-    read(gniazdo, wiad, HEADER_SIZE);
+        read(gniazdo, wiad, HEADER_SIZE);
 
         Szyfrator szyfr;
         Naglowek nagl = szyfr.deszyfrujNaglowek(wiad, NULL);
@@ -40,7 +40,6 @@ void ServerConn::odbierajWiadomosci()
 
         QString wiadomosc;
 
-
         sup = new char[rozmiar];
 
         memset(sup, '\0', rozmiar);
@@ -48,7 +47,6 @@ void ServerConn::odbierajWiadomosci()
         read(gniazdo, sup, rozmiar);
 
         wiadomosc = szyfr.deszyfrujDane(sup, NULL);
-
 
         //rozpoznanie typu wiadomosci
         switch(typ)
