@@ -38,11 +38,21 @@ void ServerConn::odbierajWiadomosci()
         temp = new char[HEADER_SIZE + 1];
         memset(temp, '\0', HEADER_SIZE + 1);
         memset(naglowek, '\0', HEADER_SIZE + 1);
+        fd_set writefds;
 
         while (ilePrzeczytano < HEADER_SIZE) {
-            nowaPartia = read(gniazdo, temp, HEADER_SIZE - ilePrzeczytano);
-            strncat(naglowek, temp, nowaPartia);
-            ilePrzeczytano += nowaPartia;
+
+
+            FD_ZERO(&writefds);
+            FD_SET(gniazdo,&writefds);
+
+
+            if(select(gniazdo+1,&writefds,NULL,NULL,NULL))
+            {
+                nowaPartia = read(gniazdo, temp, HEADER_SIZE - ilePrzeczytano);
+                strncat(naglowek, temp, nowaPartia);
+                ilePrzeczytano += nowaPartia;
+            }
         }
 
         nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
@@ -95,3 +105,4 @@ void ServerConn::odbierajWiadomosci()
         }
 
     }
+}
