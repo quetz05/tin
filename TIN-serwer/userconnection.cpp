@@ -78,16 +78,16 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 
     if(idUsr==this->myid){
         rozmowy.insert(idRozm,ro);
-    }// czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
-    if(czy){// to my ja stworzylismy przed chwila
-        qDebug() << "Se rozmowa sie stworzyla";
-        wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
-        return;
+        // czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
+        if(czy){// to my ja stworzylismy przed chwila
+            qDebug() << "Se rozmowa sie stworzyla";
+            wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
+            return;
+        }
+        qDebug() << "Dodaj";
+        wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
+        connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
     }
-    qDebug() << "Dodaj";
-    wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
-    connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
-
 }
 
 // tu obsługujemy urzytkownika (czytamy jego wypociny)
