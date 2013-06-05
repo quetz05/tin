@@ -78,16 +78,16 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 
     if(idUsr==this->myid){
         rozmowy.insert(idRozm,ro);
-    }// czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
-    if(czy){// to my ja stworzylismy przed chwila
-        qDebug() << "Se rozmowa sie stworzyla";
-        wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
-        return;
+        // czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
+        if(czy){// to my ja stworzylismy przed chwila
+            qDebug() << "Se rozmowa sie stworzyla";
+            wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
+            return;
+        }
+        qDebug() << "Dodaj";
+        wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
+        connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
     }
-    qDebug() << "Dodaj";
-    wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
-    connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
-
 }
 
 // tu obsługujemy urzytkownika (czytamy jego wypociny)
@@ -108,6 +108,8 @@ void UserConnection::run()
     Szyfrator szyfr;
     Naglowek nagl;
 
+    fd_set writefds;
+
     while(!wyjscie){ // 0 kod wyjscia
         // tu obróbka danych i wyslanie nowych wiadomosci
 
@@ -116,7 +118,7 @@ void UserConnection::run()
         temp = new char[HEADER_SIZE + 1];
         memset(temp, '\0', HEADER_SIZE + 1);
         memset(naglowek, '\0', HEADER_SIZE + 1);
-        fd_set writefds;
+
         while (ilePrzeczytano < HEADER_SIZE) {
 
             FD_ZERO(&writefds);
@@ -126,7 +128,7 @@ void UserConnection::run()
                 qDebug() << "attempting read, actual == " << ilePrzeczytano;
                 nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
 
-            if (nowaPartia == -1) {
+            if (nowaPartia == 0) {
                 wyjscie = true;
                 break;
             }

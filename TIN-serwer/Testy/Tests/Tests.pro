@@ -15,5 +15,11 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += tst_serwertests.cpp
+SOURCES += tst_serwertests.cpp \
+    ../../message.cpp \
+    test.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+HEADERS += \
+    ../../message.h \
+    test.h
