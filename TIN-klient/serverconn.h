@@ -2,7 +2,7 @@
 #define SERVERCONN_H
 
 #include <QThread>
-//#include "polaczenie.h"
+#include <sys/select.h>
 
 
 class ServerConn: public QObject
@@ -20,7 +20,6 @@ public:
     void doSetup(QThread *cThread);
 
 signals:
-
 
     void czyRejestracja(int);
     void czyZaloguj(int);

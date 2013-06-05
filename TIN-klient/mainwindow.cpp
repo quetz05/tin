@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
     gniazdo = socket;
     uzytkownik = login;
     zaznaczonyZnajomy = NULL;
@@ -122,7 +124,6 @@ void MainWindow::zaloguj(const QString &login,const int id)
 
 void MainWindow::zakoncz()
 {
-
     QApplication::exit();
 }
 

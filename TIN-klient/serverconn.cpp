@@ -79,6 +79,4 @@ void ServerConn::odbierajWiadomosci()
             emit czyIstnieje(id);
     }
 
-
     }
-}

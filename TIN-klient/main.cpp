@@ -96,7 +96,6 @@ int main(int argc, char *argv[])
 
     int i = a.exec();
 
-    Szyfrator szyfr;
     Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,QString(""),gniazdo);
     unsigned int rozmiar;
     char *sz = szyfr.szyfruj(&wiad, NULL, &rozmiar);

@@ -3,6 +3,7 @@
 
 #include <QString>
 
+
 /// TYPY NAGLOWKOW
 #define ODLACZ_UZYTKOWNIKA 1 //UWAGA!! uzywalne do konczenia petli obslugi
 #define REJESTRUJ 2 // id dlogosc loginu dlugosc hasla= dlugosc - dlugosc loginu !!!!! login potem haslo
