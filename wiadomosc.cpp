@@ -16,11 +16,18 @@ Wiadomosc::Wiadomosc(char typ, unsigned int ID, QString string, int gnia)
 bool Wiadomosc::wyslijDoSerwera(const char *co, unsigned int rozmiar)
 {
 
-    if (write(gniazdo, co, rozmiar) == -1) {
-        qDebug() << "nie bangla";
-        return false;
+    qDebug() << "sending WIADOMOSC == " << co;
+
+    unsigned int ileWyslano = 0;
+    unsigned int nowaPartia = 0;
+
+    while (ileWyslano < rozmiar) {
+        nowaPartia = write(gniazdo, co, rozmiar- ileWyslano);
+        if (nowaPartia != -1) {
+            ileWyslano += nowaPartia;
+            co += nowaPartia;
+        }
     }
 
     return true;
-
 }

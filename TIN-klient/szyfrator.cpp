@@ -256,7 +256,6 @@ char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
 
 Naglowek Szyfrator::deszyfrujNaglowek(char *data, Klucz *klucz)
 {
-
     QByteArray dane = QByteArray::fromBase64(data);
     QByteArray wynikowa;
 
