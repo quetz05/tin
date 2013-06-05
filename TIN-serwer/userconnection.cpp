@@ -299,7 +299,7 @@ void UserConnection::rejestruj(QString name, QString pass)
         wyslijPakiet(REJESTRUJ,id,NULL);
     }
     else{
-        //tu wysylamy wiadomosc ze juz taki ktos jest i kij mu w oko
+        //tu wysylamy wiadomosc ze juz taki ktos jest
         wyslijPakiet(REJESTRUJ,0,NULL);
     }
 }
