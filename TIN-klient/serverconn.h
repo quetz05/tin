@@ -30,7 +30,6 @@ signals:
     void odbiorRozmowy(int);
     //sygnał z odpowiedzią na istnienie nowego znajomego
     void czyIstnieje(const int);
-
     //sygnał odebrania nowej wiadomosci
     void odebranaWiadomosc(int,QString);
 

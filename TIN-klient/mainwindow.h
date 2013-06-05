@@ -36,8 +36,6 @@ private slots:
     void wyloguj();
     //konczy dzialanie programu
     void zakoncz();
-    //wyswietla okno do wyszukiwania znajomych
-    void wyszukiwarkaZnajomych();
     //rozpoczyna wysylanie pliku
     void rozpocznijWysylanie();
     //wyswietla okno dodawania znajomego
@@ -51,13 +49,14 @@ private slots:
     void wczytajZnajomych();
     void rozpocznijGrupRozmowe();
     void zakonczGrupRoz();
-    void zaloguj(const QString&login);
+    void zaloguj(const QString&login, const int id);
     void elCzyRejestracja(int id) {emit elSIGczyRejestracja(id);}
     void elCzyZaloguj(int id) {emit elSIGczyZaloguj(id);}
     void nowaRozmowa(int id);
     void twojaNowaRozmowa(int id);
     void odbierajWiadomosc(int id, QString wiadomosc);
     void czyIstnieje(const int);
+    void wyszukiwarkaZnajomych();
 
 
 public slots:
@@ -83,6 +82,7 @@ private:
     int gniazdo;
     GrupowaRozmowa *grRozmowa;
     ekranLogowania *el;
+    int uzytkownikID;
 
 
 

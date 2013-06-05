@@ -133,7 +133,7 @@ void ekranLogowania::sprawdzZaloguj(int id)
 
         oknoInformacji = new info(this,QString("Witaj ponownie ") + login,true);
 
-        emit logowanie(login);
+        emit logowanie(login,id);
 
     }
     else
