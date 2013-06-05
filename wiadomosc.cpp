@@ -20,12 +20,18 @@ bool Wiadomosc::wyslijDoSerwera(const char *co, unsigned int rozmiar)
 
     unsigned int ileWyslano = 0;
     unsigned int nowaPartia = 0;
-
+    fd_set writefds;
     while (ileWyslano < rozmiar) {
-        nowaPartia = write(gniazdo, co, rozmiar- ileWyslano);
-        if (nowaPartia != -1) {
-            ileWyslano += nowaPartia;
-            co += nowaPartia;
+
+        FD_ZERO(&writefds);
+        FD_SET(socket,&writefds);
+
+        if(select(socket+1,NULL,&writefds,NULL,NULL)){
+            nowaPartia = write(gniazdo, co, rozmiar- ileWyslano);
+            if (nowaPartia != -1) {
+                ileWyslano += nowaPartia;
+                co += nowaPartia;
+            }
         }
     }
 
