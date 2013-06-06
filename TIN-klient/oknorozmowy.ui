@@ -28,6 +28,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="licznikiZnakow">
+      <property name="text">
+       <string>0 / 256</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>

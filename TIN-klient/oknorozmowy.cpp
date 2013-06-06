@@ -42,6 +42,7 @@ oknoRozmowy::~oknoRozmowy()
 void oknoRozmowy::wpisywanieWiadomosci(const QString &text)
 {
     wiadomosc = text;
+    ui->licznikiZnakow->setText(QString::number(wiadomosc.length()) + QString(" / 256"));
 }
 
 void oknoRozmowy::wyslij()
