@@ -38,15 +38,9 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista, int socket
 
 GrupowaRozmowa::~GrupowaRozmowa()
 {
-    if(zaznaczonyDodaj != NULL) {
-        delete zaznaczonyDodaj;
-        zaznaczonyDodaj = NULL;
-    }
-    if(zaznaczonyUsun != NULL) {
-        delete zaznaczonyUsun;
-        zaznaczonyUsun = NULL;
-    }
+
     delete ui;
+
 }
 
 void GrupowaRozmowa::zaznaczenieDodaj(QListWidgetItem *znajomy)
@@ -85,7 +79,6 @@ void GrupowaRozmowa::usunZRozmowy()
 
     odswiezListy();
 
-
 }
 
 int GrupowaRozmowa::znajdzZnajomego(QList <Znajomy> znaj, int ID)
@@ -101,7 +94,7 @@ int GrupowaRozmowa::znajdzZnajomego(QList <Znajomy> znaj, int ID)
 
 void GrupowaRozmowa::wyjdz()
 {
-    koniec();
+    emit koniec();
 }
 
 void GrupowaRozmowa::tworzRozmowe()
@@ -139,12 +132,14 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
 
         qDebug() << ">>BEDE DODAWAŁ<<";
 
+        Szyfrator szyfr;
+
     for(int i = 0;i<IDs.length();i++)
     {
 
                 qDebug() << ">>SE DODAJE <<" << IDs[i];
 
-        Szyfrator szyfr;
+
         Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
@@ -155,6 +150,7 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
         }
     }
 
+    emit koniec();
 }
 
 
