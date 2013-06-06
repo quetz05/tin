@@ -73,9 +73,9 @@ void oknoRozmowy::zakoncz()
 {
         Szyfrator szyfr2;
         QString data="";
-        data.append("<b>>>UZYTKOWNIK ");
+        data.append("<font color='red'><b>>> Użytkownik :: <i>");
         data.append(uzytkownik);
-        data.append(" odłączył się z rozmowy. Pożegnajmy go brawami!</b>");
+        data.append(" </i> odłączył się z rozmowy. Pożegnajmy go brawami! <<</b></font>");
         Wiadomosc wiad2(WYSLIJ_WIADOMOSC,ID,data, gniazdo);
         unsigned int wielkosc2;
         char *wiadom2 = szyfr2.szyfruj(&wiad2,0,&wielkosc2);
