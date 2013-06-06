@@ -38,10 +38,14 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista, int socket
 
 GrupowaRozmowa::~GrupowaRozmowa()
 {
-    if(zaznaczonyDodaj != NULL)
-         delete zaznaczonyDodaj;
-    if(zaznaczonyUsun != NULL)
+    if(zaznaczonyDodaj != NULL) {
+        delete zaznaczonyDodaj;
+        zaznaczonyDodaj = NULL;
+    }
+    if(zaznaczonyUsun != NULL) {
         delete zaznaczonyUsun;
+        zaznaczonyUsun = NULL;
+    }
     delete ui;
 }
 
