@@ -104,7 +104,7 @@ signals:
     /**
      * @brief finished wychodzimy
      */
-    void finished(int);
+    void finished(UserConnection*);
     //void finished(int idUsr);
 public slots:
     /**
@@ -129,6 +129,7 @@ public slots:
      */
     void pojawilSieUsr(int, int);
     //void pojawilSieUsr(int idUsr,int status);
+    void zakonczono(QPrivateSignal);
 };
 
 #endif // USERCONECTION_H

@@ -102,10 +102,17 @@ void GrupowaRozmowa::wyjdz()
 
 void GrupowaRozmowa::tworzRozmowe()
 {
+    qDebug() << ">>TWORZE ROZMOWE<<";
+
     if(!znajomiDodani.empty())
     {
         for(int i = 0; i<znajomiDodani.length(); i++)
+        {
             IDs.push_back(znajomiDodani[i].second);
+
+            qDebug() << ">>DODAJE DO LISTY<<" << znajomiDodani[i].second;
+
+        }
 
         Szyfrator szyfr;
         Wiadomosc wiad(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
@@ -124,12 +131,18 @@ void GrupowaRozmowa::tworzRozmowe()
 void GrupowaRozmowa::rozpocznijRozmowe(int id)
 {
 
+        qDebug() << ">>BEDE DODAWAŁ<<";
+
     for(int i = 0;i<IDs.length();i++)
     {
+
+                qDebug() << ">>SE DODAJE <<" << IDs[i];
+
         Szyfrator szyfr;
         Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
+
 
         if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu id uzytkownika do nowej rozmowy";

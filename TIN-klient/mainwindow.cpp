@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <unistd.h>
+#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     QMainWindow(parent),
@@ -120,6 +122,14 @@ void MainWindow::zaloguj(const QString &login,const int id)
     wczytajZnajomych();
 
     this->show();
+
+    if(oknoInformacji)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,QString("Witaj ponownie ") + login,true);
 }
 
 void MainWindow::zakoncz()
@@ -272,7 +282,8 @@ void MainWindow::twojaNowaRozmowa(int id)
 
 void MainWindow::odbierajWiadomosc(int id, QString wiadomosc)
 {
-    oknaRozmowy.value(id)->wyswietlWiadomosc(wiadomosc);
+    if(oknaRozmowy.count(id)==1)
+        oknaRozmowy.value(id)->wyswietlWiadomosc(wiadomosc);
 }
 
 void MainWindow::czyIstnieje(const int odp)

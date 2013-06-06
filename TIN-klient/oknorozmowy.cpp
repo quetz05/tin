@@ -57,7 +57,6 @@ void oknoRozmowy::wyslij()
             qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
         }
 
-        //ui->oknoWiadomosci->append(loginTwoj + ": " + wiadomosc);
         ui->liniaWiadomosci->clear();
         wiadomosc = "";
     }
@@ -67,9 +66,14 @@ void oknoRozmowy::wyslij()
 
 void oknoRozmowy::zakoncz()
 {
+        Szyfrator szyfr;
+        Wiadomosc wiad(ZAKONCZ_ROZMOWE,ID,QString(""), gniazdo);
+        unsigned int wielkosc;
+        char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
 
-       //wiad = new Wiadomosc ( ZAKONCZ_ROZMOWE,ID,QString(""),gniazdo );
-       //wiad->wyslijDoSerwera();
+        if(wiad.wyslijDoSerwera(wiadom, wielkosc)==-1){
+            qDebug()<<"Błąd przy kończeniu rozmowy";
+        }
 
        koniecRozmowy(ID);
 }

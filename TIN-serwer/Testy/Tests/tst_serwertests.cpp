@@ -1,6 +1,7 @@
 #include <QString>
 #include <QtTest>
-#include "../message.h"
+#include "test.h"
+#include "../../message.h"
 
 class SerwerTests : public QObject
 {
