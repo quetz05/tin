@@ -24,9 +24,13 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
 
     this->setWindowTitle(title);
 
+    ui->liniaWiadomosci->setMaxLength(256);
+
     connect(ui->liniaWiadomosci, SIGNAL(textChanged(const QString &)), this, SLOT(wpisywanieWiadomosci(QString)));
     connect(ui->pushWyslij, SIGNAL(clicked()), this, SLOT(wyslij()));
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
+
+
 }
 
 oknoRozmowy::~oknoRozmowy()
