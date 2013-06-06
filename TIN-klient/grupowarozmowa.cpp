@@ -125,7 +125,7 @@ void GrupowaRozmowa::tworzRozmowe()
 
     }
 
-    wyjdz();
+
 
 }
 
@@ -150,6 +150,8 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
             qDebug()<<"Błąd przy wysyłaniu id uzytkownika do nowej rozmowy";
         }
     }
+
+   wyjdz();
 
 }
 
