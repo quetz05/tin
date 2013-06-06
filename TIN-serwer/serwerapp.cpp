@@ -64,7 +64,7 @@ void SerwerApp::run()
         int sock2=accept(sockfd,(struct sockaddr*)&cliaddr,&addrlen);
         UserConnection *con= new UserConnection(sock2);
         // uzytkownik moze dodac rozmowce
-
+        watki.push_back(con);
         // sprawdzić różne typy connect'ów
         // w szczególności QBlockedConnection
 
@@ -87,7 +87,7 @@ void SerwerApp::run()
         status = connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)), Qt::DirectConnection);
         qDebug() << status;
         // uzytkownik zglasza ze wychodzi
-        status = connect(con,SIGNAL(finished(int)),this,SLOT(wyszedl(int)), Qt::DirectConnection);
+        status = connect(con,SIGNAL(finished(UserConnection)),this,SLOT(wyszedl(UserConnection)), Qt::DirectConnection);
         qDebug() << status;
 
 
@@ -116,6 +116,7 @@ void SerwerApp::stworzRozmowe(int idUsr)
     int i =1;
     while(rozmowy.contains(i)) { ++i; }
     rozmowy.insert(i,new rozmowa(i));
+    rozmowy[i]->dodajSluchacza();
 
     emit dodajeDoRozmowy(idUsr,i,rozmowy[i],1);
 }
@@ -123,13 +124,15 @@ void SerwerApp::stworzRozmowe(int idUsr)
 void SerwerApp::opuscRozmowe(int idUsr, int idRozm)
 {
     if(rozmowy.contains(idRozm)){
-        rozmowy[idRozm]->usunSluchacza(idUsr);
-    }
-    if(!(rozmowy[idRozm]->czySluchacze())) {
-        delete rozmowy[idRozm];
-        rozmowy.remove(idRozm);
-    }
+            rozmowy[idRozm]->usunSluchacza(idUsr);
 
+        if(!(rozmowy[idRozm]->czySluchacze())) {
+            delete rozmowy[idRozm];
+            rozmowy.remove(idRozm);
+
+        }
+
+    }
 }
 ///zorbione
 void SerwerApp::dodajDoMapy(int idUsr,UserConnection* usr)
@@ -141,8 +144,11 @@ void SerwerApp::dodajDoMapy(int idUsr,UserConnection* usr)
     emit dodanoUrzytkownika(idUsr,0);// blad
 }
 ///zrobione
-void SerwerApp::wyszedl(int idUsr)
+void SerwerApp::wyszedl(UserConnection *Usr)
 {//usuwamy urzytkownika jego destruktor powinien nam zrobic przysluge zamknac polaczenie
-    delete users[idUsr];
-    users.remove(idUsr);
+    int i =watki.indexOf(Usr);
+    delete Usr;
+    watki.remove(i);
+    //delete users[idUsr];
+    //users.remove(idUsr);
 }

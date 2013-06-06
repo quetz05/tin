@@ -13,6 +13,7 @@ class SerwerApp : public QObject
 private:
     QCoreApplication *app;
     QMap<int,UserConnection*> users;// mapa urzytkowników do przetrzymania
+    QVector<UserConnection*> watki;// wskazniki na wszystkie stworzone watki rowniez niezalogowanych osobnikow
     QMap<int,rozmowa*>   rozmowy;
     int port;
     int sockett;
@@ -90,7 +91,7 @@ public slots:
     void dodajDoMapy(int, UserConnection*);
     //void dodajDoMapy(int idUsr, UserConnection *usr);
 
-    void wyszedl(int);
+    void wyszedl( UserConnection*);
     //void wyszedl(int idUsr);
 };
 

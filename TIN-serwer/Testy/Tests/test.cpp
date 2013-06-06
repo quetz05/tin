@@ -1,6 +1,6 @@
 #include "test.h"
 #include <QDebug>
-
+#include <QDebug>
 Test::Test()
 {
 }
@@ -8,9 +8,9 @@ Test::Test()
 void Test::test1()
 {// test wiadomosci
     message wiadomosc("jakas zarombista wiadomosc");
-    QVERIFY2(wiadomosc.iluPrzeczytalo()==0);
-    QDebug() << wiadomosc.Czytaj();
-    QVERIFY2(wiadomosc.iluPrzeczytalo());
+    QVERIFY(wiadomosc.iluPrzeczytalo()==0);
+    qDebug() << wiadomosc.Czytaj(1);
+    QVERIFY(wiadomosc.iluPrzeczytalo());
 
 }
 

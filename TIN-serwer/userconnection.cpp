@@ -34,7 +34,7 @@ UserConnection::UserConnection(int socket)
     this->moveToThread(watek);
 
     connect(watek, SIGNAL(started()), this, SLOT(run()));
-
+    connect(watek,SIGNAL(finished(QPrivateSignal)),this,SLOT(zakonczono(QPrivateSignal)),Qt::DirectConnection);
     watek->start();
 }
 
@@ -49,13 +49,14 @@ UserConnection::~UserConnection()
 void UserConnection::nowaWiadomosc(int id)
 {
 
+
     qDebug() << "nowa Wiadomosc SLOT!!";
 
     // pojawila sie nowa wiadomosc od rozmowy id losowy to wypychamy ja na gniazd
     //if(rozmowy[id]->czyWiadomosc(myid)){
     if(true) {
         QString wiadomosc = "";
-        wiadomosc.append(rozmowy[id]->odbiezWiadomosc(id));
+        wiadomosc.append(rozmowy[id]->odbiezWiadomosc(myid));
         wyslijPakiet(WYSLIJ_WIADOMOSC,id,&wiadomosc);
     }
 }
@@ -69,6 +70,11 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
             zalogowany = true;
         }
     }
+}
+// zakonczylo sie wykonywanie watku w ktorym jestesmy
+void UserConnection::zakonczono(UserConnection::QPrivateSignal)
+{
+    emit finished(this);
 }
 ///Zrobione
 void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
@@ -177,6 +183,7 @@ void UserConnection::run()
             case ODLACZ_UZYTKOWNIKA : { // skladamy samokrytyke i odlaczamy sie z serwera
                 qDebug() << "wyjscie --- ";
                 wyjscie=true;
+                // cos jeszcze musimy powiedziec serwerowi zeby nas usunol;
             } break;
 
             case REJESTRUJ : {
@@ -201,8 +208,14 @@ void UserConnection::run()
   //          case SPRAWDZ_DOSTEPNOSC:// nie wiem czy to wogole bedziemy robic ale nie ch bedzie
   //              break;
             case ZAKONCZ_ROZMOWE:{
-                // uzytkownik chce zakonczyc rozmowe
-                emit opuszczamRozmowe(myid,nagl.ID);
+                // chcemy jeszcze rozlaczyc slota zanim zrobimy wszystko inne
+                if(this->rozmowy.contains(nagl.ID)){
+                    disconnect(rozmowy[nagl.ID],SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)));
+                    // uzytkownik chce zakonczyc rozmowe
+                    rozmowy.remove(nagl.ID);
+                    emit opuszczamRozmowe(myid,nagl.ID);
+
+                }
             } break;
 
             case ROZPOCZNIJ_ROZMOWE:{// tu bedzie trudniej bo rozpoczecie chociaz nie jest tak zle
@@ -235,7 +248,7 @@ void UserConnection::run()
 
     }
     sprzataj();
-    emit finished(myid);
+
 
 }
 
