@@ -86,7 +86,6 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 
 
         rozmowy.insert(idRozm,ro);
-            }
         // czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
         if(czy){// to my ja stworzylismy przed chwila
             qDebug() << "Se rozmowa sie stworzyla";
@@ -96,7 +95,7 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
         qDebug() << "Dodaj";
         wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
         connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
-
+    }
 }
 
 // tu obsługujemy urzytkownika (czytamy jego wypociny)
