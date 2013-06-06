@@ -28,7 +28,7 @@ QString rozmowa::odbiezWiadomosc(int id)
             QString wiad = "";
             wiad.append(messages[i].Czytaj(id));
             last = "";
-            last.append(messages[i].Czytaj(id));
+            last.append(wiad);
 
             if(messages[i].iluPrzeczytalo()==userNbr){ //sprawdzamy czy czytamy tą wiadomość jako ostatni jezeli tak to ja usuwamy
                 messages.remove(i);

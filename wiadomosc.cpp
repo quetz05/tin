@@ -24,9 +24,9 @@ bool Wiadomosc::wyslijDoSerwera(const char *co, unsigned int rozmiar)
     while (ileWyslano < rozmiar) {
 
         FD_ZERO(&writefds);
-        FD_SET(socket,&writefds);
+        FD_SET(gniazdo,&writefds);
 
-        if(select(socket+1,NULL,&writefds,NULL,NULL)){
+        if(select(gniazdo+1,NULL,&writefds,NULL,NULL)){
             nowaPartia = write(gniazdo, co, rozmiar- ileWyslano);
             if (nowaPartia != -1) {
                 ileWyslano += nowaPartia;

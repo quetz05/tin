@@ -229,20 +229,18 @@ void MainWindow::zakonczRozmowe(int id)
 
 void MainWindow::rozpocznijGrupRozmowe()
 {
-    if(grRozmowa==NULL)
-    {
-        znajomi = bramaZnajomych->getListaZnajomych();
+    if (grRozmowa)
+        delete grRozmowa;
 
-        grRozmowa = new GrupowaRozmowa(this, znajomi, gniazdo);
+    znajomi = bramaZnajomych->getListaZnajomych();
 
-        connect(this, SIGNAL(grTwojaNowaRozmowa(int)), grRozmowa, SLOT(rozpocznijRozmowe(int)));
+    grRozmowa = new GrupowaRozmowa(this, znajomi, gniazdo);
 
-        connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
+    connect(this, SIGNAL(grTwojaNowaRozmowa(int)), grRozmowa, SLOT(rozpocznijRozmowe(int)));
 
-        grRozmowa->show();
+    connect(grRozmowa, SIGNAL(koniec()), this, SLOT(zakonczGrupRoz()));
 
-    }
-
+    grRozmowa->show();
 
 }
 
