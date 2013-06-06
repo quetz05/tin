@@ -19,7 +19,7 @@
 #define UZYTKOWNIK_DOSTEPNY 12 //PRZESYLAMY INFORMACJE O DOSTEPNYM UZYTKOWNIKU ID TEGO UZYTKOWNIKA RZOMIAR 1 DOSTEPNY 0 NIEDOSTEPNY
 #define NAWIAZ_BEZPIECZNE 13 // nawiazuje bezpieczne polaczenie
 #define CZY_ISTNIEJE 14 // sprawdza czy uzytkownik istnieje w bazie (w ID id uzytkownika, w danych login); w odpowiedzi spodziewane jest 0 w ID w razie porażki, bądź inna liczba w razie sukcesu
-
+#define SERWER_NIEZYJE 15//
 
 typedef struct Naglowek {
 

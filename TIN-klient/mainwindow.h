@@ -57,6 +57,7 @@ private slots:
     void odbierajWiadomosc(int id, QString wiadomosc);
     void czyIstnieje(const int);
     void wyszukiwarkaZnajomych();
+    void serwerNiezyje();
 
 
 public slots:

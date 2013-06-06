@@ -31,6 +31,8 @@ signals:
     void czyIstnieje(const int);
     //sygnał odebrania nowej wiadomosci
     void odebranaWiadomosc(int,QString);
+    //serwer padl
+    void niezywySerwer();
 
 public slots:
 

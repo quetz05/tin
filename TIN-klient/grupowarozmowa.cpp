@@ -151,7 +151,6 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
     }
 
     emit koniec();
-
 }
 
 

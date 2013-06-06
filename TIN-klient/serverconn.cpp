@@ -102,6 +102,10 @@ void ServerConn::odbierajWiadomosci()
             case CZY_ISTNIEJE:
                 emit czyIstnieje(nagl.ID);
             break;
+
+        case SERWER_NIEZYJE:
+            emit niezywySerwer();
+
         }
 
     }

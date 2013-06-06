@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(odbiorRozmowy(int)), this, SLOT(nowaRozmowa(int)));
     connect(con, SIGNAL(odebranaWiadomosc(int,QString)), this, SLOT(odbierajWiadomosc(int, QString)));
     connect(con, SIGNAL(czyIstnieje(const int)),this,SLOT(czyIstnieje(int)));
-
+    connect(con, SIGNAL(niezywySerwer()),this,SLOT(serwerNiezyje()));
 
     ui->setupUi(this);
 
@@ -302,4 +302,18 @@ void MainWindow::wyszukiwarkaZnajomych()
     }
 
     oknoInformacji = new info(this,"Sorry, but this feature has not yet been implemented",false);
+}
+
+void MainWindow::serwerNiezyje()
+{
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Świętej pamięci serwer nie żyje... Program ulegnie zamknięciu.",false);
+    oknoInformacji->exec();
+
+    QApplication::exit();
 }
