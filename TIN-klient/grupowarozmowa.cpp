@@ -155,8 +155,6 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
         }
     }
 
-   wyjdz();
-
 }
 
 
