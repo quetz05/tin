@@ -107,7 +107,8 @@ void oknoRozmowy::keyPressEvent(QKeyEvent *keyevent)
     if(keyevent->key() == Qt::Key_Escape)
     {
         zakoncz();
-    }
+    } else
+        QDialog::keyPressEvent(keyevent);
 }
 
 
