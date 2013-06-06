@@ -75,6 +75,7 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
 ///@todo
 void UserConnection::zabij()
 {
+    this->wyslijPakiet(SERWER_NIEZYJE,myid,NULL);
     this->wyjscie=true;// jeszcze cos
 }
 
