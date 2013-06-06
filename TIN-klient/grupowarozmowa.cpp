@@ -125,6 +125,8 @@ void GrupowaRozmowa::tworzRozmowe()
 
     }
 
+    wyjdz();
+
 }
 
 
