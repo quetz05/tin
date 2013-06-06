@@ -17,6 +17,7 @@ private:
     QMap<int,rozmowa*>   rozmowy;
     int port;
     int sockett;
+    bool wychodzimy;
 public:
     /**
      * @brief SerwerApp domyslny konstruktor
@@ -55,6 +56,7 @@ signals:
      */
     void dodanoUrzytkownika(int, int);
     //void dodanoUrzytkownika(int idUsr,int status);
+    void killEmAll();
 public slots:
     //nasza funkcyja odpalajaca apke
     void run();
@@ -91,7 +93,7 @@ public slots:
     void dodajDoMapy(int, UserConnection*);
     //void dodajDoMapy(int idUsr, UserConnection *usr);
 
-    void wyszedl( UserConnection*);
+    //void wyszedl();
     //void wyszedl(int idUsr);
 };
 

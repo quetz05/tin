@@ -5,13 +5,14 @@
 #include "rozmowa.h"
 #include <QMap>
 #include <QMutex>
+#include <QRunnable>
 #include "szyfrator.h"
-class UserConnection : public QObject
+class UserConnection : public QObject, public QRunnable
 {
     Q_OBJECT
 private:
 
-    QThread *watek;
+    //QThread *watek;
 
     bool zalogowany;
     int socket;
@@ -19,6 +20,7 @@ private:
     Klucz *sekret;
     QMutex mutex; // muteks gwarantujacy nam ze tylko jeden pakiet na raz bedzie wysylany
     // na wszelki wypadek bo sloty wywoluja sie w innym watku
+    bool wyjscie;
 
 
     //trzeba nam jeszcze liste naszych rozmow zeby je jakos obslugiwac
@@ -72,6 +74,8 @@ public:
      **/
     ~UserConnection();
     
+    //QThread* zwrocWatek(){return this->watek;}
+    int zwrocId(){return this->myid;}
 signals:
     /**
      * @brief dodajRozmowce sygnał który dodaje nowego rozmówcę do naszej rozmowy
@@ -104,7 +108,7 @@ signals:
     /**
      * @brief finished wychodzimy
      */
-    void finished(UserConnection*);
+    void finished();
     //void finished(int idUsr);
 public slots:
     /**
@@ -129,7 +133,7 @@ public slots:
      */
     void pojawilSieUsr(int, int);
     //void pojawilSieUsr(int idUsr,int status);
-    void zakonczono(QPrivateSignal);
+    void zabij();
 };
 
 #endif // USERCONECTION_H

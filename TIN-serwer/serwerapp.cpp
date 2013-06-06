@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "userconnection.h"
 #include <unistd.h>
+#include <QThreadPool>
 
 #define PULA 128
 // pula jeszce nie odebranych połączeń na sockecie
@@ -17,7 +18,7 @@ SerwerApp::SerwerApp(QObject *parent) :
 {
     // pobieramy instancje aplikacji glownej jeszcze nie wiem po co ale narazie tak jest w tutku
     app = QCoreApplication::instance();
-
+    wychodzimy = false;
 
 }
 //funkcja zamykajaca program
@@ -32,6 +33,7 @@ void SerwerApp::quit()
 //funkcja zawierajaca petle programu
 void SerwerApp::run()
 {
+    QThreadPool::globalInstance()->setMaxThreadCount(PULA);
     int sockfd;
     // otwieramy nowe gniazdo
 
@@ -58,39 +60,40 @@ void SerwerApp::run()
     sockett = sockfd;
      qDebug() << "start serwera (rozpoczecie nasłuchu)\n";
     //nakurwiamy petle uruchamiajaca miliard watkow urzytkownikow
-    while(1){
+    while(!wychodzimy){
         struct sockaddr_in cliaddr;
         unsigned int addrlen=sizeof(cliaddr);
         int sock2=accept(sockfd,(struct sockaddr*)&cliaddr,&addrlen);
-        UserConnection *con= new UserConnection(sock2);
-        // uzytkownik moze dodac rozmowce
-        watki.push_back(con);
-        // sprawdzić różne typy connect'ów
-        // w szczególności QBlockedConnection
+        if (sock2>0){
+            UserConnection *con= new UserConnection(sock2);
+            // uzytkownik moze dodac rozmowce
+            watki.push_back(con);
+            // sprawdzić różne typy connect'ów
+            // w szczególności QBlockedConnection
 
-        qDebug() << "connection pointer == " << con;
-        bool status;
-        status = connect(con,SIGNAL(dodajeRozmowce(int ,int )),this,SLOT(dodajDoRozmowy(int ,int )), Qt::DirectConnection);
-        qDebug() << status;
-        // uzytkownik moze stworzyc rozmowe
-        status = connect(con,SIGNAL(tworzeRozmowe(int )),this,SLOT(stworzRozmowe(int )), Qt::DirectConnection);
-        // uzytkownik moze opuscic rozmowe
-        status = connect(con,SIGNAL(opuszczamRozmowe(int  ,int )),this,SLOT(opuscRozmowe(int ,int )), Qt::DirectConnection);
-        qDebug() << status;
-        // uzytkownik moze dodac sie do zalogowanych jak juz sie zaloguje
-        status = connect(con,SIGNAL(dodajeSieDoListy(int,UserConnection*)),this,SLOT(dodajDoMapy(int,UserConnection*)), Qt::DirectConnection);
-        qDebug() << status;
-        // uzytkownik moze zostac dodany do rozmowy
-        status = connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*,bool)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*,bool)), Qt::DirectConnection);
-        qDebug() << status;
-        //rozglaszamy ze ktos sie pojawil i czy mu sie udalo
-        status = connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)), Qt::DirectConnection);
-        qDebug() << status;
-        // uzytkownik zglasza ze wychodzi
-        status = connect(con,SIGNAL(finished(UserConnection)),this,SLOT(wyszedl(UserConnection)), Qt::DirectConnection);
-        qDebug() << status;
-
-
+            qDebug() << "connection pointer == " << con;
+            bool status;
+            status = connect(con,SIGNAL(dodajeRozmowce(int ,int )),this,SLOT(dodajDoRozmowy(int ,int )), Qt::DirectConnection);
+            qDebug() << status;
+            // uzytkownik moze stworzyc rozmowe
+            status = connect(con,SIGNAL(tworzeRozmowe(int )),this,SLOT(stworzRozmowe(int )), Qt::DirectConnection);
+            // uzytkownik moze opuscic rozmowe
+            status = connect(con,SIGNAL(opuszczamRozmowe(int  ,int )),this,SLOT(opuscRozmowe(int ,int )), Qt::DirectConnection);
+            qDebug() << status;
+            // uzytkownik moze dodac sie do zalogowanych jak juz sie zaloguje
+            status = connect(con,SIGNAL(dodajeSieDoListy(int,UserConnection*)),this,SLOT(dodajDoMapy(int,UserConnection*)), Qt::DirectConnection);
+            qDebug() << status;
+            // uzytkownik moze zostac dodany do rozmowy
+            status = connect(this,SIGNAL(dodajeDoRozmowy(int,int,rozmowa*,bool)),con,SLOT(dodanyDoRozmowy(int,int,rozmowa*,bool)), Qt::DirectConnection);
+            qDebug() << status;
+            //rozglaszamy ze ktos sie pojawil i czy mu sie udalo
+            status = connect(this,SIGNAL(dodanoUrzytkownika(int,int)),con,SLOT(pojawilSieUsr(int,int)), Qt::DirectConnection);
+            qDebug() << status;
+            // uzytkownik zglasza ze wychodzi
+            status = connect(this,SIGNAL(killEmAll()),con,SLOT(zabij()), Qt::DirectConnection);
+            qDebug() << status;
+            QThreadPool::globalInstance()->start(con);
+        }
     }
 
     //na koncu wychodzimy z apki
@@ -99,6 +102,11 @@ void SerwerApp::run()
 // slot informujacy nas o zamykaniu zatrzymujemy watki i czyscimy po sobie
 void SerwerApp::AboutToQuitApp()
 {
+    emit killEmAll();
+
+    qDebug()<<"zabijamy";
+    wychodzimy=true;
+    quit();
 }
 ///zrobione
 void SerwerApp::dodajDoRozmowy(int idUsr, int idRozm)
@@ -144,11 +152,14 @@ void SerwerApp::dodajDoMapy(int idUsr,UserConnection* usr)
     emit dodanoUrzytkownika(idUsr,0);// blad
 }
 ///zrobione
-void SerwerApp::wyszedl(UserConnection *Usr)
+/*
+void SerwerApp::wyszedl()
 {//usuwamy urzytkownika jego destruktor powinien nam zrobic przysluge zamknac polaczenie
+    UserConnection* Usr = static_cast<UserConnection*>(QObject::sender());
+
     int i =watki.indexOf(Usr);
     delete Usr;
     watki.remove(i);
     //delete users[idUsr];
     //users.remove(idUsr);
-}
+}*/

@@ -28,14 +28,15 @@ UserConnection::UserConnection(int socket)
     this->socket = socket;
     zalogowany = false;
     sekret = NULL;
+    wyjscie = false;
 
-    watek = new QThread();
+    //watek = new QThread();
 
-    this->moveToThread(watek);
+    //this->moveToThread(watek);
 
-    connect(watek, SIGNAL(started()), this, SLOT(run()));
-    connect(watek,SIGNAL(finished(QPrivateSignal)),this,SLOT(zakonczono(QPrivateSignal)),Qt::DirectConnection);
-    watek->start();
+    //connect(watek, SIGNAL(started()), this, SLOT(run()));
+
+    //watek->start();
 }
 
 ///zrobione chyba wszystko
@@ -71,11 +72,13 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
         }
     }
 }
-// zakonczylo sie wykonywanie watku w ktorym jestesmy
-void UserConnection::zakonczono(UserConnection::QPrivateSignal)
+///@todo
+void UserConnection::zabij()
 {
-    emit finished(this);
+    this->wyjscie=true;// jeszcze cos
 }
+
+
 ///Zrobione
 void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 {
@@ -104,7 +107,7 @@ void UserConnection::run()
 {
     unsigned int ilePrzeczytano = 0;
     unsigned int nowaPartia = 0;
-    bool wyjscie = false;
+
     char naglowek[HEADER_SIZE + 1];
     char *content;
     char *temp;
@@ -120,7 +123,9 @@ void UserConnection::run()
 
     while(!wyjscie){ // 0 kod wyjscia
         // tu obróbka danych i wyslanie nowych wiadomosci
-
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec= 100000;
         ilePrzeczytano = 0;
         nowaPartia = 0;
         temp = new char[HEADER_SIZE + 1];
@@ -132,7 +137,7 @@ void UserConnection::run()
             FD_ZERO(&writefds);
             FD_SET(socket,&writefds);
 
-            if(select(socket+1,&writefds,NULL,NULL,NULL)){
+            if(select(socket+1,&writefds,NULL,NULL,&tv)){
                 qDebug() << "attempting read, actual == " << ilePrzeczytano;
                 nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
 
@@ -143,6 +148,8 @@ void UserConnection::run()
 
                 strncat(naglowek, temp, nowaPartia);
                 ilePrzeczytano += nowaPartia;
+            }else{
+                if(wyjscie) break;
             }
         }
 
@@ -166,10 +173,12 @@ void UserConnection::run()
             FD_ZERO(&writefds);
             FD_SET(socket,&writefds);
 
-            if(select(socket+1,&writefds,NULL,NULL,NULL)){
+            if(select(socket+1,&writefds,NULL,NULL,&tv)){
                 nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
                 strncat(content, temp, nowaPartia);
                 ilePrzeczytano += nowaPartia;
+            }else{
+                if(wyjscie) break;
             }
         }
 

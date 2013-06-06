@@ -3,6 +3,8 @@
 #include <QTimer>
 #include <iostream>
 #include<cstdlib>
+#include<signal.h>
+
 #include "serwerapp.h"
 
 #include "Baza/bramauzytkownikow.h"
@@ -14,7 +16,14 @@
  * 2. Nowy nagłówek : CZY_ISTNIEJE -> sprawdza czy istnieje user w bazie na serwerze, w danych piszesz "0"
  *    jeśli nie istnieje i "1" jeśli istnieje
  */
+/**
+ * @brief sigInt funkcja obsługi przerwania ctrl + c
+ */
+SerwerApp* sapp;
+void sigInt(int signum){
+    sapp->AboutToQuitApp();
 
+}
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +32,8 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
       SerwerApp aplikacja;
+      signal(SIGINT,sigInt);
+    sapp = &aplikacja;
 
     // moze tu sobie zrzucimy pewne wartości z argv zeby miec je jakby co i zeby nie przekazywac calosci do aplikacji
     //taka podstawowa obróbka
