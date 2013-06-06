@@ -239,7 +239,7 @@ void MainWindow::zakonczRozmowe(int id)
 
 void MainWindow::rozpocznijGrupRozmowe()
 {
-    if (grRozmowa)
+    if (grRozmowa != NULL)
         delete grRozmowa;
 
     znajomi = bramaZnajomych->getListaZnajomych();
@@ -256,8 +256,8 @@ void MainWindow::rozpocznijGrupRozmowe()
 
 void MainWindow::zakonczGrupRoz()
 {
-        delete grRozmowa;
-        grRozmowa = NULL;
+    delete grRozmowa;
+    grRozmowa = NULL;
 }
 
 
