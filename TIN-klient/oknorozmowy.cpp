@@ -71,6 +71,19 @@ void oknoRozmowy::wyslij()
 
 void oknoRozmowy::zakoncz()
 {
+        Szyfrator szyfr2;
+        QString data="";
+        data.append("<b>>>UZYTKOWNIK ");
+        data.append(login);
+        data.append(" odłączył się z rozmowy. Pożegnajmy go brawami!</b>");
+        Wiadomosc wiad2(WYSLIJ_WIADOMOSC,ID,data, gniazdo);
+        unsigned int wielkosc2;
+        char *wiadom2 = szyfr2.szyfruj(&wiad2,0,&wielkosc2);
+
+        if(wiad2.wyslijDoSerwera(wiadom2, wielkosc2)==-1){
+            qDebug()<<"Błąd przy kończeniu rozmowy";
+        }
+
         Szyfrator szyfr;
         Wiadomosc wiad(ZAKONCZ_ROZMOWE,ID,QString(""), gniazdo);
         unsigned int wielkosc;
