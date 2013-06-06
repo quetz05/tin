@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "szyfrator.h"
 #include <QDebug>
+#include <QKeyEvent>
 
 
 oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
@@ -100,5 +101,15 @@ void oknoRozmowy::wyswietlWiadomosc(QString wiadomosc)
 {
     ui->oknoWiadomosci->append(wiadomosc);
 }
+
+void oknoRozmowy::keyPressEvent(QKeyEvent *keyevent)
+{
+    if(keyevent->key() == Qt::Key_Escape)
+    {
+        zakoncz();
+    }
+}
+
+
 
 

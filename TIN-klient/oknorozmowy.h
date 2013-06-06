@@ -26,7 +26,7 @@ public:
     ~oknoRozmowy();
     void wyswietlWiadomosc(QString wiadomosc);
 
-
+    void keyPressEvent( QKeyEvent *keyevent );
 
 signals:
     void koniecRozmowy(const int);
