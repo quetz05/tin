@@ -18,6 +18,8 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista, int socket
     zaznaczonyDodaj = NULL;
     zaznaczonyUsun = NULL;
 
+    wyslij = NULL;
+
     connect(ui->pushAnuluj, SIGNAL(clicked()), this, SLOT(wyjdz()));
     connect(ui->pushTworz, SIGNAL(clicked()), this, SLOT(tworzRozmowe()));
 
@@ -39,6 +41,11 @@ GrupowaRozmowa::GrupowaRozmowa(QWidget *parent, QList<Znajomy> lista, int socket
 GrupowaRozmowa::~GrupowaRozmowa()
 {
 
+    if(wyslij)
+    {
+        delete wyslij;
+        wyslij = NULL;
+    }
     delete ui;
 
 }
@@ -111,14 +118,21 @@ void GrupowaRozmowa::tworzRozmowe()
 
         }
 
-        Szyfrator szyfr;
+        if(wyslij)
+        {
+            delete wyslij;
+            wyslij = NULL;
+        }
+
+        wyslij=new Wyslij(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
+        /*Szyfrator szyfr;
         Wiadomosc wiad(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 
         if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu wiadomosci o ID do rozmowy";
-        }
+        }*/
 
     }
 
@@ -139,15 +153,22 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
 
                 qDebug() << ">>SE DODAJE <<" << IDs[i];
 
+         if(wyslij)
+         {
+               delete wyslij;
+               wyslij = NULL;
+         }
 
-        Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
+         wyslij=new Wyslij(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
+
+        /*Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
         unsigned int wielkosc;
         char *wiadomosc = szyfr.szyfruj(&wiad,0,&wielkosc);
 
 
         if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu id uzytkownika do nowej rozmowy";
-        }
+        }*/
     }
 
     emit koniec();

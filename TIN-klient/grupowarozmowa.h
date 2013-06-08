@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QListWidgetItem>
 #include "Baza/bramaznajomych.h"
+#include "../wyslij.h"
 
 namespace Ui {
 class GrupowaRozmowa;
@@ -56,6 +57,7 @@ private:
     int znajdzZnajomego(QList <Znajomy> znaj, int ID);
     void odswiezListy();
     QList <int> IDs;
+    Wyslij *wyslij;
 
 
 signals:

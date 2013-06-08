@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QString>
-#include "../wiadomosc.h"
+#include "../wyslij.h"
 
 
 namespace Ui {
@@ -18,7 +18,7 @@ class oknoRozmowy : public QDialog
 private slots:
 
     void wpisywanieWiadomosci(const QString &);
-    void wyslij();
+    void wyslijWiadomosc();
     void zakoncz();
 
 public:
@@ -36,11 +36,11 @@ private:
     Ui::oknoRozmowy *ui;
     QString wiadomosc;
     QString uzytkownik;
-
     //ID rozmowy
     int ID;
     int gniazdo;
-    Wiadomosc *wiad;
+    //Wiadomosc *wiad;
+    Wyslij *wyslij;
     QList <QString> rozmowcy;
 };
 

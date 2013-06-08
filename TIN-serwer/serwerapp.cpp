@@ -67,7 +67,7 @@ void SerwerApp::run()
         if (sock2>0){
             UserConnection *con= new UserConnection(sock2);
             // uzytkownik moze dodac rozmowce
-            watki.push_back(con);
+            //watki.push_back(con);
             // sprawdzić różne typy connect'ów
             // w szczególności QBlockedConnection
 
