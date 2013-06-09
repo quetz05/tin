@@ -14,18 +14,12 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include "polaczenie.h"
 
-UserConnection::UserConnection(QObject *parent)
-{
-    zalogowany = false;
-    myid = -1;
-    sekret = NULL;
-}
-
-UserConnection::UserConnection(int socket)
+UserConnection::UserConnection(int socket) : pakieto(socket)
 {
     myid = -1;
-    this->socket = socket;
+    this->gniazdo = socket;
     zalogowany = false;
     sekret = NULL;
     wyjscie = false;
@@ -44,7 +38,7 @@ UserConnection::~UserConnection()
 {
     if(sekret!=NULL) delete sekret;
 
-    close(socket);// zamykamy gniazdo
+    close(gniazdo);// zamykamy gniazdo
 }
 
 void UserConnection::nowaWiadomosc(int id)
@@ -77,6 +71,7 @@ void UserConnection::zabij()
 {
     this->wyslijPakiet(SERWER_NIEZYJE,myid,NULL);
     this->wyjscie=true;// jeszcze cos
+    this->pakieto.wyjdz();
 }
 
 
@@ -106,6 +101,7 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 ///@todo
 void UserConnection::run()
 {
+    Polaczenie conn(this->gniazdo);
     unsigned int ilePrzeczytano = 0;
     unsigned int nowaPartia = 0;
 
@@ -123,72 +119,12 @@ void UserConnection::run()
     fd_set writefds;
 
     while(!wyjscie){ // 0 kod wyjscia
-        // tu obróbka danych i wyslanie nowych wiadomosci
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec= 100000;
-        ilePrzeczytano = 0;
-        nowaPartia = 0;
-        temp = new char[HEADER_SIZE + 1];
-        memset(temp, '\0', HEADER_SIZE + 1);
-        memset(naglowek, '\0', HEADER_SIZE + 1);
-
-        while (ilePrzeczytano < HEADER_SIZE) {
-
-            FD_ZERO(&writefds);
-            FD_SET(socket,&writefds);
-
-            if(select(socket+1,&writefds,NULL,NULL,&tv)){
-                qDebug() << "attempting read, actual == " << ilePrzeczytano;
-                nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
-
-            if (nowaPartia == 0) {
-                wyjscie = true;
-                break;
-            }
-
-                strncat(naglowek, temp, nowaPartia);
-                ilePrzeczytano += nowaPartia;
-            }else{
-                if(wyjscie) break;
-            }
-        }
-
-        if (wyjscie)
-            break;
-
-        nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
-
-        delete [] temp;
-
-        temp = new char[nagl.trueRozmiar + 1];
-        content = new char[nagl.trueRozmiar + 1];
-        memset(temp, '\0', nagl.trueRozmiar + 1);
-        memset(content, '\0', nagl.trueRozmiar + 1);
-
-        ilePrzeczytano = 0;
-        nowaPartia = 0;
-
-        while (ilePrzeczytano < nagl.trueRozmiar) {
-
-            FD_ZERO(&writefds);
-            FD_SET(socket,&writefds);
-
-            if(select(socket+1,&writefds,NULL,NULL,&tv)){
-                nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
-                strncat(content, temp, nowaPartia);
-                ilePrzeczytano += nowaPartia;
-            }else{
-                if(wyjscie) break;
-            }
-        }
-
-        wiadomosc = szyfr.deszyfrujDane(content, sekret);
-
-        delete [] temp;
-        delete [] content;
-
-        switch (nagl.typ){
+        unsigned int naglowek;
+        unsigned int id;
+        QString wiadomosc;
+        int dlogosc = pakieto.odbiezPakiet(&naglowek,&id,&wiadomosc,this->sekret);
+        if(dlogosc<0) return;// wychodzimy w razie bledu :) lub zamkniecia
+        switch (naglowek){
 
             case ODLACZ_UZYTKOWNIKA : { // skladamy samokrytyke i odlaczamy sie z serwera
                 qDebug() << "wyjscie --- ";
@@ -197,33 +133,33 @@ void UserConnection::run()
             } break;
 
             case REJESTRUJ : {
-                login = wiadomosc.left(nagl.ID);
-                hash = wiadomosc.right(wiadomosc.size()-nagl.ID);
+                login = wiadomosc.left(id);
+                hash = wiadomosc.right(wiadomosc.size()-id);
                 rejestruj(login,hash);
             } break;
 
             case WYSLIJ_WIADOMOSC:{ // zeby nie bylo wiadomosc przyszla do nas :)
                 qDebug() << "got == " << wiadomosc;
-                if(rozmowy.contains(nagl.ID)) {
+                if(rozmowy.contains(id)) {
                     qDebug() << "this is the rozmowa you are looking for";
-                    rozmowy[nagl.ID]->wyslijWiadomosc(wiadomosc);
+                    rozmowy[id]->wyslijWiadomosc(wiadomosc);
                 }
             } break;
 
             case LOGUJ_UZYTKOWNIKA:{
-                login = wiadomosc.left(nagl.ID);
-                hash = wiadomosc.right(wiadomosc.size()-nagl.ID);
+                login = wiadomosc.left(id);
+                hash = wiadomosc.right(wiadomosc.size()-id);
                 loguj(login,hash);
             } break;
   //          case SPRAWDZ_DOSTEPNOSC:// nie wiem czy to wogole bedziemy robic ale nie ch bedzie
   //              break;
             case ZAKONCZ_ROZMOWE:{
                 // chcemy jeszcze rozlaczyc slota zanim zrobimy wszystko inne
-                if(this->rozmowy.contains(nagl.ID)){
-                    disconnect(rozmowy[nagl.ID],SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)));
+                if(this->rozmowy.contains(id)){
+                    disconnect(rozmowy[id],SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)));
                     // uzytkownik chce zakonczyc rozmowe
-                    rozmowy.remove(nagl.ID);
-                    emit opuszczamRozmowe(myid,nagl.ID);
+                    rozmowy.remove(id);
+                    emit opuszczamRozmowe(myid,id);
 
                 }
             } break;
@@ -237,7 +173,7 @@ void UserConnection::run()
             case DODAJ_DO_ROZMOWY:{
 
                 int idRozm = wiadomosc.toInt();
-                emit dodajeRozmowce(nagl.ID,idRozm);
+                emit dodajeRozmowce(id,idRozm);
 
             } break;
 
@@ -313,7 +249,7 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
         dane1 = *dane;
     }
 
-    Wiadomosc wiad(typ, id, dane1, this->socket);
+    Wiadomosc wiad(typ, id, dane1, this->gniazdo);
     unsigned int wielkosc;
     char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
 
