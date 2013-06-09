@@ -151,43 +151,6 @@ void MainWindow::zakoncz()
     emit zakonczServerConn();
 }
 
-
-void MainWindow::rozpocznijWysylanie()
-{
-    QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
-    if (fileName.length() != 0) {
-
-        QFile *plik = new QFile(fileName);
-        plik->open(QIODevice::ReadOnly);
-/*        if (plik.size() > 21000) {
-
-            if (oknoInformacji)
-                delete oknoInformacji;
-
-            oknoInformacji = new info(this, QString("Za duży plik! Proszę wybrać plik o rozmiarze do 20kb!"), false);
-        } else {*/
-
-            wp = new WysylaczPlikow(plik, gniazdo, QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt(), NULL);
-
-            unsigned int subIndex = fileName.lastIndexOf('/') + 1;
-            qDebug() << "subIndex == " << subIndex;
-
-            fileName = fileName.right(fileName.length() - subIndex);
-
-            qDebug() << "fileName == " << fileName;
-
-            Szyfrator szyfr;
-            Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
-            unsigned int rozmiar;
-            char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
-            wiad.wyslijDoSerwera(dane, rozmiar);
-
-            delete dane;
-
-        //}
-    }
-}
-
 void MainWindow::dodajZnajomego()
 {
 
@@ -360,6 +323,44 @@ void MainWindow::serwerNiezyje()
 void MainWindow::theEnd()
 {
     QApplication::exit();
+}
+
+// ----------------- CZARY PLIKOWE -----------------------
+
+void MainWindow::rozpocznijWysylanie()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
+    if (fileName.length() != 0) {
+
+        QFile *plik = new QFile(fileName);
+        plik->open(QIODevice::ReadOnly);
+/*        if (plik.size() > 21000) {
+
+            if (oknoInformacji)
+                delete oknoInformacji;
+
+            oknoInformacji = new info(this, QString("Za duży plik! Proszę wybrać plik o rozmiarze do 20kb!"), false);
+        } else {*/
+
+            wp = new WysylaczPlikow(plik, gniazdo, QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt(), NULL);
+
+            unsigned int subIndex = fileName.lastIndexOf('/') + 1;
+            qDebug() << "subIndex == " << subIndex;
+
+            fileName = fileName.right(fileName.length() - subIndex);
+
+            qDebug() << "fileName == " << fileName;
+
+            Szyfrator szyfr;
+            Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
+            unsigned int rozmiar;
+            char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
+            wiad.wyslijDoSerwera(dane, rozmiar);
+
+            delete dane;
+
+        //}
+    }
 }
 
 void MainWindow::plikOdbiorStart(int idZrodla, QString nazwa) {

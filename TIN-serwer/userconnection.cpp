@@ -16,6 +16,24 @@
 #include <stdio.h>
 #include "polaczenie.h"
 
+/* BARTKU!
+ * Jeżeli po tych POPTach jeszcze do tego usiadłeś,
+ * to wiedz, że jesteś hardcore'm i masz mój szacunek :)
+ * Ad rem :
+ * PLIK_POCZATEK : tu dostajesz idCelu, przepychasz do Celu z idŹródła
+ * PLIK_CHCE / PLIK_NIECHCE : przepychasz od Celu do Źródła
+ * PLIK_TRANSFER : j/w
+ * PLIK_KONIEC / PLIK_TIMEOUT : j/w, zakańczasz serwerową obsługę pakietów plikowych (dla tej transmisji)
+ *
+ * Jeżeli byś potrzebował ID'ki sobie jakieś przesyłać to najwięcej się dzieje w
+ * mainwindow.cpp i wysylaczplikow.cpp w kliencie, bo ja to już nie pamiętam w zasadzie
+ * co tam idzie poza tym w PLIK_POCZATEK.
+ * Wszystkie czary plikowe masz na samym dole mainwindow.cpp
+ *
+ * Szyfrujesz/deszyfrujesz standardowo
+ * /
+
+
 UserConnection::UserConnection(int socket) : pakieto(socket)
 {
     myid = -1;
