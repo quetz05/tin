@@ -7,7 +7,7 @@
 #include <QMutex>
 #include <QRunnable>
 #include "szyfrator.h"
-#include "pakietor.h"
+#include "../pakietor.h"
 class UserConnection : public QObject, public QRunnable
 {
     Q_OBJECT

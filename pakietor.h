@@ -14,6 +14,7 @@ class Pakietor : public QObject
 {
     Q_OBJECT
 private:
+    QMutex mutek;
     Connection conn;
     int socc;
 public:

@@ -40,7 +40,6 @@ HEADERS  += mainwindow.h \
     ekranlogowania.h \
     info.h \
     oknorozmowy.h \
-    polaczenie.h \
     rejestracja.h \
     ../wiadomosc.h \
     szyfrator.h \
@@ -50,7 +49,8 @@ HEADERS  += mainwindow.h \
     odbieraczplikow.h \
     ../wyslij.h \
     ../pakietor.h \
-    ../connection.h
+    ../connection.h \
+    polaczenie.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \
