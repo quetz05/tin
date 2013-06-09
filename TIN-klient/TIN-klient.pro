@@ -27,7 +27,9 @@ SOURCES += main.cpp\
     szyfrator.cpp \
     grupowarozmowa.cpp \
     serverconn.cpp \
-    ../wyslij.cpp
+    ../wyslij.cpp \
+    ../pakietor.cpp \
+    ../connection.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
@@ -42,7 +44,9 @@ HEADERS  += mainwindow.h \
     szyfrator.h \
     grupowarozmowa.h \
     serverconn.h \
-    ../wyslij.h
+    ../wyslij.h \
+    ../pakietor.h \
+    ../connection.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \

@@ -40,7 +40,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(odebranaWiadomosc(int,QString)), this, SLOT(odbierajWiadomosc(int, QString)));
     connect(con, SIGNAL(czyIstnieje(const int)),this,SLOT(czyIstnieje(int)));
     connect(con, SIGNAL(niezywySerwer()),this,SLOT(serwerNiezyje()));
-    connect(this,SIGNAL(zakonczServerConn()),con,SLOT(zakoncz()));
+    connect(this,SIGNAL(zakonczServerConn()),con,SLOT(zakoncz()),Qt::DirectConnection);
+    connect(con,SIGNAL(koniecProgramu()),this, SLOT(theEnd()));
 
     ui->setupUi(this);
 
@@ -97,8 +98,9 @@ void MainWindow::wyloguj()
 {
     emit zakonczServerConn();
 
-    QProcess::startDetached(QApplication::applicationFilePath());
-    exit(12);
+    //QProcess::startDetached(QApplication::applicationFilePath());
+    //exit(12);
+
 }
 
 void MainWindow::zaloguj(const QString &login,const int id)
@@ -135,9 +137,8 @@ void MainWindow::zaloguj(const QString &login,const int id)
 
 void MainWindow::zakoncz()
 {
+    qDebug() << "Se emituje ServerConn koncz";
     emit zakonczServerConn();
-
-    QApplication::exit();
 }
 
 
@@ -319,5 +320,10 @@ void MainWindow::serwerNiezyje()
     oknoInformacji->exec();
 
 
+    emit zakonczServerConn();
+}
+
+void MainWindow::theEnd()
+{
     QApplication::exit();
 }
