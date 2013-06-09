@@ -2,7 +2,7 @@
 #define PAKIETOR_H
 
 #include <QObject>
-#include"polaczenie.h"
+#include"connection.h"
 #include <QMutex>
 #include "../wyslij.h"
 /**
@@ -14,8 +14,7 @@ class Pakietor : public QObject
 {
     Q_OBJECT
 private:
-    QMutex mutek;
-    Polaczenie conn;
+    Connection conn;
     int socc;
 public:
     explicit Pakietor(int soc, QObject *parent = 0);
@@ -36,10 +35,10 @@ public:
      */
     int nadajPakiet(unsigned int naglowek,unsigned int id,QString* wiadomosc,Klucz *kluczor);
 signals:
-    
+
 public slots:
     void wyjdz();
-    
+
 };
 
 #endif // PAKIETOR_H

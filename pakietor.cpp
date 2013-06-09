@@ -29,8 +29,6 @@ int Pakietor::odbiezPakiet(unsigned int *naglowek, unsigned int *id,
 int Pakietor::nadajPakiet(unsigned int naglowek, unsigned int id,
                           QString *wiadomosc,Klucz* kluczor)
 {
-    // tu bawimy sie szyfrowaniem
-    mutek.lock();
 
     QString dane1;
     if(wiadomosc == NULL){
@@ -39,15 +37,8 @@ int Pakietor::nadajPakiet(unsigned int naglowek, unsigned int id,
         dane1 = *wiadomosc;
     }
 
-  //  Wiadomosc wiad(naglowek, id, dane1, this->socc);
-  //  unsigned int wielkosc;
-   // char *wiadomosc1 = szyfr.szyfruj(&wiad,kluczor,&wielkosc);
-   // wiad.wyslijDoSerwera(wiadomosc1, wielkosc);
-
     Wyslij wiad(naglowek, id, dane1, this->socc, kluczor);
     wiad.wyslij();
-
-    mutek.unlock();
 
 }
 

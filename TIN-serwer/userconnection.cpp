@@ -236,13 +236,16 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
         dane1 = *dane;
     }
 
-    Wiadomosc wiad(typ, id, dane1, this->gniazdo);
-    unsigned int wielkosc;
-    char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
+    //Wiadomosc wiad(typ, id, dane1, this->gniazdo);
+    //unsigned int wielkosc;
+    //char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
+
+    Wyslij wys(typ, id, dane1, this->gniazdo);
+    wys.wyslij();
 
     qDebug() << "WYSYŁAM typ: " <<id;
 
-    wiad.wyslijDoSerwera(wiadomosc, wielkosc);
+    //wiad.wyslijDoSerwera(wiadomosc, wielkosc);
 
     mutex.unlock();
 }

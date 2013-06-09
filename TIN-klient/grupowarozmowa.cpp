@@ -124,7 +124,8 @@ void GrupowaRozmowa::tworzRozmowe()
             wyslij = NULL;
         }
 
-        wyslij=new Wyslij(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
+        wyslij=new Wyslij(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo,NULL);
+        wyslij->wyslij();
         /*Szyfrator szyfr;
         Wiadomosc wiad(ROZPOCZNIJ_ROZMOWE,0,"",gniazdo);
         unsigned int wielkosc;
@@ -160,6 +161,7 @@ void GrupowaRozmowa::rozpocznijRozmowe(int id)
          }
 
          wyslij=new Wyslij(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
+         wyslij->wyslij();
 
         /*Wiadomosc wiad(DODAJ_DO_ROZMOWY,IDs[i],QString::number(id),gniazdo);
         unsigned int wielkosc;

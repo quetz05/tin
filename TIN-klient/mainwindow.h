@@ -60,8 +60,10 @@ private slots:
     void serwerNiezyje();
 
 
+
 public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
+    void theEnd();
 
     
 public:
@@ -97,6 +99,7 @@ signals:
     void elSIGczyZaloguj(int);
     void grTwojaNowaRozmowa(int);
     void odSIGczyIstnieje(const int);
+    void zakonczServerConn();
 
 
 
