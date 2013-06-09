@@ -53,6 +53,8 @@ private:
      */
     void wyslijPakiet(char typ, unsigned int id, QString* dane);
 
+    void wyslijPakiet(char typ, unsigned int id, char *dane);
+
 protected:
     /**
      * @brief run petla glowna programu

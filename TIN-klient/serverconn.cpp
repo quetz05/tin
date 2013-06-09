@@ -21,6 +21,7 @@ void ServerConn::doSetup(QThread *cThread)
 
 void ServerConn::odbierajWiadomosci()
 {
+    QByteArray plik;
     Szyfrator szyfr;
     Naglowek nagl;
     char naglowek[HEADER_SIZE + 1];
@@ -72,7 +73,12 @@ void ServerConn::odbierajWiadomosci()
             ilePrzeczytano += nowaPartia;
         }
 
-        wiadomosc = szyfr.deszyfrujDane(content, NULL);
+        char *plik;
+
+        if (nagl.typ != PLIK_TRANSFER)
+            wiadomosc = szyfr.deszyfrujDane(content, NULL);
+        else
+            plik = szyfr.deszyfrujPlik(content, NULL);
 
         delete [] temp;
         delete [] content;
@@ -103,9 +109,33 @@ void ServerConn::odbierajWiadomosci()
                 emit czyIstnieje(nagl.ID);
             break;
 
+        case PLIK_POCZATEK:
+            //qDebug() << "----- plik_poczatek ------";
+             emit plikObiorStart(nagl.ID, wiadomosc);
+            break;
+
+        case PLIK_TRANSFER:
+            qDebug() << "----- plik_transfer ------ == ";
+            emit plikOdbiorTransfer(plik, 256);
+            break;
+
+        case PLIK_KONIEC:
+            //qDebug() << "----- plik_koniec ------";
+            emit plikOdbiorKoniec();
+            break;
+
+        case PLIK_CHCE:
+            //qDebug() << "----- plik_chce ------";
+            emit plikWysylStart();
+            break;
+
+        case PLIK_NIECHCE :
+            //do something here
+            break;
+
         case SERWER_NIEZYJE:
             emit niezywySerwer();
-
+            break;
         }
 
     }

@@ -34,6 +34,11 @@ signals:
     //serwer padl
     void niezywySerwer();
 
+    void plikObiorStart(int, QString);
+    void plikOdbiorTransfer(char*, int);
+    void plikOdbiorKoniec();
+    void plikWysylStart();
+
 public slots:
 
     void odbierajWiadomosci();

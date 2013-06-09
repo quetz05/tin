@@ -12,7 +12,7 @@ rozmowa::rozmowa(int id,QObject *parent) :
 QString rozmowa::odbiezWiadomosc(int id)
 {
 
-    qDebug() << "odbiezWiadomosc( " << id << ");";
+    //qDebug() << "odbiezWiadomosc( " << id << ");";
 
     //z powodu zapisu nie mozemy pozwolic na odczytywanie bez mutka
     mutex.lock();
@@ -23,7 +23,7 @@ QString rozmowa::odbiezWiadomosc(int id)
         if(!messages[i].czyPrzeczytal(id)){
             mutex.unlock();
 
-            qDebug() << "------ sending message for id == " << id;
+            //qDebug() << "------ sending message for id == " << id;
 
             QString wiad = "";
             wiad.append(messages[i].Czytaj(id));
@@ -69,7 +69,7 @@ void rozmowa::wyslijWiadomosc(QString wiadomosc)
     mutex.unlock();
     //po dodaniu nowej wiadomosci informujemy wszystkich ze takowa sie pojawila
 
-    qDebug() << "emitujemy nowa wiadomosc";
+    //qDebug() << "emitujemy nowa wiadomosc";
 
     emit nowaWiadomosc(myid);
 }

@@ -14,12 +14,14 @@
 #define ROZPOCZNIJ_ROZMOWE 7 // id to id rozmowy brak danych
 #define DODAJ_DO_ROZMOWY 8 // id to id uzytkownika rozmiar to id rozmowy
 #define PLIK_TRANSFER 9
-#define PLIK_CHETNI 10
-#define PLIK_ODPYTAJ 11
+#define PLIK_POCZATEK 10
+#define PLIK_KONIEC 11
 #define UZYTKOWNIK_DOSTEPNY 12 //PRZESYLAMY INFORMACJE O DOSTEPNYM UZYTKOWNIKU ID TEGO UZYTKOWNIKA RZOMIAR 1 DOSTEPNY 0 NIEDOSTEPNY
 #define NAWIAZ_BEZPIECZNE 13 // nawiazuje bezpieczne polaczenie
 #define CZY_ISTNIEJE 14 // sprawdza czy uzytkownik istnieje w bazie (w ID id uzytkownika, w danych login); w odpowiedzi spodziewane jest 0 w ID w razie porażki, bądź inna liczba w razie sukcesu
 #define SERWER_NIEZYJE 15//
+#define PLIK_NIECHCE 16
+#define PLIK_CHCE 17
 
 typedef struct Naglowek {
 

@@ -15,6 +15,8 @@
 #include "oknorozmowy.h"
 #include "dodawanie.h"
 #include "szyfrator.h"
+#include "wysylaczplikow.h"
+#include "odbieraczplikow.h"
 
  /**
     * @brief The MainWindow class
@@ -59,6 +61,13 @@ private slots:
     void wyszukiwarkaZnajomych();
     void serwerNiezyje();
 
+    void plikOdbiorStart(int, QString);
+    void plikOdbiorTransfer(char*, int);
+    void plikOdbiorKoniec();
+    void plikWysylStart();
+    void plikWysylTransfer();
+    void plikWysylKoniec();
+
 
 public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
@@ -84,7 +93,8 @@ private:
     GrupowaRozmowa *grRozmowa;
     ekranLogowania *el;
     int uzytkownikID;
-
+    WysylaczPlikow *wp;
+    OdbieraczPlikow *op;
 
 
 signals:
@@ -97,9 +107,6 @@ signals:
     void elSIGczyZaloguj(int);
     void grTwojaNowaRozmowa(int);
     void odSIGczyIstnieje(const int);
-
-
-
 
 };
 
