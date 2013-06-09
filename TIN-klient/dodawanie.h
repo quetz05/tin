@@ -9,8 +9,6 @@
 #include <QDebug>
 #include "info.h"
 
-
-
 namespace Ui {
 class dodawanie;
 }
@@ -73,6 +71,7 @@ private:
     int gniazdo;
     info *oknoInformacji;
     int uzytkownikID;
+
 };
 
 #endif // DODAWANIE_H

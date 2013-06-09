@@ -20,7 +20,8 @@ ekranLogowania::ekranLogowania(QWidget *parent, int socket) :
     oknoInformacji = NULL;
     rej = new Rejestracja(this,gniazdo);
 
-    wiad = NULL;
+    //wiad = NULL;
+    wyslij = NULL;
 
     connect(this,SIGNAL(SIGczyRejestracja(int)),rej,SLOT(wynikRejestracji(int)));
 
@@ -45,11 +46,19 @@ ekranLogowania::~ekranLogowania()
 void ekranLogowania::zakoncz()
 {
 
-    Szyfrator szyfr;
+    if(wyslij)
+    {
+        delete wyslij;
+        wyslij = NULL;
+    }
+
+    /*Szyfrator szyfr;
     unsigned int size;
     wiad = new Wiadomosc(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
     char *sz = szyfr.szyfruj(wiad, NULL, &size);
-    wiad->wyslijDoSerwera(sz, size);
+    wiad->wyslijDoSerwera(sz, size);*/
+
+    wyslij = new Wyslij(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
 
     QApplication::exit();
 }
@@ -71,7 +80,14 @@ void ekranLogowania::zaloguj()
     else if(login!="" && haslo!="")
     {
 
-        Szyfrator szyfr;
+
+        if(wyslij)
+        {
+            delete wyslij;
+            wyslij = NULL;
+        }
+
+       /* Szyfrator szyfr;
         QString s = "";
         s.append(login);
         s.append(haslo);
@@ -81,7 +97,11 @@ void ekranLogowania::zaloguj()
 
         if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy logowaniu";
-        }
+        }*/
+        QString s = "";
+        s.append(login);
+        s.append(haslo);
+        wyslij = new Wyslij(LOGUJ_UZYTKOWNIKA, login.length(),s,gniazdo);
 
     }
 

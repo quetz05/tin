@@ -20,7 +20,7 @@ Rejestracja::Rejestracja(QWidget *parent, int socket) :
     gniazdo = socket;
 
     oknoInformacji = NULL;
-    wiad = NULL;
+    wyslij = NULL;
 
     connect(ui->pushRejestruj, SIGNAL(clicked()), this, SLOT(rejestruj()));
     connect(ui->pushAnuluj, SIGNAL(clicked()), this, SLOT(wyjscie()));
@@ -63,8 +63,19 @@ void Rejestracja::rejestruj()
 
     else
     {
+        if(wyslij)
+        {
+            delete wyslij;
+            wyslij = NULL;
+        }
 
-        Szyfrator szyfr;
+        QString s = "";
+        s.append(login);
+        s.append(haslo);
+
+        wyslij = new Wyslij(REJESTRUJ, login.length(),s ,gniazdo);
+
+        /*Szyfrator szyfr;
         QString s = "";
         s.append(login);
         s.append(haslo);
@@ -74,7 +85,7 @@ void Rejestracja::rejestruj()
 
         if(wiad.wyslijDoSerwera(wiadomosc, wielkosc)==-1){
             qDebug()<<"Błąd przy rejestracji";
-        }
+        }*/
     }
 }
 
