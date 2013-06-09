@@ -8,6 +8,7 @@
 #include <wyszukiwarka.h>
 #include <QProcess>
 #include <QFileDialog>
+#include <QTimer>
 
 #include "grupowarozmowa.h"
 #include "ekranlogowania.h"
@@ -62,13 +63,16 @@ private slots:
     void serwerNiezyje();
 
     void plikOdbiorStart(int, QString);
-    void plikOdbiorTransfer(char*, int);
+    void plikOdbiorTransfer(QString, int);
     void plikOdbiorKoniec();
     void plikWysylStart();
     void plikWysylTransfer();
+    void plikNiechce();
+
     void plikWysylKoniec();
 
-
+    void wysylTimeout();
+    void odbiorTimeout();
 
 public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
@@ -97,7 +101,7 @@ private:
     int uzytkownikID;
     WysylaczPlikow *wp;
     OdbieraczPlikow *op;
-
+    QTimer *timeout;
 
 signals:
     //sygnal do ekranu logowania

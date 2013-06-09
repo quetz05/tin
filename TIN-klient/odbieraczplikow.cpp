@@ -6,16 +6,12 @@ OdbieraczPlikow::OdbieraczPlikow(QString nazwa, QWidget *parent)
 {
     plik = new QFile(nazwa);
     plik->open(QIODevice::WriteOnly);
+    nazwaPliku = nazwa;
 
     strumien = new QDataStream(plik);
-    rozmiar = 0;
-    rozmiar2 = 0;
-
 }
 
 OdbieraczPlikow::~OdbieraczPlikow() {
-
-    qDebug() << "odebrano << " << rozmiar << " << bajtów";
 
     plik->close();
 
@@ -25,22 +21,17 @@ OdbieraczPlikow::~OdbieraczPlikow() {
 
 void OdbieraczPlikow::nowaPartia(QByteArray *partia) {
 
-    qDebug() << "odbieraczDostal == " << (*partia);
-    qDebug() << "odbieraczRozmiar == " << partia->length();
+    QByteArray decode = QByteArray::fromBase64(*partia);
 
-    unsigned int ile = strumien->writeRawData(partia->data(), partia->length());
-
-    //if (ile != partia->length())
-        qDebug() << "jakieś juju -- ile == " << (unsigned int)ile << " :: length == " << partia->length();
-
-    if (ile == -1)
-        qDebug() << "bad juju....";
-
-    rozmiar += ile;
-
-    qDebug() << "odebrano paczek == " << ++rozmiar2;
-    //(*strumien) << partia->data();
+    strumien->writeRawData(decode.data(), decode.length());
 
     delete partia;
 
+}
+
+void OdbieraczPlikow::zakoncz()
+{
+    plik->close();
+
+    QFile::remove(nazwaPliku);
 }

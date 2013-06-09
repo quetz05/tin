@@ -11,13 +11,12 @@ public:
     ~OdbieraczPlikow();
 
     void nowaPartia(QByteArray *partia);
+    void zakoncz();
 
 private:
     QFile *plik;
     QDataStream *strumien;
-
-    unsigned int rozmiar;
-    unsigned int rozmiar2;
+    QString nazwaPliku;
 };
 
 #endif // ODBIERACZPLIKOW_H

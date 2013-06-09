@@ -105,26 +105,49 @@ void UserConnection::run()
     unsigned int ilePrzeczytano = 0;
     unsigned int nowaPartia = 0;
 
-    char naglowek[HEADER_SIZE + 1];
+    //char naglowek[HEADER_SIZE + 1];
     char *content;
     char *temp;
 
     QString login;
     QString hash;
-    QString wiadomosc;
 
     Szyfrator szyfr;
-    Naglowek nagl;
+
+    unsigned int naglowek;
+    unsigned int id;
+    QString wiadomosc;
 
     fd_set writefds;
 
     while(!wyjscie){ // 0 kod wyjscia
-        unsigned int naglowek;
-        unsigned int id;
-        QString wiadomosc;
+
         int dlogosc = pakieto.odbiezPakiet(&naglowek,&id,&wiadomosc,this->sekret);
         if(dlogosc<0) return;// wychodzimy w razie bledu :) lub zamkniecia
         switch (naglowek){
+
+        case PLIK_TIMEOUT : {
+            wyslijPakiet(PLIK_TIMEOUT, id, &wiadomosc);
+        } break;
+
+        case PLIK_NIECHCE : {
+            wyslijPakiet(PLIK_NIECHCE, id, &wiadomosc);
+        } break;
+
+             case PLIK_POCZATEK : {
+            wyslijPakiet(PLIK_POCZATEK, id, &wiadomosc);
+        } break;
+        case PLIK_KONIEC : {
+       wyslijPakiet(PLIK_KONIEC, id, &wiadomosc);
+   } break;
+
+        case PLIK_TRANSFER: {
+       wyslijPakiet(PLIK_TRANSFER, id, &wiadomosc);
+   } break;
+
+        case PLIK_CHCE: {
+       wyslijPakiet(PLIK_CHCE, id, &wiadomosc);
+   } break;
 
             case ODLACZ_UZYTKOWNIKA : { // skladamy samokrytyke i odlaczamy sie z serwera
                 qDebug() << "wyjscie --- ";
@@ -234,6 +257,28 @@ void UserConnection::loguj(QString name, QString pass)
     wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,NULL);
     // nie udalo sie zalogowac trzeba naszego goscia o tym powiadomic
 }
+
+std::string naglowki[] = {
+    "",
+    "ODLACZ_UZYTKOWNIKA",
+    "REJESTRUJ",
+    "WYSLIJ_WIADOMOWSC",
+    "LOGUJ_UZYTKOWNIKA",
+    "SPRAWDZ_DOSTEPNOSC",
+    "ZAKONCZ_ROZMOWE",
+    "DODAJ_DO_ROZMOWY",
+    "PLIK_TRANSFER",
+    "PLIK_POCZATEK",
+    "PLIK_KONIEC",
+    "UZYTKOWNIK_DOSTEPNY",
+    "NAWIAZ_BEZPIECZNE",
+    "CZY_ISTNIEJE",
+    "SERWER_NIEZYJE",
+    "PLIK_NIECHCE",
+    "PLIK_CHCE",
+    "PLIK_TIMEOUT"
+};
+
 // tu bedziemy wysylac nanana
 void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
@@ -256,7 +301,7 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     Wyslij wys(typ, id, dane1, this->gniazdo);
     wys.wyslij();
 
-    qDebug() << "WYSYŁAM typ: " <<id;
+    qDebug() << "WYSYŁAM typ: " << naglowki[typ - 1].c_str() << " == " << (int) typ;
 
     //wiad.wyslijDoSerwera(wiadomosc, wielkosc);
 

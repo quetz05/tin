@@ -6,12 +6,21 @@ WysylaczPlikow::WysylaczPlikow(QFile *co, int socket, int doKogo, QObject *paren
     src = co;
     gniazdo = socket;
     idCelu = doKogo;
+    anuluj = false;
 
 }
 
 WysylaczPlikow::~WysylaczPlikow() {
 
     delete src;
+}
+
+void WysylaczPlikow::timeout()
+{
+    mutex.lock();
+    anuluj = true;
+    mutex.unlock();
+
 }
 
 void WysylaczPlikow::run() {
@@ -28,43 +37,48 @@ void WysylaczPlikow::run() {
     Szyfrator szyfr;
     Wiadomosc *wiad;
     QDataStream wejscie(src);
+    QByteArray qba;
+
 
     while (ilePoszlo < rozmiar) {
+
+        mutex.lock();
+
+        if (anuluj)
+            break;
 
         aktSize = wejscie.readRawData(temp, 256);
 
         if (aktSize == -1)
             break;
 
-        qDebug() << "przeczytano bajtow == " << aktSize;
-        qDebug() << "przeczytano << " << temp;
+        qba = QByteArray::fromRawData(temp, aktSize);
+        qba = qba.toBase64();
 
-        wiad = new Wiadomosc(PLIK_TRANSFER, idCelu, QString(""), gniazdo);
-        send = szyfr.szyfrujPlik(wiad, NULL, &dataSize, temp, aktSize);
-
-        qDebug() << "wyslano == " << send;
+        wiad = new Wiadomosc(PLIK_TRANSFER, idCelu, QString(qba.data()), gniazdo);
+        send = szyfr.szyfruj(wiad, NULL, &dataSize);
 
         wiad->wyslijDoSerwera(send, dataSize);
         ilePoszlo += aktSize;
 
-        qDebug() << "poszlo ==== " << ++counter;
-
         delete send;
         delete wiad;
         memset(temp, '\0', 257);
+
+        mutex.unlock();
     }
 
     delete temp;
 
-    wiad = new Wiadomosc(PLIK_KONIEC, idCelu, QString(""), gniazdo);
-    send = szyfr.szyfruj(wiad, NULL, &dataSize);
-    wiad->wyslijDoSerwera(send, dataSize);
+    if (!anuluj) {
+        wiad = new Wiadomosc(PLIK_KONIEC, idCelu, QString(""), gniazdo);
+        send = szyfr.szyfruj(wiad, NULL, &dataSize);
+        wiad->wyslijDoSerwera(send, dataSize);
 
-    delete send;
-    delete wiad;
+        delete send;
+        delete wiad;
 
+        emit koniec();
+    }
 
-    qDebug() << "zakonczylem wysyl pliki";
-    qDebug() << "wysylacz :: rozmiar == " << rozmiar;
-    qDebug() << "wysylacz :: ilePosz == " << ilePoszlo;
 }

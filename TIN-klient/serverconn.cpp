@@ -59,8 +59,33 @@ void ServerConn::odbierajWiadomosci()
                 emit czyIstnieje(id);
             break;
 
+        case PLIK_POCZATEK:
+            emit plikObiorStart(id, wiadomosc);
+            break;
+
+        case PLIK_TRANSFER:
+            emit plikOdbiorTransfer(wiadomosc, id);
+            break;
+
+        case PLIK_CHCE:
+            emit plikWysylStart();
+            break;
+
+        case PLIK_KONIEC:
+            emit plikOdbiorKoniec();
+            break;
+
+        case PLIK_NIECHCE:
+            emit plikNiechce();
+            break;
+
+        case PLIK_TIMEOUT:
+            emit plikTimeout();
+
         case SERWER_NIEZYJE:
             emit niezywySerwer();
+            break;
+
 
         }
 

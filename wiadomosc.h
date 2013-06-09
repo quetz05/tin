@@ -22,6 +22,7 @@
 #define SERWER_NIEZYJE 15//
 #define PLIK_NIECHCE 16
 #define PLIK_CHCE 17
+#define PLIK_TIMEOUT 18
 
 typedef struct Naglowek {
 
