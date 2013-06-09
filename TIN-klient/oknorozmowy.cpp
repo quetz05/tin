@@ -78,7 +78,8 @@ void oknoRozmowy::wyslijWiadomosc()
         data.append(uzytkownik);
         data.append(": ");
         data.append(wiadomosc);
-        wyslij = new Wyslij(WYSLIJ_WIADOMOSC,ID,data, gniazdo);
+        wyslij = new Wyslij(WYSLIJ_WIADOMOSC,ID,data, gniazdo, NULL);
+        wyslij->wyslij();
 
         ui->liniaWiadomosci->clear();
         wiadomosc = "";
@@ -101,12 +102,14 @@ void oknoRozmowy::zakoncz()
         data.append(uzytkownik);
         data.append(" </i> odłączył się z rozmowy. Pożegnajmy go brawami! <<</b></font>");
 
-        wyslij = new Wyslij(WYSLIJ_WIADOMOSC,ID,data, gniazdo);
+        wyslij = new Wyslij(WYSLIJ_WIADOMOSC,ID,data, gniazdo,NULL);
+        wyslij->wyslij();
 
         delete wyslij;
 
 
-        wyslij = new Wyslij(ZAKONCZ_ROZMOWE,ID,QString(""), gniazdo);
+        wyslij = new Wyslij(ZAKONCZ_ROZMOWE,ID,QString(""), gniazdo, NULL);
+        wyslij->wyslij();
     /*    Szyfrator szyfr2;
         QString data="";
         data.append("<font color='red'><b>>> Użytkownik :: <i>");

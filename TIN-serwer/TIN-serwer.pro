@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     ../wiadomosc.cpp \
     szyfrator.cpp \
     polaczenie.cpp \
-    pakietor.cpp
+    pakietor.cpp \
+    ../wyslij.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramauzytkownikow.h \
@@ -33,6 +34,7 @@ HEADERS  += mainwindow.h \
     ../wiadomosc.h \
     szyfrator.h \
     polaczenie.h \
-    pakietor.h
+    pakietor.h \
+    ../wyslij.h
 
 FORMS    += mainwindow.ui

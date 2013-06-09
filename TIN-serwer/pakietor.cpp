@@ -1,6 +1,4 @@
 #include "pakietor.h"
-#include "../wiadomosc.h"
-#include "szyfrator.h"
 
 Pakietor::Pakietor(int soc,QObject *parent) :
     QObject(parent), conn(soc)
@@ -34,7 +32,6 @@ int Pakietor::nadajPakiet(unsigned int naglowek, unsigned int id,
     // tu bawimy sie szyfrowaniem
     mutek.lock();
 
-    Szyfrator szyfr;
     QString dane1;
     if(wiadomosc == NULL){
         dane1 = "";
@@ -42,13 +39,13 @@ int Pakietor::nadajPakiet(unsigned int naglowek, unsigned int id,
         dane1 = *wiadomosc;
     }
 
-    Wiadomosc wiad(naglowek, id, dane1, this->socc);
-    unsigned int wielkosc;
-    char *wiadomosc1 = szyfr.szyfruj(&wiad,kluczor,&wielkosc);
+  //  Wiadomosc wiad(naglowek, id, dane1, this->socc);
+  //  unsigned int wielkosc;
+   // char *wiadomosc1 = szyfr.szyfruj(&wiad,kluczor,&wielkosc);
+   // wiad.wyslijDoSerwera(wiadomosc1, wielkosc);
 
-
-
-    wiad.wyslijDoSerwera(wiadomosc1, wielkosc);
+    Wyslij wiad(naglowek, id, dane1, this->socc, kluczor);
+    wiad.wyslij();
 
     mutek.unlock();
 

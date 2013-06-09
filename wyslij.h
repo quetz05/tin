@@ -6,12 +6,13 @@
 class Wyslij
 {
 public:
-    Wyslij(char type, unsigned int id, QString string, int gnia);
+    Wyslij(char type, unsigned int id, QString string, int gnia, Klucz *key = NULL);
+    ~Wyslij();
+
+    void wyslij();
 
 
 private:
-    void wyslij();
-
     char typ;
     unsigned int ID;
     QString dane;
@@ -19,6 +20,7 @@ private:
 
     Wiadomosc *wiad;
     Szyfrator szyfr;
+    Klucz *klucz;
 
 
 

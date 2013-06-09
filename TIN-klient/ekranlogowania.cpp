@@ -59,6 +59,7 @@ void ekranLogowania::zakoncz()
     wiad->wyslijDoSerwera(sz, size);*/
 
     wyslij = new Wyslij(ODLACZ_UZYTKOWNIKA,0,"",gniazdo);
+    wyslij->wyslij();
 
     QApplication::exit();
 }
@@ -102,6 +103,7 @@ void ekranLogowania::zaloguj()
         s.append(login);
         s.append(haslo);
         wyslij = new Wyslij(LOGUJ_UZYTKOWNIKA, login.length(),s,gniazdo);
+        wyslij->wyslij();
 
     }
 

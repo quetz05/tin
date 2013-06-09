@@ -73,7 +73,8 @@ void Rejestracja::rejestruj()
         s.append(login);
         s.append(haslo);
 
-        wyslij = new Wyslij(REJESTRUJ, login.length(),s ,gniazdo);
+        wyslij = new Wyslij(REJESTRUJ, login.length(),s ,gniazdo,NULL);
+        wyslij->wyslij();
 
         /*Szyfrator szyfr;
         QString s = "";

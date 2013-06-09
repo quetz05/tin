@@ -4,7 +4,7 @@
 #include <QObject>
 #include"polaczenie.h"
 #include <QMutex>
-#include "szyfrator.h"
+#include "../wyslij.h"
 /**
  * @brief The Pakietor class czego chcemy od klasy obudowujacej pakiety ??
  *  1   mozliwosc nadania pakietu o danym naglowku
