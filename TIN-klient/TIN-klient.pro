@@ -28,7 +28,7 @@ SOURCES += main.cpp\
     grupowarozmowa.cpp \
     serverconn.cpp \
     wysylaczplikow.cpp \
-    odbieraczplikow.cpp
+    odbieraczplikow.cpp \
     ../wyslij.cpp \
     ../pakietor.cpp \
     ../connection.cpp
@@ -47,7 +47,7 @@ HEADERS  += mainwindow.h \
     grupowarozmowa.h \
     serverconn.h \
     wysylaczplikow.h \
-    odbieraczplikow.h
+    odbieraczplikow.h \
     ../wyslij.h \
     ../pakietor.h \
     ../connection.h
