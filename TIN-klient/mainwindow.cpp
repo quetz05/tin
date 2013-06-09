@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(odebranaWiadomosc(int,QString)), this, SLOT(odbierajWiadomosc(int, QString)));
     connect(con, SIGNAL(czyIstnieje(const int)),this,SLOT(czyIstnieje(int)));
     connect(con, SIGNAL(niezywySerwer()),this,SLOT(serwerNiezyje()));
+    connect(this,SIGNAL(zakonczServerConn()),con,SLOT(zakoncz()));
 
     ui->setupUi(this);
 
@@ -86,7 +87,6 @@ MainWindow::~MainWindow()
     {
         delete oknoInformacji;
         oknoInformacji = NULL;
-
     }
 
     delete ui;
@@ -95,6 +95,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::wyloguj()
 {
+    emit zakonczServerConn();
 
     QProcess::startDetached(QApplication::applicationFilePath());
     exit(12);
@@ -134,6 +135,8 @@ void MainWindow::zaloguj(const QString &login,const int id)
 
 void MainWindow::zakoncz()
 {
+    emit zakonczServerConn();
+
     QApplication::exit();
 }
 
@@ -314,6 +317,7 @@ void MainWindow::serwerNiezyje()
 
     oknoInformacji = new info(this,"Świętej pamięci serwer nie żyje... Program ulegnie zamknięciu.",false);
     oknoInformacji->exec();
+
 
     QApplication::exit();
 }

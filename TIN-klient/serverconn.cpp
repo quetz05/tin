@@ -9,6 +9,7 @@ ServerConn::ServerConn(QObject *parent, int socket) :
     QObject(parent)
 {
     gniazdo = socket;
+    koniec = false;
 }
 
 
@@ -30,7 +31,7 @@ void ServerConn::odbierajWiadomosci()
     unsigned int nowaPartia = 0;
     QString wiadomosc;
 
-    while(1) {
+    while(!koniec) {
 
         ilePrzeczytano = 0;
         nowaPartia = 0;
@@ -109,4 +110,9 @@ void ServerConn::odbierajWiadomosci()
         }
 
     }
+}
+
+void ServerConn::zakoncz()
+{
+    koniec = true;
 }

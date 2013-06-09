@@ -97,6 +97,7 @@ signals:
     void elSIGczyZaloguj(int);
     void grTwojaNowaRozmowa(int);
     void odSIGczyIstnieje(const int);
+    void zakonczServerConn();
 
 
 

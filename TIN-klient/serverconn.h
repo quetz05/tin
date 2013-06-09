@@ -34,13 +34,15 @@ signals:
     //serwer padl
     void niezywySerwer();
 
-public slots:
 
+public slots:
+    void zakoncz();
     void odbierajWiadomosci();
 
 private:
     int gniazdo;
     QThread *watek;
+    bool koniec;
 
 };
 
