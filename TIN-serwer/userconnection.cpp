@@ -102,21 +102,8 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 void UserConnection::run()
 {
     Polaczenie conn(this->gniazdo);
-    unsigned int ilePrzeczytano = 0;
-    unsigned int nowaPartia = 0;
-
-    char naglowek[HEADER_SIZE + 1];
-    char *content;
-    char *temp;
-
     QString login;
     QString hash;
-    QString wiadomosc;
-
-    Szyfrator szyfr;
-    Naglowek nagl;
-
-    fd_set writefds;
 
     while(!wyjscie){ // 0 kod wyjscia
         unsigned int naglowek;
