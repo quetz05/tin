@@ -81,13 +81,13 @@ int main(int argc, char *argv[])
     MainWindow main(0,"",gniazdo);
 
     Szyfrator szyfr;
-    Wiadomosc wiadd(WYSLIJ_WIADOMOSC, 0, QString("ehllo"), gniazdo);
+    /*Wiadomosc wiadd(WYSLIJ_WIADOMOSC, 0, QString("ehllo"), gniazdo);
     unsigned int size;
     char *s = szyfr.szyfruj(&wiadd, NULL, &size);
 
     qDebug() << "sending == " << s;
 
-    wiadd.wyslijDoSerwera(s, size);
+    wiadd.wyslijDoSerwera(s, size);*/
 
     main.con->doSetup(&odbiorSerwer);
     main.con->moveToThread(&odbiorSerwer);
@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
     odbiorSerwer.start();
 
     int i = a.exec();
+
 
     Wiadomosc wiad(ODLACZ_UZYTKOWNIKA,0,QString(""),gniazdo);
     unsigned int rozmiar;

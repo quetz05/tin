@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(niezywySerwer()),this,SLOT(serwerNiezyje()));
     connect(con, SIGNAL(plikObiorStart(int,QString)), this, SLOT(plikOdbiorStart(int,QString)));
     connect(con, SIGNAL(plikOdbiorTransfer(char*, int)), this, SLOT(plikOdbiorTransfer(char*, int)));
+    connect(this,SIGNAL(zakonczServerConn()),con,SLOT(zakoncz()),Qt::DirectConnection);
+    connect(con,SIGNAL(koniecProgramu()),this, SLOT(theEnd()));
     connect(con, SIGNAL(plikOdbiorKoniec()), this, SLOT(plikOdbiorKoniec()));
     connect(con, SIGNAL(plikWysylStart()), this, SLOT(plikWysylStart()));
 
@@ -92,7 +94,6 @@ MainWindow::~MainWindow()
     {
         delete oknoInformacji;
         oknoInformacji = NULL;
-
     }
 
     delete ui;
@@ -101,9 +102,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::wyloguj()
 {
+    emit zakonczServerConn();
 
-    QProcess::startDetached(QApplication::applicationFilePath());
-    exit(12);
+    //QProcess::startDetached(QApplication::applicationFilePath());
+    //exit(12);
+
 }
 
 void MainWindow::zaloguj(const QString &login,const int id)
@@ -140,7 +143,8 @@ void MainWindow::zaloguj(const QString &login,const int id)
 
 void MainWindow::zakoncz()
 {
-    QApplication::exit();
+    qDebug() << "Se emituje ServerConn koncz";
+    emit zakonczServerConn();
 }
 
 
@@ -345,6 +349,12 @@ void MainWindow::serwerNiezyje()
     oknoInformacji = new info(this,"Świętej pamięci serwer nie żyje... Program ulegnie zamknięciu.",false);
     oknoInformacji->exec();
 
+
+    emit zakonczServerConn();
+}
+
+void MainWindow::theEnd()
+{
     QApplication::exit();
 }
 

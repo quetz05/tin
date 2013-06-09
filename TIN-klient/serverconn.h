@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <sys/select.h>
+#include "../pakietor.h"
 
 
 class ServerConn: public QObject
@@ -33,20 +34,26 @@ signals:
     void odebranaWiadomosc(int,QString);
     //serwer padl
     void niezywySerwer();
+    //sygnal zakonczenia programu
+    void koniecProgramu();
 
     void plikObiorStart(int, QString);
     void plikOdbiorTransfer(char*, int);
     void plikOdbiorKoniec();
     void plikWysylStart();
 
-public slots:
 
+public slots:
+    void zakoncz();
     void odbierajWiadomosci();
+    void koncz();
+
 
 private:
     int gniazdo;
     QThread *watek;
-
+    bool koniec;
+    Pakietor pakietor;
 };
 
 #endif // SERVERCONN_H

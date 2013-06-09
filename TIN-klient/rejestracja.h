@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "info.h"
-#include "../wiadomosc.h"
+#include "../wyslij.h"
 
 namespace Ui {
 class Rejestracja;
@@ -46,8 +46,9 @@ private:
     QString haslo;
     QString haslo2;
     int gniazdo;
-    Wiadomosc *wiad;
+    //Wiadomosc *wiad;
     info *oknoInformacji;
+    Wyslij *wyslij;
 };
 
 #endif // REJESTRACJA_H

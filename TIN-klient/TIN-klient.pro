@@ -29,6 +29,9 @@ SOURCES += main.cpp\
     serverconn.cpp \
     wysylaczplikow.cpp \
     odbieraczplikow.cpp
+    ../wyslij.cpp \
+    ../pakietor.cpp \
+    ../connection.cpp
 
 HEADERS  += mainwindow.h \
     Baza/bramaznajomych.h \
@@ -45,6 +48,9 @@ HEADERS  += mainwindow.h \
     serverconn.h \
     wysylaczplikow.h \
     odbieraczplikow.h
+    ../wyslij.h \
+    ../pakietor.h \
+    ../connection.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \

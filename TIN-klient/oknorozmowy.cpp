@@ -1,7 +1,6 @@
 #include "oknorozmowy.h"
 #include "ui_oknorozmowy.h"
 #include <unistd.h>
-#include "szyfrator.h"
 #include <QDebug>
 #include <QKeyEvent>
 
@@ -12,7 +11,7 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
 {
     this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-    wiad = NULL;
+    wyslij = NULL;
     ID = id;
     gniazdo = socket;
     uzytkownik = login;
@@ -28,7 +27,7 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
     ui->liniaWiadomosci->setMaxLength(256);
 
     connect(ui->liniaWiadomosci, SIGNAL(textChanged(const QString &)), this, SLOT(wpisywanieWiadomosci(QString)));
-    connect(ui->pushWyslij, SIGNAL(clicked()), this, SLOT(wyslij()));
+    connect(ui->pushWyslij, SIGNAL(clicked()), this, SLOT(wyslijWiadomosc()));
     connect(ui->pushZakoncz, SIGNAL(clicked()), this, SLOT(zakoncz()));
 
 
@@ -36,6 +35,11 @@ oknoRozmowy::oknoRozmowy(QWidget *parent, int id, int socket, QString login) :
 
 oknoRozmowy::~oknoRozmowy()
 {
+    if(wyslij)
+    {
+        delete wyslij;
+        wyslij = NULL;
+    }
     delete ui;
 }
 
@@ -46,22 +50,36 @@ void oknoRozmowy::wpisywanieWiadomosci(const QString &text)
     ui->licznikiZnakow->setText(QString::number(wiadomosc.length()) + QString(" / 256"));
 }
 
-void oknoRozmowy::wyslij()
+void oknoRozmowy::wyslijWiadomosc()
 {
     if(wiadomosc!="")
     {
-        Szyfrator szyfr;
+
+        if(wyslij)
+        {
+            delete wyslij;
+            wyslij = NULL;
+        }
+
+       /* Szyfrator szyfr;
         QString data;
         data.append(uzytkownik);
         data.append(": ");
         data.append(wiadomosc);
-        Wiadomosc wiad(WYSLIJ_WIADOMOSC,ID,data, gniazdo);
+        Wiadomosc wiad();
         unsigned int wielkosc;
         char *wiadom = szyfr.szyfruj(&wiad,0,&wielkosc);
 
         if(wiad.wyslijDoSerwera(wiadom, wielkosc)==-1){
             qDebug()<<"Błąd przy wysyłaniu wiadomosci :(";
-        }
+        }*/
+
+        QString data;
+        data.append(uzytkownik);
+        data.append(": ");
+        data.append(wiadomosc);
+        wyslij = new Wyslij(WYSLIJ_WIADOMOSC,ID,data, gniazdo, NULL);
+        wyslij->wyslij();
 
         ui->liniaWiadomosci->clear();
         wiadomosc = "";
@@ -72,7 +90,27 @@ void oknoRozmowy::wyslij()
 
 void oknoRozmowy::zakoncz()
 {
-        Szyfrator szyfr2;
+
+        if(wyslij)
+        {
+            delete wyslij;
+            wyslij = NULL;
+        }
+
+        QString data="";
+        data.append("<font color='red'><b>>> Użytkownik :: <i>");
+        data.append(uzytkownik);
+        data.append(" </i> odłączył się z rozmowy. Pożegnajmy go brawami! <<</b></font>");
+
+        wyslij = new Wyslij(WYSLIJ_WIADOMOSC,ID,data, gniazdo,NULL);
+        wyslij->wyslij();
+
+        delete wyslij;
+
+
+        wyslij = new Wyslij(ZAKONCZ_ROZMOWE,ID,QString(""), gniazdo, NULL);
+        wyslij->wyslij();
+    /*    Szyfrator szyfr2;
         QString data="";
         data.append("<font color='red'><b>>> Użytkownik :: <i>");
         data.append(uzytkownik);
@@ -92,7 +130,7 @@ void oknoRozmowy::zakoncz()
 
         if(wiad.wyslijDoSerwera(wiadom, wielkosc)==-1){
             qDebug()<<"Błąd przy kończeniu rozmowy";
-        }
+        }*/
 
        koniecRozmowy(ID);
 }

@@ -4,11 +4,13 @@
 #include <QDebug>
 #include "../wiadomosc.h"
 #include "szyfrator.h"
+#include <QApplication>
 
-ServerConn::ServerConn(QObject *parent, int socket) :
+ServerConn::ServerConn(QObject *parent, int socket) : pakietor(socket),
     QObject(parent)
 {
     gniazdo = socket;
+    koniec = false;
 }
 
 
@@ -16,127 +18,63 @@ void ServerConn::doSetup(QThread *cThread)
 {
 
     connect(cThread,SIGNAL(started()),this, SLOT(odbierajWiadomosci()));
-
+    connect(cThread,SIGNAL(finished()),this, SLOT(koncz()));
 }
 
 void ServerConn::odbierajWiadomosci()
 {
-    QByteArray plik;
-    Szyfrator szyfr;
-    Naglowek nagl;
-    char naglowek[HEADER_SIZE + 1];
-    char *content;
-    char *temp;
-    unsigned int ilePrzeczytano = 0;
-    unsigned int nowaPartia = 0;
-    QString wiadomosc;
 
-    while(1) {
-
-        ilePrzeczytano = 0;
-        nowaPartia = 0;
-
-        temp = new char[HEADER_SIZE + 1];
-        memset(temp, '\0', HEADER_SIZE + 1);
-        memset(naglowek, '\0', HEADER_SIZE + 1);
-        fd_set writefds;
-
-        while (ilePrzeczytano < HEADER_SIZE) {
-
-
-            FD_ZERO(&writefds);
-            FD_SET(gniazdo,&writefds);
-
-
-            if(select(gniazdo+1,&writefds,NULL,NULL,NULL))
-            {
-                nowaPartia = read(gniazdo, temp, HEADER_SIZE - ilePrzeczytano);
-                strncat(naglowek, temp, nowaPartia);
-                ilePrzeczytano += nowaPartia;
-            }
-        }
-
-        nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
-
-        ilePrzeczytano = 0;
-        nowaPartia = 0;
-        delete [] temp;
-
-        temp = new char[nagl.trueRozmiar + 1];
-        content = new char[nagl.trueRozmiar + 1];
-        memset(temp, '\0', nagl.trueRozmiar + 1);
-        memset(content, '\0', nagl.trueRozmiar + 1);
-
-        if (ilePrzeczytano < nagl.trueRozmiar) {
-            nowaPartia = read(gniazdo, temp, nagl.trueRozmiar - ilePrzeczytano);
-            strncat(content, temp, nowaPartia);
-            ilePrzeczytano += nowaPartia;
-        }
-
-        char *plik;
-
-        if (nagl.typ != PLIK_TRANSFER)
-            wiadomosc = szyfr.deszyfrujDane(content, NULL);
-        else
-            plik = szyfr.deszyfrujPlik(content, NULL);
-
-        delete [] temp;
-        delete [] content;
+    while(!koniec)// false - kod wyjscia
+    {
+        unsigned int naglowek;
+        unsigned int id;
+        QString wiadomosc;
+        int dlugosc = pakietor.odbiezPakiet(&naglowek,&id,&wiadomosc,NULL);
+        if(dlugosc<0)
+            return;// wychodzimy w razie bledu :) lub zamkniecia
 
         //rozpoznanie typu wiadomosci
-        switch(nagl.typ) {
+        switch(naglowek) {
             case REJESTRUJ:
-                emit czyRejestracja(nagl.ID);
+                emit czyRejestracja(id);
             break;
 
             case LOGUJ_UZYTKOWNIKA:
-                emit czyZaloguj(nagl.ID);
+                emit czyZaloguj(id);
             break;
 
             case ROZPOCZNIJ_ROZMOWE:
-                emit nowaRozmowa(nagl.ID);
+                emit nowaRozmowa(id);
             break;
 
             case  DODAJ_DO_ROZMOWY:
-                emit odbiorRozmowy(nagl.ID);
+                emit odbiorRozmowy(id);
             break;
 
             case WYSLIJ_WIADOMOSC:
-                emit odebranaWiadomosc(nagl.ID, wiadomosc);
+                emit odebranaWiadomosc(id, wiadomosc);
             break;
 
             case CZY_ISTNIEJE:
-                emit czyIstnieje(nagl.ID);
-            break;
-
-        case PLIK_POCZATEK:
-            //qDebug() << "----- plik_poczatek ------";
-             emit plikObiorStart(nagl.ID, wiadomosc);
-            break;
-
-        case PLIK_TRANSFER:
-            qDebug() << "----- plik_transfer ------ == ";
-            emit plikOdbiorTransfer(plik, 256);
-            break;
-
-        case PLIK_KONIEC:
-            //qDebug() << "----- plik_koniec ------";
-            emit plikOdbiorKoniec();
-            break;
-
-        case PLIK_CHCE:
-            //qDebug() << "----- plik_chce ------";
-            emit plikWysylStart();
-            break;
-
-        case PLIK_NIECHCE :
-            //do something here
+                emit czyIstnieje(id);
             break;
 
         case SERWER_NIEZYJE:
             emit niezywySerwer();
-            break;
+
         }
 
     }
+}
+
+void ServerConn::zakoncz()
+{
+    qDebug() << "Sie koniec sie dzieje";
+    koniec = true;
+}
+
+void ServerConn::koncz()
+{
+    qDebug() << "KONIEC DEFINITYWNIE!!";
+    emit koniecProgramu();
 }

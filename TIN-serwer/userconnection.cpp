@@ -14,18 +14,12 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include "polaczenie.h"
 
-UserConnection::UserConnection(QObject *parent)
-{
-    zalogowany = false;
-    myid = -1;
-    sekret = NULL;
-}
-
-UserConnection::UserConnection(int socket)
+UserConnection::UserConnection(int socket) : pakieto(socket)
 {
     myid = -1;
-    this->socket = socket;
+    this->gniazdo = socket;
     zalogowany = false;
     sekret = NULL;
     wyjscie = false;
@@ -44,14 +38,14 @@ UserConnection::~UserConnection()
 {
     if(sekret!=NULL) delete sekret;
 
-    close(socket);// zamykamy gniazdo
+    close(gniazdo);// zamykamy gniazdo
 }
 
 void UserConnection::nowaWiadomosc(int id)
 {
 
 
-    //qDebug() << "nowa Wiadomosc SLOT!!";
+    qDebug() << "nowa Wiadomosc SLOT!!";
 
     // pojawila sie nowa wiadomosc od rozmowy id losowy to wypychamy ja na gniazd
     //if(rozmowy[id]->czyWiadomosc(myid)){
@@ -75,8 +69,9 @@ void UserConnection::pojawilSieUsr(int idUsr, int status)
 ///@todo
 void UserConnection::zabij()
 {
-    this->wyslijPakiet(SERWER_NIEZYJE,myid,(QString*)NULL);
+    this->wyslijPakiet(SERWER_NIEZYJE,myid,NULL);
     this->wyjscie=true;// jeszcze cos
+    this->pakieto.wyjdz();
 }
 
 
@@ -84,7 +79,7 @@ void UserConnection::zabij()
 void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 {
 
-    //qDebug() << "TUTAJ TUTAJ TUTAJ TUTAJ";
+    qDebug() << "TUTAJ TUTAJ TUTAJ TUTAJ";
 
     if(idUsr==this->myid){
 
@@ -93,11 +88,11 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
         // czy cos jeszcze trzeba jeszcze powiadomic uzytkownika
         if(czy){// to my ja stworzylismy przed chwila
             qDebug() << "Se rozmowa sie stworzyla";
-            wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,(QString*)NULL);// wysylamy potwierdzenie ze stwozona rozmowa
+            wyslijPakiet(ROZPOCZNIJ_ROZMOWE,idRozm,NULL);// wysylamy potwierdzenie ze stwozona rozmowa
             //return;
         }
         qDebug() << "Dodaj";
-        wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,(QString*)NULL);
+        wyslijPakiet(DODAJ_DO_ROZMOWY,idRozm,NULL);
         connect(ro,SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)), Qt::DirectConnection);
     }
 }
@@ -106,6 +101,7 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 ///@todo
 void UserConnection::run()
 {
+    Polaczenie conn(this->gniazdo);
     unsigned int ilePrzeczytano = 0;
     unsigned int nowaPartia = 0;
 
@@ -122,112 +118,13 @@ void UserConnection::run()
 
     fd_set writefds;
 
-    unsigned int filePackets = 0;
-
     while(!wyjscie){ // 0 kod wyjscia
-        // tu obróbka danych i wyslanie nowych wiadomosci
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec= 100000;
-        ilePrzeczytano = 0;
-        nowaPartia = 0;
-        temp = new char[HEADER_SIZE + 1];
-        memset(temp, '\0', HEADER_SIZE + 1);
-        memset(naglowek, '\0', HEADER_SIZE + 1);
-
-        while (ilePrzeczytano < HEADER_SIZE) {
-
-            FD_ZERO(&writefds);
-            FD_SET(socket,&writefds);
-
-            if(select(socket+1,&writefds,NULL,NULL,&tv)){
-                //qDebug() << "attempting read, actual == " << ilePrzeczytano;
-                nowaPartia = read(socket, temp, HEADER_SIZE - ilePrzeczytano);
-
-            if (nowaPartia == 0) {
-                wyjscie = true;
-                break;
-            }
-
-                strncat(naglowek, temp, nowaPartia);
-                ilePrzeczytano += nowaPartia;
-            }else{
-                if(wyjscie) break;
-            }
-        }
-
-        if (wyjscie)
-            break;
-
-        nagl = szyfr.deszyfrujNaglowek(naglowek, NULL);
-
-        delete [] temp;
-
-        temp = new char[nagl.trueRozmiar + 1];
-        content = new char[nagl.trueRozmiar + 1];
-        memset(temp, '\0', nagl.trueRozmiar + 1);
-        memset(content, '\0', nagl.trueRozmiar + 1);
-
-        ilePrzeczytano = 0;
-        nowaPartia = 0;
-
-        while (ilePrzeczytano < nagl.trueRozmiar) {
-
-            FD_ZERO(&writefds);
-            FD_SET(socket,&writefds);
-
-            if(select(socket+1,&writefds,NULL,NULL,&tv)){
-                nowaPartia = read(socket, temp, nagl.trueRozmiar - ilePrzeczytano);
-                strncat(content, temp, nowaPartia);
-                ilePrzeczytano += nowaPartia;
-            }else{
-                if(wyjscie) break;
-            }
-        }
-
-        char *plik;
-
-        if  (nagl.typ != PLIK_TRANSFER)
-            wiadomosc = szyfr.deszyfrujDane(content, sekret);
-        else {
-            qDebug() << "serwerDostal == " << content;
-            plik = szyfr.deszyfrujPlik(content, sekret);
-            qDebug() << "serwerOdkodowal == " << plik;
-        }
-
-        delete [] temp;
-        delete [] content;
-
-        switch (nagl.typ){
-
-        case PLIK_POCZATEK : {
-
-            qDebug() << "serwer -- plik_poczatek";
-            filePackets = 0;
-            wyslijPakiet(PLIK_POCZATEK, nagl.ID, &wiadomosc);
-
-        } break;
-
-        case PLIK_TRANSFER :{
-
-            qDebug() << "serwer -- plik_transfer << " << ++filePackets;
-
-            wyslijPakiet(PLIK_TRANSFER, nagl.ID, plik);
-
-        } break;
-
-        case PLIK_CHCE : {
-
-            qDebug() << "serwer -- plik_chce";
-            wyslijPakiet(PLIK_CHCE, nagl.ID, &wiadomosc);
-        }break;
-
-        case PLIK_KONIEC : {
-
-            qDebug() << "serwer -- plik_koniec";
-            wyslijPakiet(PLIK_KONIEC, nagl.ID, (QString*)NULL);
-
-        } break;
+        unsigned int naglowek;
+        unsigned int id;
+        QString wiadomosc;
+        int dlogosc = pakieto.odbiezPakiet(&naglowek,&id,&wiadomosc,this->sekret);
+        if(dlogosc<0) return;// wychodzimy w razie bledu :) lub zamkniecia
+        switch (naglowek){
 
             case ODLACZ_UZYTKOWNIKA : { // skladamy samokrytyke i odlaczamy sie z serwera
                 qDebug() << "wyjscie --- ";
@@ -236,33 +133,33 @@ void UserConnection::run()
             } break;
 
             case REJESTRUJ : {
-                login = wiadomosc.left(nagl.ID);
-                hash = wiadomosc.right(wiadomosc.size()-nagl.ID);
+                login = wiadomosc.left(id);
+                hash = wiadomosc.right(wiadomosc.size()-id);
                 rejestruj(login,hash);
             } break;
 
             case WYSLIJ_WIADOMOSC:{ // zeby nie bylo wiadomosc przyszla do nas :)
-                //qDebug() << "got == " << wiadomosc;
-                if(rozmowy.contains(nagl.ID)) {
+                qDebug() << "got == " << wiadomosc;
+                if(rozmowy.contains(id)) {
                     qDebug() << "this is the rozmowa you are looking for";
-                    rozmowy[nagl.ID]->wyslijWiadomosc(wiadomosc);
+                    rozmowy[id]->wyslijWiadomosc(wiadomosc);
                 }
             } break;
 
             case LOGUJ_UZYTKOWNIKA:{
-                login = wiadomosc.left(nagl.ID);
-                hash = wiadomosc.right(wiadomosc.size()-nagl.ID);
+                login = wiadomosc.left(id);
+                hash = wiadomosc.right(wiadomosc.size()-id);
                 loguj(login,hash);
             } break;
   //          case SPRAWDZ_DOSTEPNOSC:// nie wiem czy to wogole bedziemy robic ale nie ch bedzie
   //              break;
             case ZAKONCZ_ROZMOWE:{
                 // chcemy jeszcze rozlaczyc slota zanim zrobimy wszystko inne
-                if(this->rozmowy.contains(nagl.ID)){
-                    disconnect(rozmowy[nagl.ID],SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)));
+                if(this->rozmowy.contains(id)){
+                    disconnect(rozmowy[id],SIGNAL(nowaWiadomosc(int)),this,SLOT(nowaWiadomosc(int)));
                     // uzytkownik chce zakonczyc rozmowe
-                    rozmowy.remove(nagl.ID);
-                    emit opuszczamRozmowe(myid,nagl.ID);
+                    rozmowy.remove(id);
+                    emit opuszczamRozmowe(myid,id);
 
                 }
             } break;
@@ -276,7 +173,7 @@ void UserConnection::run()
             case DODAJ_DO_ROZMOWY:{
 
                 int idRozm = wiadomosc.toInt();
-                emit dodajeRozmowce(nagl.ID,idRozm);
+                emit dodajeRozmowce(id,idRozm);
 
             } break;
 
@@ -308,11 +205,11 @@ void UserConnection::rejestruj(QString name, QString pass)
     if(brama->sprawdzUzytkownika(name)<=0){
         int id =brama->dodajUzytkownika(name,pass);
         // i wysylamy takie cos ze sie u
-        wyslijPakiet(REJESTRUJ,id,(QString*)NULL);
+        wyslijPakiet(REJESTRUJ,id,NULL);
     }
     else{
         //tu wysylamy wiadomosc ze juz taki ktos jest
-        wyslijPakiet(REJESTRUJ,0,(QString*)NULL);
+        wyslijPakiet(REJESTRUJ,0,NULL);
     }
 }
 
@@ -328,13 +225,13 @@ void UserConnection::loguj(QString name, QString pass)
         if(!haslo.compare(pass)){
             qDebug() << "Hasło się zgadza!";
             myid=id;
-            wyslijPakiet(LOGUJ_UZYTKOWNIKA,id,(QString*)NULL);
+            wyslijPakiet(LOGUJ_UZYTKOWNIKA,id,NULL);
             emit dodajeSieDoListy(myid,this);
             return;
 
         }
     }
-    wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,(QString*)NULL);
+    wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,NULL);
     // nie udalo sie zalogowac trzeba naszego goscia o tym powiadomic
 }
 // tu bedziemy wysylac nanana
@@ -352,40 +249,16 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
         dane1 = *dane;
     }
 
-    Wiadomosc wiad(typ, id, dane1, this->socket);
-    unsigned int wielkosc;
-    char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
+    //Wiadomosc wiad(typ, id, dane1, this->gniazdo);
+    //unsigned int wielkosc;
+    //char *wiadomosc = szyfr.szyfruj(&wiad,sekret,&wielkosc);
 
-    //qDebug() << "WYSYŁAM typ: " << typ;
+    Wyslij wys(typ, id, dane1, this->gniazdo);
+    wys.wyslij();
 
-    wiad.wyslijDoSerwera(wiadomosc, wielkosc);
+    qDebug() << "WYSYŁAM typ: " <<id;
 
-    mutex.unlock();
-}
-
-void UserConnection::wyslijPakiet(char typ, unsigned int id, char *dane)
-{
-    mutex.lock();
-
-    Szyfrator szyfr;
-
-    // tworzymy wiadomość
-    /*QString dane1;
-    if(dane == NULL){
-        dane1 = "";
-    } else {
-        dane1 = *dane;
-    }*/
-
-    Wiadomosc wiad(typ, id, QString(""), this->socket);
-    unsigned int wielkosc;
-    char *wiadomosc = szyfr.szyfrujPlik(&wiad,sekret,&wielkosc, dane, 256);
-
-    qDebug() << "serwer wysyla pakiet == " << wiadomosc;
-
-    //qDebug() << "WYSYŁAM typ: " << typ;
-
-    wiad.wyslijDoSerwera(wiadomosc, wielkosc);
+    //wiad.wyslijDoSerwera(wiadomosc, wielkosc);
 
     mutex.unlock();
 }
@@ -398,3 +271,4 @@ void UserConnection::sprzataj()
         emit opuszczamRozmowe(myid,it.key());
     }// tu nie musimy sie martwic o zazadzanie pamiecia rozmow bo to robi glowny watek serwera
 }
+

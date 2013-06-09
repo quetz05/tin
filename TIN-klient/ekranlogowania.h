@@ -5,6 +5,7 @@
 #include <QString>
 #include "info.h"
 #include "rejestracja.h"
+#include "../wyslij.h"
 
 namespace Ui {
 class ekranLogowania;
@@ -86,11 +87,12 @@ public:
 private:
     QString login;
     QString haslo;
-    Wiadomosc *wiad;
+    //Wiadomosc *wiad;
     Rejestracja *rej;
     info *oknoInformacji;
     int gniazdo;
     Ui::ekranLogowania *ui;
+    Wyslij *wyslij;
 };
 
 #endif // EKRANLOGOWANIA_H

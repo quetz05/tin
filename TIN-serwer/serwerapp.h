@@ -7,6 +7,7 @@
 #include "userconnection.h"
 #include "rozmowa.h"
 
+
 class SerwerApp : public QObject
 {
     Q_OBJECT
