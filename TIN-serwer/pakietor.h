@@ -2,7 +2,7 @@
 #define PAKIETOR_H
 
 #include <QObject>
-#include"polaczenie.h"
+#include "polaczenie.h"
 #include <QMutex>
 #include "../wyslij.h"
 /**
