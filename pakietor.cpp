@@ -1,5 +1,7 @@
 #include "pakietor.h"
 
+#include <QDebug>
+
 Pakietor::Pakietor(int soc,QObject *parent) :
     QObject(parent), conn(soc)
 {
@@ -47,5 +49,6 @@ int Pakietor::nadajPakiet(unsigned int naglowek, unsigned int id,
 
 void Pakietor::wyjdz()
 {
+    qDebug() << "Odcyganiamy wyjscie  1.1" << endl;
     this->conn.wychodzimy();
 }
