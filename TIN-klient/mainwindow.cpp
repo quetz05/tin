@@ -461,6 +461,8 @@ void MainWindow::plikOdbiorTransfer(QString paczka, int size) {
     op->nowaPartia(partia);
     timeout->start(60000);
 
+    qDebug() << "postep == " << op->dajPostep();
+
     ui->progresOdbior->setValue(op->dajPostep());
 }
 

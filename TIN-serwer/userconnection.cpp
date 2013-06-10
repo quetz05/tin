@@ -13,12 +13,6 @@
 #include <sys/time.h>
 #include "polaczenie.h"
 
-<<<<<<< HEAD
- * Szyfrujesz/deszyfrujesz standardowo
-=======
->>>>>>> 8e11488bc02f10e8c4f8e9d42f405a15a77d406a
-
-
 std::string naglowki[] = {
     "",
     "ODLACZ_UZYTKOWNIKA",

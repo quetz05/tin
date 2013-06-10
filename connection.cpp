@@ -30,14 +30,14 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
     tv.tv_sec = 1;
     tv.tv_usec= 0;
 
-    while(ilePrzeczytano<dlogosc){
+    while(ilePrzeczytano < dlogosc){
         FD_ZERO(&readfds);
         FD_SET(gniazdo,&readfds);
         int inf = select(this->gniazdo+1,&readfds,NULL,NULL,&tv);
-        if(inf>0){
+        if(inf > 0) {
             // mozna odczytywac
             nowaPartia = read(gniazdo,temp,dlogosc - ilePrzeczytano);
-            if(nowaPartia<0){
+            if(nowaPartia < 0){
                 qDebug() << "Cygan placze nad readem" << this;
                 delete [] temp;
                 return -1;
@@ -46,11 +46,11 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
             strncat(bufor,temp,nowaPartia);
             ilePrzeczytano += nowaPartia;
 
+        } else { //do inf > 0
 
-        }else{
+            //qDebug() << "inf == " << inf;
 
-
-            if(inf<0){
+            if(inf < 0){
 
                 qDebug() << "Cygan placze kiedy nie ma gruzu" << this;
                 return -1;
@@ -66,8 +66,9 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
 
                 return -1;
             }
-        }
-    }
+        } //koniec inf > 0
+    } //koniec while
+
     delete [] temp;
     return dlogosc;
 }
