@@ -38,12 +38,9 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
             // mozna odczytywac
             nowaPartia = read(gniazdo,temp,dlogosc - ilePrzeczytano);
             if(nowaPartia<0){
-<<<<<<< HEAD
                 qDebug() << "Cygan placze nad readem" << this;
-=======
                 delete [] temp;
 
->>>>>>> 8e11488bc02f10e8c4f8e9d42f405a15a77d406a
                 return -1;
             }
 
@@ -55,13 +52,12 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
 
 
             if(inf<0){
-<<<<<<< HEAD
+
                 qDebug() << "Cygan placze kiedy nie ma gruzu" << this;
                 return -1;
             }
             if(this->typInformacji==-1){
                 qDebug() << "Odcyganiamy wyjscie";
-=======
                 delete [] temp;
 
                 return -1;
@@ -69,7 +65,6 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
             if(this->typInformacji==-1){
                 delete [] temp;
 
->>>>>>> 8e11488bc02f10e8c4f8e9d42f405a15a77d406a
                 return -1;
             }
         }
@@ -80,11 +75,8 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
 
 void Connection::wychodzimy()
 {
-<<<<<<< HEAD
     qDebug() << "Odcyganiamy wyjscie 1.0" << this;
     this->typInformacji = -1;
-=======
     this->typInformacji=-1;
->>>>>>> 8e11488bc02f10e8c4f8e9d42f405a15a77d406a
 }
 
