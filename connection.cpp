@@ -10,11 +10,11 @@ Connection::Connection(int soc, QObject *parent) :
 
 }
 
-int Connection::wyslijPakiet(char *dane, int dlogosc)
+/*int Connection::wyslijPakiet(char *dane, int dlogosc)
 {
     // tu nie bedzie tak latwo
 }
-
+*/
 int Connection::odbiezPakiet(char *bufor, int dlogosc)
 {
     memset(bufor,'\0',dlogosc+1);
@@ -38,6 +38,8 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
             // mozna odczytywac
             nowaPartia = read(gniazdo,temp,dlogosc - ilePrzeczytano);
             if(nowaPartia<0){
+                delete [] temp;
+
                 return -1;
             }
 
@@ -48,9 +50,13 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
         }else{
 
             if(inf<0){
+                delete [] temp;
+
                 return -1;
             }
             if(this->typInformacji==-1){
+                delete [] temp;
+
                 return -1;
             }
         }
@@ -61,6 +67,6 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
 
 void Connection::wychodzimy()
 {
-    this->typInformacji==-1;
+    this->typInformacji=-1;
 }
 
