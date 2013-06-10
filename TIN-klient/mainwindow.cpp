@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     doda = NULL;
     oknoWysylania= new QFileDialog(this);
     oknoInformacji = NULL;
+    wp = NULL;
+    op = NULL;
 
     timeout = new QTimer(this);
 
@@ -330,7 +332,8 @@ void MainWindow::theEnd()
 void MainWindow::rozpocznijWysylanie()
 {
 
-    if (wp != NULL) {
+    qDebug() << "wp == " << wp;
+    if (wp == NULL) {
         QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
         if (fileName.length() != 0) {
 
@@ -353,7 +356,7 @@ void MainWindow::rozpocznijWysylanie()
                 fileName.append(QString::number(plik->size()));
 
                 Szyfrator szyfr;
-                Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
+                Wiadomosc wiad(PLIK_POCZATEK, zaznaczonyZnajomy->text().section("|",1,1).toInt(), fileName, gniazdo);
                 unsigned int rozmiar;
                 char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
                 wiad.wyslijDoSerwera(dane, rozmiar);
@@ -382,7 +385,7 @@ void MainWindow::plikOdbiorStart(int idZrodla, QString nazwa) {
     char *dane;
     unsigned int rozmiar;
 
-    if (op != NULL) {
+    if (op == NULL) {
 
         QString rozmiarPliku = nazwa.right(nazwa.length() - (nazwa.lastIndexOf('.') + 1));
         QString nazwaPliku = nazwa.left(nazwa.lastIndexOf('.'));
