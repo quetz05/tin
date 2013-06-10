@@ -10,7 +10,7 @@ public:
     OdbieraczPlikow(QString nazwa, QWidget *parent);
     ~OdbieraczPlikow();
 
-    unsigned int ustawIlosc(unsigned int ile) { ilePaczek = ile; }
+    unsigned int ustawIlosc(unsigned int ile) { ilePaczek = ile + 1; }
     unsigned int dajPostep() { return (postep * 100) / ilePaczek; }
     void nowaPartia(QByteArray *partia);
     void zakoncz();

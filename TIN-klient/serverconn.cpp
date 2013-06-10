@@ -33,6 +33,8 @@ void ServerConn::odbierajWiadomosci()
         if(dlugosc<0)
             return;// wychodzimy w razie bledu :) lub zamkniecia
 
+        qDebug() << "got naglowek_id == " << (int)naglowek;
+
         //rozpoznanie typu wiadomosci
         switch(naglowek) {
             case REJESTRUJ:

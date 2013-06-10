@@ -136,7 +136,7 @@ void UserConnection::run()
     unsigned int id;
     UserConnection* usrr;
     QString wiadomosc;
-    bool czyIstnieje;
+    bool czyIstnieje= false;
 
 
     while(!wyjscie){ // 0 kod wyjscia
@@ -161,11 +161,10 @@ void UserConnection::run()
             } break;
         
             case PLIK_POCZATEK : {
-                bool czyIstnieje;
                 this->giveUsr(&czyIstnieje,id,&usrr);
                 bool pomoc=false;
                 if(czyIstnieje){
-                    zacznijPrzesyl(&pomoc,this);
+                    usrr->zacznijPrzesyl(&pomoc,this);
                     if(pomoc)usrr->wyslijPakiet(PLIK_POCZATEK, id, &wiadomosc);
                     else wyslijPakiet(PLIK_NIECHCE, id, &wiadomosc);
                 }else{
@@ -182,7 +181,8 @@ void UserConnection::run()
         
             case PLIK_TRANSFER: {
                 this->giveUsr(&czyIstnieje,id,&usrr);
-                if(czyIstnieje)usrr->wyslijPakiet(PLIK_TRANSFER, id, &wiadomosc);
+                if(czyIstnieje)
+                    usrr->wyslijPakiet(PLIK_TRANSFER, id, &wiadomosc);
             } break;
             case PLIK_CHCE: {
                 if(this->wysylajacy){

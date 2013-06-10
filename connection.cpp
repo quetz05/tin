@@ -39,7 +39,6 @@ int Connection::odbiezPakiet(char *bufor, int dlogosc)
             nowaPartia = read(gniazdo,temp,dlogosc - ilePrzeczytano);
             if(nowaPartia<0){
                 delete [] temp;
-
                 return -1;
             }
 

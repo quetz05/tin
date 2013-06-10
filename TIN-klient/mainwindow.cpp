@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     doda = NULL;
     oknoWysylania= new QFileDialog(this);
     oknoInformacji = NULL;
+    wp=NULL;
+    op=NULL;
 
     timeout = new QTimer(this);
 
@@ -382,7 +384,7 @@ void MainWindow::plikOdbiorStart(int idZrodla, QString nazwa) {
     char *dane;
     unsigned int rozmiar;
 
-    if (op != NULL) {
+    if (op == NULL) {
 
         QString rozmiarPliku = nazwa.right(nazwa.length() - (nazwa.lastIndexOf('.') + 1));
         QString nazwaPliku = nazwa.left(nazwa.lastIndexOf('.'));
