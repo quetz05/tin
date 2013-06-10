@@ -8,7 +8,7 @@ WysylaczPlikow::WysylaczPlikow(QFile *co, int socket, int doKogo, QObject *paren
     idCelu = doKogo;
     anuluj = false;
 
-    ilePaczek = qRound( (double)co->size() / 256.0d );
+    ilePaczek = qRound( (double)co->size() / 256.0d ) + 1;
     aktPaczka = 0;
 }
 

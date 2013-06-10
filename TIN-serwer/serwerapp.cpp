@@ -92,7 +92,7 @@ void SerwerApp::run()
             // uzytkownik zglasza ze wychodzi
             status = connect(this,SIGNAL(killEmAll()),con,SLOT(zabij()), Qt::DirectConnection);
             qDebug() << status;
-            status = connect(con,SIGNAL(giveUsr(bool*,int,UserConnection**)),this,SLOT(zwrocUzytkownika(bool*,int,UserConnection**)));
+            status = connect(con,SIGNAL(giveUsr(bool*,int,UserConnection**)),this,SLOT(zwrocUzytkownika(bool*,int,UserConnection**)), Qt::DirectConnection);
             qDebug() << status;
             QThreadPool::globalInstance()->start(con);
         }

@@ -5,6 +5,11 @@
 #include "wysylaczplikow.h"
 #include <QThreadPool>
 #include <QMessageBox>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
 MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     QMainWindow(parent),
@@ -92,6 +97,8 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
 MainWindow::~MainWindow()
 {
 
+    ::close(gniazdo);
+
     if(zaznaczonyZnajomy)
         delete zaznaczonyZnajomy;
     if(doda)
@@ -110,8 +117,8 @@ void MainWindow::wyloguj()
 {
     emit zakonczServerConn();
 
-    //QProcess::startDetached(QApplication::applicationFilePath());
-    //exit(12);
+    QProcess::startDetached(QApplication::applicationFilePath());
+    exit(12);
 
 }
 
@@ -150,6 +157,7 @@ void MainWindow::zaloguj(const QString &login,const int id)
 void MainWindow::zakoncz()
 {
     qDebug() << "Se emituje ServerConn koncz";
+
     emit zakonczServerConn();
 }
 
@@ -318,8 +326,8 @@ void MainWindow::serwerNiezyje()
     oknoInformacji = new info(this,"Świętej pamięci serwer nie żyje... Program ulegnie zamknięciu.",false);
     oknoInformacji->exec();
 
-
-    emit zakonczServerConn();
+    QApplication::exit();
+   // emit zakonczServerConn();
 }
 
 void MainWindow::theEnd()
@@ -332,7 +340,8 @@ void MainWindow::theEnd()
 void MainWindow::rozpocznijWysylanie()
 {
 
-    if (wp != NULL) {
+    qDebug() << "wp == " << wp;
+    if (wp == NULL) {
         QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
         if (fileName.length() != 0) {
 
@@ -355,7 +364,7 @@ void MainWindow::rozpocznijWysylanie()
                 fileName.append(QString::number(plik->size()));
 
                 Szyfrator szyfr;
-                Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
+                Wiadomosc wiad(PLIK_POCZATEK, zaznaczonyZnajomy->text().section("|",1,1).toInt(), fileName, gniazdo);
                 unsigned int rozmiar;
                 char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
                 wiad.wyslijDoSerwera(dane, rozmiar);

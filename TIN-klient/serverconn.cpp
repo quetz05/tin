@@ -19,19 +19,26 @@ void ServerConn::doSetup(QThread *cThread)
 
     connect(cThread,SIGNAL(started()),this, SLOT(odbierajWiadomosci()));
     connect(cThread,SIGNAL(finished()),this, SLOT(koncz()));
+        connect(cThread,SIGNAL(destroyed()),this, SLOT(koncz()));
 }
 
 void ServerConn::odbierajWiadomosci()
 {
+    unsigned int naglowek;
+    unsigned int id;
+    QString wiadomosc;
 
     while(!koniec)// false - kod wyjscia
     {
-        unsigned int naglowek;
-        unsigned int id;
-        QString wiadomosc;
         int dlugosc = pakietor.odbiezPakiet(&naglowek,&id,&wiadomosc,NULL);
-        if(dlugosc<0)
+
+        if(dlugosc < 0)
+        {
+            qDebug() <<"Czy cygan dostał gruz?";
+            emit thread()->terminate();
             return;// wychodzimy w razie bledu :) lub zamkniecia
+        }
+        qDebug() << "got message == " << (int) naglowek;
 
         qDebug() << "got naglowek_id == " << (int)naglowek;
 
@@ -61,43 +68,46 @@ void ServerConn::odbierajWiadomosci()
                 emit czyIstnieje(id);
             break;
 
-        case PLIK_POCZATEK:
-            emit plikObiorStart(id, wiadomosc);
+            case PLIK_POCZATEK:
+                emit plikObiorStart(id, wiadomosc);
+                break;
+
+            case PLIK_TRANSFER:
+                emit plikOdbiorTransfer(wiadomosc, id);
+                break;
+
+            case PLIK_CHCE:
+                emit plikWysylStart();
+                break;
+
+            case PLIK_KONIEC:
+                emit plikOdbiorKoniec();
+                break;
+
+            case PLIK_NIECHCE:
+                emit plikNiechce();
+                break;
+
+            case PLIK_TIMEOUT:
+                emit plikTimeout();
             break;
 
-        case PLIK_TRANSFER:
-            emit plikOdbiorTransfer(wiadomosc, id);
-            break;
-
-        case PLIK_CHCE:
-            emit plikWysylStart();
-            break;
-
-        case PLIK_KONIEC:
-            emit plikOdbiorKoniec();
-            break;
-
-        case PLIK_NIECHCE:
-            emit plikNiechce();
-            break;
-
-        case PLIK_TIMEOUT:
-            emit plikTimeout();
-
-        case SERWER_NIEZYJE:
-            emit niezywySerwer();
+            case SERWER_NIEZYJE:
+                emit niezywySerwer();
             break;
 
 
         }
 
     }
+
 }
 
 void ServerConn::zakoncz()
 {
     qDebug() << "Sie koniec sie dzieje";
     koniec = true;
+    pakietor.wyjdz();
 }
 
 void ServerConn::koncz()
