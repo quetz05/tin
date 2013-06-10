@@ -37,6 +37,13 @@ signals:
     //sygnal zakonczenia programu
     void koniecProgramu();
 
+    void plikObiorStart(int, QString);
+    void plikOdbiorTransfer(QString, int);
+    void plikOdbiorKoniec();
+    void plikNiechce();
+    void plikWysylStart();
+    void plikTimeout();
+
 
 public slots:
     void zakoncz();

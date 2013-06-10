@@ -30,16 +30,19 @@ int Pakietor::nadajPakiet(unsigned int naglowek, unsigned int id,
                           QString *wiadomosc,Klucz* kluczor)
 {
 
+   mutek.lock();
+
     QString dane1;
     if(wiadomosc == NULL){
         dane1 = "";
     } else {
         dane1 = *wiadomosc;
     }
-
     Wyslij wiad(naglowek, id, dane1, this->socc, kluczor);
     wiad.wyslij();
 
+    mutek.unlock();
+    return 1;
 }
 
 void Pakietor::wyjdz()

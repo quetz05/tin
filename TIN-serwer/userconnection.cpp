@@ -5,16 +5,31 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <stdio.h>
 #include "../wiadomosc.h"
 #include <QString>
 #include "Baza/bramauzytkownikow.h"
 #include "rozmowa.h"
 #include <sys/select.h>
-#include <sys/types.h>
 #include <sys/time.h>
-#include <stdio.h>
 #include "polaczenie.h"
+
+/* BARTKU!
+ * Jeżeli po tych POPTach jeszcze do tego usiadłeś,
+ * to wiedz, że jesteś hardcore'm i masz mój szacunek :)
+ * Ad rem :
+ * PLIK_POCZATEK : tu dostajesz idCelu, przepychasz do Celu z idŹródła
+ * PLIK_CHCE / PLIK_NIECHCE : przepychasz od Celu do Źródła
+ * PLIK_TRANSFER : j/w
+ * PLIK_KONIEC / PLIK_TIMEOUT : j/w, zakańczasz serwerową obsługę pakietów plikowych (dla tej transmisji)
+ *
+ * Jeżeli byś potrzebował ID'ki sobie jakieś przesyłać to najwięcej się dzieje w
+ * mainwindow.cpp i wysylaczplikow.cpp w kliencie, bo ja to już nie pamiętam w zasadzie
+ * co tam idzie poza tym w PLIK_POCZATEK.
+ * Wszystkie czary plikowe masz na samym dole mainwindow.cpp
+ *
+ * Szyfrujesz/deszyfrujesz standardowo
+ */
+
 
 UserConnection::UserConnection(int socket) : pakieto(socket)
 {
@@ -23,14 +38,9 @@ UserConnection::UserConnection(int socket) : pakieto(socket)
     zalogowany = false;
     sekret = NULL;
     wyjscie = false;
+    odbieraPlik = false;
+    wysylajacy = NULL;
 
-    //watek = new QThread();
-
-    //this->moveToThread(watek);
-
-    //connect(watek, SIGNAL(started()), this, SLOT(run()));
-
-    //watek->start();
 }
 
 ///zrobione chyba wszystko
@@ -74,6 +84,24 @@ void UserConnection::zabij()
     this->pakieto.wyjdz();
 }
 
+void UserConnection::zacznijPrzesyl(bool *czy, UserConnection *ucon)
+{
+    if(!this->odbieraPlik){
+        odbieraPlik=true;
+        this->wysylajacy =ucon;
+        (*czy) = true;
+
+    }else{
+        (*czy) = false;
+    }
+}
+
+void UserConnection::zakonczPrzesyl()
+{
+    odbieraPlik = false;
+    this->wysylajacy = NULL;
+}
+
 
 ///Zrobione
 void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
@@ -101,17 +129,66 @@ void UserConnection::dodanyDoRozmowy(int idUsr, int idRozm,rozmowa *ro,bool czy)
 ///@todo
 void UserConnection::run()
 {
-    Polaczenie conn(this->gniazdo);
+    Szyfrator szyfr;
     QString login;
     QString hash;
+    unsigned int naglowek;
+    unsigned int id;
+    UserConnection* usrr;
+    QString wiadomosc;
+    bool czyIstnieje;
+
 
     while(!wyjscie){ // 0 kod wyjscia
-        unsigned int naglowek;
-        unsigned int id;
-        QString wiadomosc;
+
         int dlogosc = pakieto.odbiezPakiet(&naglowek,&id,&wiadomosc,this->sekret);
-        if(dlogosc<0) return;// wychodzimy w razie bledu :) lub zamkniecia
+        if(dlogosc<0) break;// wychodzimy w razie bledu :) lub zamkniecia
         switch (naglowek){
+
+            case PLIK_TIMEOUT : {
+                if(this->wysylajacy){
+
+                    wysylajacy->wyslijPakiet(PLIK_TIMEOUT, id, &wiadomosc);
+                    wysylajacy=NULL;
+                    odbieraPlik = false;
+                }
+            } break;
+        
+            case PLIK_NIECHCE : {
+                if(this->wysylajacy){
+                    wysylajacy->wyslijPakiet(PLIK_NIECHCE, id, &wiadomosc);
+                }
+            } break;
+        
+            case PLIK_POCZATEK : {
+                bool czyIstnieje;
+                this->giveUsr(&czyIstnieje,id,&usrr);
+                bool pomoc=false;
+                if(czyIstnieje){
+                    zacznijPrzesyl(&pomoc,this);
+                    if(pomoc)usrr->wyslijPakiet(PLIK_POCZATEK, id, &wiadomosc);
+                    else wyslijPakiet(PLIK_NIECHCE, id, &wiadomosc);
+                }else{
+                    wyslijPakiet(PLIK_NIECHCE, id, &wiadomosc);
+                }
+            } break;
+            case PLIK_KONIEC : {
+                this->giveUsr(&czyIstnieje,id,&usrr);
+                if(czyIstnieje){
+                    usrr->zakonczPrzesyl();
+                    usrr->wyslijPakiet(PLIK_KONIEC, id, &wiadomosc);
+                }
+            } break;
+        
+            case PLIK_TRANSFER: {
+                this->giveUsr(&czyIstnieje,id,&usrr);
+                if(czyIstnieje)usrr->wyslijPakiet(PLIK_TRANSFER, id, &wiadomosc);
+            } break;
+            case PLIK_CHCE: {
+                if(this->wysylajacy){
+                    wysylajacy->wyslijPakiet(PLIK_CHCE, id, &wiadomosc);
+                }
+            } break;
 
             case ODLACZ_UZYTKOWNIKA : { // skladamy samokrytyke i odlaczamy sie z serwera
                 qDebug() << "wyjscie --- ";
@@ -168,15 +245,7 @@ void UserConnection::run()
                 Klucz nk = szyfr.stringDoKlucz(wiadomosc);
                 sekret = new Klucz(nk);
             } break;
-            /*case PLIK_TRANSFER:
-                break;
-            case PLIK_CHETNI:
-                break;
-            case PLIK_ODPYTAJ:
-                break;
-            case UZYTKOWNIK_DOSTEPNY:
-                break;
-*/
+
         }
 
     }
@@ -221,6 +290,28 @@ void UserConnection::loguj(QString name, QString pass)
     wyslijPakiet(LOGUJ_UZYTKOWNIKA,0,NULL);
     // nie udalo sie zalogowac trzeba naszego goscia o tym powiadomic
 }
+
+std::string naglowki[] = {
+    "",
+    "ODLACZ_UZYTKOWNIKA",
+    "REJESTRUJ",
+    "WYSLIJ_WIADOMOWSC",
+    "LOGUJ_UZYTKOWNIKA",
+    "SPRAWDZ_DOSTEPNOSC",
+    "ZAKONCZ_ROZMOWE",
+    "DODAJ_DO_ROZMOWY",
+    "PLIK_TRANSFER",
+    "PLIK_POCZATEK",
+    "PLIK_KONIEC",
+    "UZYTKOWNIK_DOSTEPNY",
+    "NAWIAZ_BEZPIECZNE",
+    "CZY_ISTNIEJE",
+    "SERWER_NIEZYJE",
+    "PLIK_NIECHCE",
+    "PLIK_CHCE",
+    "PLIK_TIMEOUT"
+};
+
 // tu bedziemy wysylac nanana
 void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 {
@@ -243,7 +334,7 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
     Wyslij wys(typ, id, dane1, this->gniazdo);
     wys.wyslij();
 
-    qDebug() << "WYSYŁAM typ: " <<id;
+    qDebug() << "WYSYŁAM typ: " << naglowki[typ - 1].c_str() << " == " << (int) typ;
 
     //wiad.wyslijDoSerwera(wiadomosc, wielkosc);
 
@@ -253,8 +344,10 @@ void UserConnection::wyslijPakiet(char typ, unsigned int id, QString *dane)
 // wywalamy sie
 void UserConnection::sprzataj()
 {
+    if(this->wysylajacy)    wysylajacy->wyslijPakiet(PLIK_TIMEOUT, this->myid, NULL);
     // wywalamy sie ze wszystkich rozmow
     for(QMap<int,rozmowa*>::Iterator it=rozmowy.begin();it!=rozmowy.end();++it){
         emit opuszczamRozmowe(myid,it.key());
     }// tu nie musimy sie martwic o zazadzanie pamiecia rozmow bo to robi glowny watek serwera
 }
+

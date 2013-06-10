@@ -204,6 +204,56 @@ void Szyfrator::teaDecrypt(unsigned int *v, Klucz *klucz)
     v[1] = v1;
 }
 
+char* Szyfrator::szyfrujPlik(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize, char *dane, unsigned int ile) {
+
+    std::stringstream naglowek;
+
+    naglowek << (int)wiad->naglowek.typ << 'x' << wiad->naglowek.ID << 'x';
+
+    QByteArray prepDane = QByteArray::fromRawData(dane, ile);
+    prepDane = prepDane.toBase64();
+
+    QByteArray wynikowaDane;
+    encrypt(&prepDane, &wynikowaDane, klucz);
+
+    wynikowaDane = wynikowaDane.toBase64();
+
+    naglowek << wynikowaDane.size() + 1;
+
+    unsigned short size = naglowek.str().size();
+
+    while (size != 25) {
+        naglowek << 'x';
+        ++size;
+    }
+
+    QByteArray prepNaglowek(naglowek.str().c_str());
+    prepNaglowek = prepNaglowek.toBase64();
+
+    QByteArray wynikowaNaglowek;
+
+    encrypt(&prepNaglowek, &wynikowaNaglowek, klucz);
+
+    wynikowaNaglowek = wynikowaNaglowek.toBase64();
+
+    unsigned int payloadSize = wynikowaDane.length() + wynikowaNaglowek.length() + 1;
+    *pSize = payloadSize;
+
+    char *wynik = new char[payloadSize];
+    memset(wynik, '\0', payloadSize);
+
+    int i = 0;
+
+    for (i = 0; i < wynikowaNaglowek.length(); ++i)
+        wynik[i] = wynikowaNaglowek[i];
+
+    for (int j = 0; j < wynikowaDane.length(); ++j)
+        wynik[i + j] = wynikowaDane[j];
+
+    return wynik;
+
+}
+
 char* Szyfrator::szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize)
 {
     std::stringstream naglowek;
@@ -301,4 +351,18 @@ QString Szyfrator::deszyfrujDane(char *data, Klucz *klucz)
     wynikowa = QByteArray::fromBase64(wynikowa);
 
     return QString(wynikowa.data());
+}
+
+char* Szyfrator::deszyfrujPlik(char *data, Klucz *klucz) {
+
+    QByteArray dane = QByteArray::fromBase64(data);
+    QByteArray *wynikowa = new QByteArray();
+
+    decrypt(&dane, wynikowa, klucz);
+
+    wynikowa = new QByteArray(QByteArray::fromBase64(*wynikowa));
+
+    return wynikowa->data();
+
+
 }

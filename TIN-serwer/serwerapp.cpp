@@ -92,6 +92,8 @@ void SerwerApp::run()
             // uzytkownik zglasza ze wychodzi
             status = connect(this,SIGNAL(killEmAll()),con,SLOT(zabij()), Qt::DirectConnection);
             qDebug() << status;
+            status = connect(con,SIGNAL(giveUsr(bool*,int,UserConnection**)),this,SLOT(zwrocUzytkownika(bool*,int,UserConnection**)));
+            qDebug() << status;
             QThreadPool::globalInstance()->start(con);
         }
     }
@@ -150,6 +152,17 @@ void SerwerApp::dodajDoMapy(int idUsr,UserConnection* usr)
         emit dodanoUrzytkownika(idUsr,1);//ok
     }
     emit dodanoUrzytkownika(idUsr,0);// blad
+}
+
+void SerwerApp::zwrocUzytkownika(bool* czyjest,int id,UserConnection ** usr)
+{
+    // zwracamy wsk na usr
+    if(users.contains(id)){
+        (*usr)=users[id];
+        (*czyjest)=true;
+        return;
+    }
+    (*czyjest)=false;
 }
 ///zrobione
 /*

@@ -27,6 +27,8 @@ SOURCES += main.cpp\
     szyfrator.cpp \
     grupowarozmowa.cpp \
     serverconn.cpp \
+    wysylaczplikow.cpp \
+    odbieraczplikow.cpp \
     ../wyslij.cpp \
     ../pakietor.cpp \
     ../connection.cpp
@@ -38,15 +40,17 @@ HEADERS  += mainwindow.h \
     ekranlogowania.h \
     info.h \
     oknorozmowy.h \
-    polaczenie.h \
     rejestracja.h \
     ../wiadomosc.h \
     szyfrator.h \
     grupowarozmowa.h \
     serverconn.h \
+    wysylaczplikow.h \
+    odbieraczplikow.h \
     ../wyslij.h \
     ../pakietor.h \
-    ../connection.h
+    ../connection.h \
+    polaczenie.h
 
 FORMS    += mainwindow.ui \
     wyszukiwarka.ui \

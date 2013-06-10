@@ -45,6 +45,7 @@ public:
      */
     char* szyfruj(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize);
 
+    char *szyfrujPlik(Wiadomosc *wiad, Klucz *klucz, unsigned int *pSize, char *dane, unsigned int ile);
     /**
      * @brief deszyfrujNaglowek
      * Metoda odpowiedzialna za odszyfrowanie nagłówka.
@@ -68,6 +69,8 @@ public:
      * Zwracany jest QString zawierający przesłane dane.
      */
     QString deszyfrujDane(char* data, Klucz *klucz);
+
+    char *deszyfrujPlik(char*data, Klucz *klucz);
 
     /**
      * @brief wygenerujKlucz

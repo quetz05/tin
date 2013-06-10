@@ -21,8 +21,8 @@ SOURCES += main.cpp\
     userconnection.cpp \
     ../wiadomosc.cpp \
     szyfrator.cpp \
-    polaczenie.cpp \
-    pakietor.cpp \
+    ../connection.cpp \
+    ../pakietor.cpp \
     ../wyslij.cpp
 
 HEADERS  += mainwindow.h \
@@ -33,8 +33,8 @@ HEADERS  += mainwindow.h \
     message.h \
     ../wiadomosc.h \
     szyfrator.h \
-    polaczenie.h \
-    pakietor.h \
+    ../connection.h \
+    ../pakietor.h \
     ../wyslij.h
 
 FORMS    += mainwindow.ui

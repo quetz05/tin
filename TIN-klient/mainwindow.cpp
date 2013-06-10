@@ -2,7 +2,9 @@
 #include "ui_mainwindow.h"
 #include <unistd.h>
 #include <QDebug>
-
+#include "wysylaczplikow.h"
+#include <QThreadPool>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     QMainWindow(parent),
@@ -19,12 +21,15 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     oknoWysylania= new QFileDialog(this);
     oknoInformacji = NULL;
 
+    timeout = new QTimer(this);
+
     con = new ServerConn(NULL,socket);
 
 
     el = new ekranLogowania(this,socket);
     el->show();
 
+    connect(timeout, SIGNAL(timeout()), this, SLOT(odbiorTimeout()));
 
     //ekran logowania
     connect(el, SIGNAL(logowanie(const QString&, const int)), this, SLOT(zaloguj(QString,int)));
@@ -40,8 +45,13 @@ MainWindow::MainWindow(QWidget *parent, QString login, int socket) :
     connect(con, SIGNAL(odebranaWiadomosc(int,QString)), this, SLOT(odbierajWiadomosc(int, QString)));
     connect(con, SIGNAL(czyIstnieje(const int)),this,SLOT(czyIstnieje(int)));
     connect(con, SIGNAL(niezywySerwer()),this,SLOT(serwerNiezyje()));
+    connect(con, SIGNAL(plikObiorStart(int,QString)), this, SLOT(plikOdbiorStart(int,QString)));
+    connect(con, SIGNAL(plikOdbiorTransfer(QString, int)), this, SLOT(plikOdbiorTransfer(QString, int)));
     connect(this,SIGNAL(zakonczServerConn()),con,SLOT(zakoncz()),Qt::DirectConnection);
-    connect(con,SIGNAL(koniecProgramu()),this, SLOT(theEnd()));
+    connect(con, SIGNAL(koniecProgramu()),this, SLOT(theEnd()));
+    connect(con, SIGNAL(plikOdbiorKoniec()), this, SLOT(plikOdbiorKoniec()));
+    connect(con, SIGNAL(plikWysylStart()), this, SLOT(plikWysylStart()));
+    connect(con, SIGNAL(plikNiechce()), this, SLOT(plikNiechce()));
 
     ui->setupUi(this);
 
@@ -139,19 +149,6 @@ void MainWindow::zakoncz()
 {
     qDebug() << "Se emituje ServerConn koncz";
     emit zakonczServerConn();
-}
-
-
-void MainWindow::rozpocznijWysylanie()
-{
-    if(oknoInformacji)
-    {
-        delete oknoInformacji;
-        oknoInformacji = NULL;
-    }
-
-    oknoInformacji = new info(this,"Sorry, but this feature has not yet been implemented",false);
-
 }
 
 void MainWindow::dodajZnajomego()
@@ -326,4 +323,184 @@ void MainWindow::serwerNiezyje()
 void MainWindow::theEnd()
 {
     QApplication::exit();
+}
+
+// ----------------- CZARY PLIKOWE -----------------------
+
+void MainWindow::rozpocznijWysylanie()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
+    if (fileName.length() != 0) {
+
+        QFile *plik = new QFile(fileName);
+        plik->open(QIODevice::ReadOnly);
+/*        if (plik.size() > 21000) {
+
+            if (oknoInformacji)
+                delete oknoInformacji;
+
+            oknoInformacji = new info(this, QString("Za duży plik! Proszę wybrać plik o rozmiarze do 20kb!"), false);
+        } else {*/
+
+            wp = new WysylaczPlikow(plik, gniazdo, QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt(), NULL);
+
+            unsigned int subIndex = fileName.lastIndexOf('/') + 1;
+            qDebug() << "subIndex == " << subIndex;
+
+            fileName = fileName.right(fileName.length() - subIndex);
+
+            qDebug() << "fileName == " << fileName;
+
+            Szyfrator szyfr;
+            Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
+            unsigned int rozmiar;
+            char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
+            wiad.wyslijDoSerwera(dane, rozmiar);
+
+            delete dane;
+
+        //}
+    }
+}
+
+void MainWindow::plikOdbiorStart(int idZrodla, QString nazwa) {
+
+    Szyfrator szyfr;
+    Wiadomosc *wiad;
+    char *dane;
+    unsigned int rozmiar;
+
+    QString pytanie = "Czy chcesz odebrać plik <b>";
+    pytanie.append(nazwa);
+    pytanie.append(" </b> od użytkownika <b> ");
+    pytanie.append(QString::number(idZrodla));
+    pytanie.append(" </b>?");
+
+    QString nazwaDysk;
+
+    if (QMessageBox::Yes == QMessageBox::question(this, "Przesył pliku", pytanie, QMessageBox::Yes|QMessageBox::No)) {
+
+        wiad = new Wiadomosc(PLIK_CHCE, idZrodla, QString(""), gniazdo);
+        nazwaDysk = QFileDialog::getSaveFileName(this, "Zapisz Plik", nazwa, "");
+
+        //timeout 60 sekund
+        timeout->start(60000);
+
+        op = new OdbieraczPlikow(nazwaDysk, this);
+
+    }
+    else
+        wiad = new Wiadomosc(PLIK_NIECHCE, idZrodla, QString(""), gniazdo);
+
+
+    dane = szyfr.szyfruj(wiad, NULL, &rozmiar);
+    wiad->wyslijDoSerwera(dane, rozmiar);
+
+    delete dane;
+    delete wiad;
+
+}
+
+void MainWindow::plikOdbiorTransfer(QString paczka, int size) {
+
+    QByteArray *partia = new QByteArray(paczka.toStdString().c_str());
+    op->nowaPartia(partia);
+    timeout->start(60000);
+}
+
+void MainWindow::plikOdbiorKoniec() {
+
+    delete op;
+    op = NULL;
+
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Melduje wykonanie zadania, plik odebrany.",true);
+    oknoInformacji->show();
+
+    timeout->stop();
+
+}
+
+// jak tu jestesmy to znaczy ze przyszlo PLIK_CHCE
+void MainWindow::plikWysylStart() {
+    connect(wp, SIGNAL(koniec()), this, SLOT(plikWysylKoniec()));
+    QThreadPool::globalInstance()->start(wp);
+}
+
+void MainWindow::plikWysylTransfer() {
+//ew. update paska postepu
+}
+
+void MainWindow::plikWysylKoniec() {
+
+    //delete wp;
+    wp = NULL;
+
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Melduje wykonanie zadania, plik wysłany.",true);
+    oknoInformacji->show();
+
+}
+
+
+void MainWindow::plikNiechce() {
+
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Użytkownik odmówił odebrania pliku.",false);
+    oknoInformacji->show();
+
+
+}
+
+void MainWindow::wysylTimeout()
+{
+    if(oknoInformacji!=NULL)
+    {
+        delete oknoInformacji;
+        oknoInformacji = NULL;
+    }
+
+    oknoInformacji = new info(this,"Ups! Nie udało się wysłać pliku.",false);
+    oknoInformacji->show();
+
+    wp->timeout();
+}
+
+void MainWindow::odbiorTimeout()
+{
+
+    QString pytanie = "Wyglada na to, że dawno nie dotarła nowa część pliku. Czy chcesz nadal czekać?";
+
+    if (QMessageBox::No == QMessageBox::question(this, "Przesył pliku", pytanie, QMessageBox::Yes|QMessageBox::No)) {
+
+        op->zakoncz();
+        delete op;
+
+        Szyfrator szyfr;
+        unsigned int rozmiar;
+        Wiadomosc wiad(PLIK_TIMEOUT, uzytkownikID, QString(""), gniazdo);
+        char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
+        wiad.wyslijDoSerwera(dane, rozmiar);
+
+        delete dane;
+
+    } else {
+        timeout->start(60000);
+    }
+
 }

@@ -8,6 +8,7 @@
 #include <wyszukiwarka.h>
 #include <QProcess>
 #include <QFileDialog>
+#include <QTimer>
 
 #include "grupowarozmowa.h"
 #include "ekranlogowania.h"
@@ -15,6 +16,8 @@
 #include "oknorozmowy.h"
 #include "dodawanie.h"
 #include "szyfrator.h"
+#include "wysylaczplikow.h"
+#include "odbieraczplikow.h"
 
  /**
     * @brief The MainWindow class
@@ -59,7 +62,17 @@ private slots:
     void wyszukiwarkaZnajomych();
     void serwerNiezyje();
 
+    void plikOdbiorStart(int, QString);
+    void plikOdbiorTransfer(QString, int);
+    void plikOdbiorKoniec();
+    void plikWysylStart();
+    void plikWysylTransfer();
+    void plikNiechce();
 
+    void plikWysylKoniec();
+
+    void wysylTimeout();
+    void odbiorTimeout();
 
 public slots:
     void koniecInfo() {delete oknoInformacji; oknoInformacji = NULL;}
@@ -86,8 +99,9 @@ private:
     GrupowaRozmowa *grRozmowa;
     ekranLogowania *el;
     int uzytkownikID;
-
-
+    WysylaczPlikow *wp;
+    OdbieraczPlikow *op;
+    QTimer *timeout;
 
 signals:
     //sygnal do ekranu logowania
@@ -100,9 +114,6 @@ signals:
     void grTwojaNowaRozmowa(int);
     void odSIGczyIstnieje(const int);
     void zakonczServerConn();
-
-
-
 
 };
 
