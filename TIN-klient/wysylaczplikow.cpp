@@ -8,6 +8,8 @@ WysylaczPlikow::WysylaczPlikow(QFile *co, int socket, int doKogo, QObject *paren
     idCelu = doKogo;
     anuluj = false;
 
+    ilePaczek = qRound( (double)co->size() / 256.0d );
+    aktPaczka = 0;
 }
 
 WysylaczPlikow::~WysylaczPlikow() {
@@ -64,6 +66,10 @@ void WysylaczPlikow::run() {
         delete send;
         delete wiad;
         memset(temp, '\0', 257);
+
+        ++aktPaczka;
+
+        emit paczkaPoszla((aktPaczka*100 / ilePaczek));
 
         mutex.unlock();
     }

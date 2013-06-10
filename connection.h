@@ -23,7 +23,7 @@ public:
      * @param dlogosc danych do wyslania
      * @return  0 gdy sie uda -1 w razie bledu
      */
-    int wyslijPakiet(char* dane,int dlogosc);
+    //int wyslijPakiet(char* dane,int dlogosc);
     /**
      * @brief odbiezPakiet odbiera pakiet z zadanego gniazda
      * @param bufor wskaznik na bufor do zapisu (zaalokowane miejsce o jeden wieksze od ilosci danych)

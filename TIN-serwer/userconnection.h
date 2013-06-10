@@ -23,6 +23,8 @@ private:
     // na wszelki wypadek bo sloty wywoluja sie w innym watku
     bool wyjscie;
     Pakietor pakieto;
+    bool odbieraPlik;
+    UserConnection *wysylajacy;
 
 
     //trzeba nam jeszcze liste naszych rozmow zeby je jakos obslugiwac
@@ -55,7 +57,7 @@ private:
      */
     void wyslijPakiet(char typ, unsigned int id, QString* dane);
 
-    void wyslijPakietPlik(char typ, unsigned int id, char *dane) {};
+    //void wyslijPakietPlik(char typ, unsigned int id, char *dane) {};
 
 protected:
     /**
@@ -80,6 +82,7 @@ public:
     
     //QThread* zwrocWatek(){return this->watek;}
     int zwrocId(){return this->myid;}
+
 signals:
     /**
      * @brief dodajRozmowce sygnał który dodaje nowego rozmówcę do naszej rozmowy
@@ -114,6 +117,9 @@ signals:
      */
     void finished();
     //void finished(int idUsr);
+
+
+    void giveUsr(bool*,int,UserConnection**);
 public slots:
     /**
      * @brief dodanyDoRozmowy slocik ktory informuje nas ze dodano nas do rozmowy i przekazuje nam id rozmowy
@@ -138,6 +144,9 @@ public slots:
     void pojawilSieUsr(int, int);
     //void pojawilSieUsr(int idUsr,int status);
     void zabij();
+
+    void zacznijPrzesyl(bool*,UserConnection*);
+    void zakonczPrzesyl();
 };
 
 #endif // USERCONECTION_H

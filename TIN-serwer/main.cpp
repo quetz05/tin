@@ -21,6 +21,7 @@
  */
 SerwerApp* sapp;
 void sigInt(int signum){
+    Q_UNUSED(signum);
     sapp->AboutToQuitApp();
 
 }
@@ -38,15 +39,15 @@ int main(int argc, char *argv[])
     // moze tu sobie zrzucimy pewne wartości z argv zeby miec je jakby co i zeby nie przekazywac calosci do aplikacji
     //taka podstawowa obróbka
     int port = 1112;
-    /*if(argc>1)
+    if(argc>1)
     {
         port = atoi(argv[1]);
     }//narazie port potraktujemy jako pierwszy paramettr wywołania
     else{
         std::cout<<"podaj port przy uruchamianiu\n";
         //return -1;
-        port = 1111;
-    }*/
+       // port = 1111;
+    }
     aplikacja.setPort(port);
     // podłączamy sygnały i sloty do obiektu qt bez ktorego nie dziala komunikacja miedzy watkami
     QObject::connect(&aplikacja,SIGNAL(finished()),&a,SLOT(quit()));
