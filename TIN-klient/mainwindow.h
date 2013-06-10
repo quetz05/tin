@@ -66,7 +66,7 @@ private slots:
     void plikOdbiorTransfer(QString, int);
     void plikOdbiorKoniec();
     void plikWysylStart();
-    void plikWysylTransfer();
+    void plikWysylTransfer(unsigned int);
     void plikNiechce();
 
     void plikWysylKoniec();

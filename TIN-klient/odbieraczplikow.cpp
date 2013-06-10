@@ -13,7 +13,8 @@ OdbieraczPlikow::OdbieraczPlikow(QString nazwa, QWidget *parent)
 
 OdbieraczPlikow::~OdbieraczPlikow() {
 
-    plik->close();
+    if (nazwaPliku.size() != 0)
+        plik->close();
 
     delete plik;
     delete strumien;
@@ -24,6 +25,8 @@ void OdbieraczPlikow::nowaPartia(QByteArray *partia) {
     QByteArray decode = QByteArray::fromBase64(*partia);
 
     strumien->writeRawData(decode.data(), decode.length());
+
+    ++postep;
 
     delete partia;
 

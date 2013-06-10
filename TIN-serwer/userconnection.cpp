@@ -30,8 +30,8 @@
  * co tam idzie poza tym w PLIK_POCZATEK.
  * Wszystkie czary plikowe masz na samym dole mainwindow.cpp
  *
- * Szyfrujesz/deszyfrujesz standardowo
- * /
+ * Szyfrujesz/deszyfrujesz standardowo.
+ */
 
 
 UserConnection::UserConnection(int socket) : pakieto(socket)

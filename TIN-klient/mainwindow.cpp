@@ -329,37 +329,49 @@ void MainWindow::theEnd()
 
 void MainWindow::rozpocznijWysylanie()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
-    if (fileName.length() != 0) {
 
-        QFile *plik = new QFile(fileName);
-        plik->open(QIODevice::ReadOnly);
-/*        if (plik.size() > 21000) {
+    if (wp != NULL) {
+        QString fileName = QFileDialog::getOpenFileName(this, "Wybierz Plik", "", "*.*");
+        if (fileName.length() != 0) {
 
-            if (oknoInformacji)
-                delete oknoInformacji;
+            QFile *plik = new QFile(fileName);
+            plik->open(QIODevice::ReadOnly);
+            if (plik->size() > 21000000) { //ograniczenie na ok. 20Mb
 
-            oknoInformacji = new info(this, QString("Za duży plik! Proszę wybrać plik o rozmiarze do 20kb!"), false);
-        } else {*/
+                if (oknoInformacji)
+                    delete oknoInformacji;
 
-            wp = new WysylaczPlikow(plik, gniazdo, QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt(), NULL);
+                oknoInformacji = new info(this, QString("Za duży plik! Proszę wybrać plik o rozmiarze do 20Mb!"), false);
+            } else {
 
-            unsigned int subIndex = fileName.lastIndexOf('/') + 1;
-            qDebug() << "subIndex == " << subIndex;
+                wp = new WysylaczPlikow(plik, gniazdo, QString(zaznaczonyZnajomy->text()).section("|",1,1).toInt(), NULL);
 
-            fileName = fileName.right(fileName.length() - subIndex);
+                unsigned int subIndex = fileName.lastIndexOf('/') + 1;
 
-            qDebug() << "fileName == " << fileName;
+                fileName = fileName.right(fileName.length() - subIndex);
+                fileName.append(".");
+                fileName.append(QString::number(plik->size()));
 
-            Szyfrator szyfr;
-            Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
-            unsigned int rozmiar;
-            char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
-            wiad.wyslijDoSerwera(dane, rozmiar);
+                Szyfrator szyfr;
+                Wiadomosc wiad(PLIK_POCZATEK, uzytkownikID, fileName, gniazdo);
+                unsigned int rozmiar;
+                char *dane = szyfr.szyfruj(&wiad, NULL, &rozmiar);
+                wiad.wyslijDoSerwera(dane, rozmiar);
 
-            delete dane;
+                delete dane;
 
-        //}
+            }
+        }
+    } else {
+
+        if(oknoInformacji!=NULL)
+        {
+            delete oknoInformacji;
+            oknoInformacji = NULL;
+        }
+
+        oknoInformacji = new info(this,"Niestety nie umiem wysłać dwóch plików na raz...",true);
+        oknoInformacji->show();
     }
 }
 
@@ -370,35 +382,66 @@ void MainWindow::plikOdbiorStart(int idZrodla, QString nazwa) {
     char *dane;
     unsigned int rozmiar;
 
-    QString pytanie = "Czy chcesz odebrać plik <b>";
-    pytanie.append(nazwa);
-    pytanie.append(" </b> od użytkownika <b> ");
-    pytanie.append(QString::number(idZrodla));
-    pytanie.append(" </b>?");
+    if (op != NULL) {
 
-    QString nazwaDysk;
+        QString rozmiarPliku = nazwa.right(nazwa.length() - (nazwa.lastIndexOf('.') + 1));
+        QString nazwaPliku = nazwa.left(nazwa.lastIndexOf('.'));
 
-    if (QMessageBox::Yes == QMessageBox::question(this, "Przesył pliku", pytanie, QMessageBox::Yes|QMessageBox::No)) {
+        QString pytanie = "Czy chcesz odebrać plik <b>";
+        pytanie.append(nazwaPliku);
+        pytanie.append(" </b> od użytkownika <b> ");
+        pytanie.append(QString::number(idZrodla));
+        pytanie.append(" </b>?");
 
-        wiad = new Wiadomosc(PLIK_CHCE, idZrodla, QString(""), gniazdo);
-        nazwaDysk = QFileDialog::getSaveFileName(this, "Zapisz Plik", nazwa, "");
+        QString nazwaDysk;
 
-        //timeout 60 sekund
-        timeout->start(60000);
+        if (QMessageBox::Yes == QMessageBox::question(this, "Przesył pliku", pytanie, QMessageBox::Yes|QMessageBox::No)) {
 
-        op = new OdbieraczPlikow(nazwaDysk, this);
+            nazwaDysk = QFileDialog::getSaveFileName(this, "Zapisz Plik", nazwaPliku, "");
+
+            qDebug() << "nazwaDysk == " << nazwaDysk;
+
+            if (nazwaDysk.length() > 0) {
+
+                //timeout 60 sekund
+                timeout->start(60000);
+
+                op = new OdbieraczPlikow(nazwaDysk, this);
+                op->ustawIlosc(qRound((double)rozmiarPliku.toInt() / 256.0d));
+                wiad = new Wiadomosc(PLIK_CHCE, idZrodla, QString(""), gniazdo);
+            } else {
+                wiad = new Wiadomosc(PLIK_NIECHCE, idZrodla, QString(""), gniazdo);
+                op = NULL;
+            }
+
+        } else {
+            wiad = new Wiadomosc(PLIK_NIECHCE, idZrodla, QString(""), gniazdo);
+        }
+
+        dane = szyfr.szyfruj(wiad, NULL, &rozmiar);
+        wiad->wyslijDoSerwera(dane, rozmiar);
+    } else {
+
+        if(oknoInformacji!=NULL)
+        {
+            delete oknoInformacji;
+            oknoInformacji = NULL;
+        }
+
+        QString wiad = "Użytkownik <b>";
+        wiad.append(QString::number(idZrodla));
+        wiad.append("</b> chce przesłać Ci plik <b>");
+        wiad.append(nazwa);
+        wiad.append("<b>.\nNiestety odbierasz już plik, poproś użytkownika o przesłanie, gdy zakończy się aktualny transfer.");
+
+        oknoInformacji = new info(this,wiad,true);
+        oknoInformacji->show();
 
     }
-    else
-        wiad = new Wiadomosc(PLIK_NIECHCE, idZrodla, QString(""), gniazdo);
 
-
-    dane = szyfr.szyfruj(wiad, NULL, &rozmiar);
-    wiad->wyslijDoSerwera(dane, rozmiar);
 
     delete dane;
     delete wiad;
-
 }
 
 void MainWindow::plikOdbiorTransfer(QString paczka, int size) {
@@ -406,12 +449,16 @@ void MainWindow::plikOdbiorTransfer(QString paczka, int size) {
     QByteArray *partia = new QByteArray(paczka.toStdString().c_str());
     op->nowaPartia(partia);
     timeout->start(60000);
+
+    ui->progresOdbior->setValue(op->dajPostep());
 }
 
 void MainWindow::plikOdbiorKoniec() {
 
     delete op;
     op = NULL;
+
+    ui->progresOdbior->setValue(0);
 
     if(oknoInformacji!=NULL)
     {
@@ -429,17 +476,22 @@ void MainWindow::plikOdbiorKoniec() {
 // jak tu jestesmy to znaczy ze przyszlo PLIK_CHCE
 void MainWindow::plikWysylStart() {
     connect(wp, SIGNAL(koniec()), this, SLOT(plikWysylKoniec()));
+    connect(wp, SIGNAL(paczkaPoszla(uint)), this, SLOT(plikWysylTransfer(uint)));
     QThreadPool::globalInstance()->start(wp);
 }
 
-void MainWindow::plikWysylTransfer() {
-//ew. update paska postepu
+void MainWindow::plikWysylTransfer(unsigned int ilePoszlo) {
+
+    ui->progresWysyl->setValue(ilePoszlo);
+
 }
 
 void MainWindow::plikWysylKoniec() {
 
     //delete wp;
     wp = NULL;
+
+    ui->progresWysyl->setValue(0);
 
     if(oknoInformacji!=NULL)
     {

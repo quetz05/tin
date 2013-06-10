@@ -25,12 +25,15 @@ public slots:
 
 signals:
     void koniec();
+    void paczkaPoszla(unsigned int);
 
 private:
     QMutex mutex;
     int gniazdo;
     int idCelu;
     bool anuluj;
+    unsigned int ilePaczek;
+    unsigned int aktPaczka;
     QFile *src;
 
 };
