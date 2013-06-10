@@ -31,7 +31,7 @@
  * Wszystkie czary plikowe masz na samym dole mainwindow.cpp
  *
  * Szyfrujesz/deszyfrujesz standardowo
- * /
+ */
 
 
 UserConnection::UserConnection(int socket) : pakieto(socket)

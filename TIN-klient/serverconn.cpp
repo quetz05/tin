@@ -19,6 +19,7 @@ void ServerConn::doSetup(QThread *cThread)
 
     connect(cThread,SIGNAL(started()),this, SLOT(odbierajWiadomosci()));
     connect(cThread,SIGNAL(finished()),this, SLOT(koncz()));
+        connect(cThread,SIGNAL(destroyed()),this, SLOT(koncz()));
 }
 
 void ServerConn::odbierajWiadomosci()
@@ -31,8 +32,11 @@ void ServerConn::odbierajWiadomosci()
         QString wiadomosc;
         int dlugosc = pakietor.odbiezPakiet(&naglowek,&id,&wiadomosc,NULL);
         if(dlugosc<0)
+        {
+            qDebug() <<"Czy cygan dostał gruz?";
+            emit thread()->terminate();
             return;// wychodzimy w razie bledu :) lub zamkniecia
-
+        }
         //rozpoznanie typu wiadomosci
         switch(naglowek) {
             case REJESTRUJ:
@@ -90,12 +94,14 @@ void ServerConn::odbierajWiadomosci()
         }
 
     }
+
 }
 
 void ServerConn::zakoncz()
 {
     qDebug() << "Sie koniec sie dzieje";
     koniec = true;
+    pakietor.wyjdz();
 }
 
 void ServerConn::koncz()
